@@ -218,4 +218,4 @@ def do_crawl(oliveyoung_id):
     driver.quit()
 
 
-do_crawl("A000000219097")
+# do_crawl("A000000219097")
