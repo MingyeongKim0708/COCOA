@@ -47,6 +47,8 @@ def get_cosemtic_ingredient(soup: BeautifulSoup):
         dictionary_value = ""
 
         for ingredient in ingredients:
+
+            # 이상한 이름 거르기
             if ingredient == "1" or ingredient == " 1" or ingredient == "2" or ingredient == " 2" or ingredient == "2-올레아미도-1":
                 continue
             elif ingredient == "2-헥산다이올":
@@ -163,8 +165,8 @@ def do_crawl(oliveyoung_id):
 
     review_amount = int(soup.select_one(
         "div.star_area>p.total>em").get_text(strip=True).replace(",", ""))
-    cosmetic_id = insert_cosmetic(oliveyoung_id, product_name, "page",
-                                  product_producer, product_category, reputations, review_amount, 0)
+    page_cosmetic_id = insert_cosmetic(oliveyoung_id, product_name, "page",
+                                       product_producer, product_category, reputations, review_amount, 0)
 
     if items == None:
         service
@@ -179,17 +181,15 @@ def do_crawl(oliveyoung_id):
     else:
         for item in items:
             optgoodsinfo = item.get("optgoodsinfo", "없음")  # 상품번호 및 아이템번호
-            title_tag = item.select_one("a.item")
-            title = title_tag.get("title", "제목 없음") if title_tag else "제목 없음"
+            if optgoodsinfo == "없음":
+                continue
+
             option_span = item.select_one("span.txt")
             option_name = option_span.get_text(
                 strip=True) if option_span else "내용 없음"
             review_amount_span = item.select_one("span.num em.txt_en")
             review_amount = review_amount_span.get_text(
                 strip=True) if review_amount_span else "숫자 없음"
-
-            if optgoodsinfo == "없음":
-                continue
 
             [child_oliveyoung_id, option_id] = optgoodsinfo.split(":")
             option_id = int(option_id.lstrip(
@@ -210,7 +210,7 @@ def do_crawl(oliveyoung_id):
             # print(f"리뷰 수: {review_amount}")
             # print("-" * 50)
 
-    insert_ingredient_text(cosmetic_id, product_ingredient)
+    insert_ingredient_text(page_cosmetic_id, product_ingredient)
 
     print(product_ingredient)
 
