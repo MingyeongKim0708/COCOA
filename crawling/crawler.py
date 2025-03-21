@@ -41,7 +41,7 @@ def get_cosemtic_ingredient(soup: BeautifulSoup):
             ingredient_string_by_option = option
             option = "nooption"
         else:
-            # 옵션이름이 없거나 무효할 경우우
+            # 옵션이름이 없거나 무효할 경우
             if len(ingredient_string_by_option) <= 1:
                 ingredient_string_by_option = option
                 option = "blank"+str(index)
@@ -142,7 +142,7 @@ def do_crawl(oliveyoung_id):
     # 상품명 가져오기
     product_name = soup.select_one("p.prd_name").get_text(
         strip=True) if soup.select_one("p.prd_name") else "상품명 없음"
-    # 상품 제조사 가져오기기
+    # 상품 제조사 가져오기
     product_producer = soup.select_one("a#moveBrandShop").get_text(
         strip=True) if soup.select_one("a#moveBrandShop") else "상품명 없음"
     # 카테고리명 가져오기
