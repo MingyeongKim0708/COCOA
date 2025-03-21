@@ -11,7 +11,7 @@ from db import insert_cosmetic, is_in_child_cosmetic, insert_same_cosmetic, upda
 
 
 def get_cosemtic_ingredient(soup: BeautifulSoup):
-    product_ingredient = ""
+    product_ingredient = None
     product_info = None
     for dl in soup.select("dl.detail_info_list"):
         dt = dl.select_one("dt")
@@ -25,7 +25,7 @@ def get_cosemtic_ingredient(soup: BeautifulSoup):
             product_ingredient = dd.get_text(strip=True) if dd else "성분 정보 없음"
             break
 
-    if product_info == None:
+    if product_ingredient == None:
         return None, None
 
     product_ingredient_by_option = product_ingredient.split("[")
