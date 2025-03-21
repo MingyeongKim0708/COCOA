@@ -12,17 +12,21 @@ from db import insert_cosmetic, is_in_child_cosmetic, insert_same_cosmetic, upda
 
 def get_cosemtic_ingredient(soup: BeautifulSoup):
     product_ingredient = ""
+    product_info = None
     for dl in soup.select("dl.detail_info_list"):
         dt = dl.select_one("dt")
 
         if dt and "내용물의 용량 또는 중량" in dt.get_text(strip=True):
             dd = dl.select_one("dd")
-            product_name = dd.get_text(strip=True) if dd else "상품명 없음"
+            product_info = dd.get_text(strip=True) if dd else "상품명 없음"
 
         if dt and "화장품법에 따라 기재해야 하는 모든 성분" in dt.get_text(strip=True):
             dd = dl.select_one("dd")
             product_ingredient = dd.get_text(strip=True) if dd else "성분 정보 없음"
             break
+
+    if product_info == None:
+        return None, None
 
     product_ingredient_by_option = product_ingredient.split("[")
 
@@ -48,32 +52,32 @@ def get_cosemtic_ingredient(soup: BeautifulSoup):
 
         for ingredient in ingredients:
 
-            # 이상한 이름 거르기
-            if ingredient == "1" or ingredient == " 1" or ingredient == "2" or ingredient == " 2" or ingredient == "2-올레아미도-1":
-                continue
-            elif ingredient == "2-헥산다이올":
-                ingredient = "1,2-헥산다이올"
-            elif ingredient == "3-다이아미노프로판다이말리에이트":
-                ingredient = "1,3-다이아미노프로판다이말리에이트"
-            elif ingredient == "4-트라이하이드록시벤젠":
-                ingredient = "1,2,4-트라이하이드록시벤젠"
-            elif ingredient == "6-헥산트라이올":
-                ingredient = "1,2,6-헥산트라이올"
-            elif ingredient == "10-데칸다이올":
-                ingredient = "1,10-데칸다이올"
-            elif ingredient == "2'-티오비스":
-                ingredient = "2,2'-티오비스"
-            elif ingredient == "2'-메틸렌비스4-아미노페놀":
-                ingredient = "2,2'-메틸렌비스4-아미노페놀"
-            elif ingredient == "3-부탄다이올":
-                ingredient = "2,3-부탄다이올"
-            elif ingredient == "6-다이메틸-7-옥텐-2-올":
-                ingredient = "2,6-다이메틸-7-옥텐-2-올"
+            # # 이상한 이름 거르기
+            # if ingredient == "1" or ingredient == " 1" or ingredient == "2" or ingredient == " 2" or ingredient == "2-올레아미도-1":
+            #     continue
+            # elif ingredient == "2-헥산다이올":
+            #     ingredient = "1,2-헥산다이올"
+            # elif ingredient == "3-다이아미노프로판다이말리에이트":
+            #     ingredient = "1,3-다이아미노프로판다이말리에이트"
+            # elif ingredient == "4-트라이하이드록시벤젠":
+            #     ingredient = "1,2,4-트라이하이드록시벤젠"
+            # elif ingredient == "6-헥산트라이올":
+            #     ingredient = "1,2,6-헥산트라이올"
+            # elif ingredient == "10-데칸다이올":
+            #     ingredient = "1,10-데칸다이올"
+            # elif ingredient == "2'-티오비스":
+            #     ingredient = "2,2'-티오비스"
+            # elif ingredient == "2'-메틸렌비스4-아미노페놀":
+            #     ingredient = "2,2'-메틸렌비스4-아미노페놀"
+            # elif ingredient == "3-부탄다이올":
+            #     ingredient = "2,3-부탄다이올"
+            # elif ingredient == "6-다이메틸-7-옥텐-2-올":
+            #     ingredient = "2,6-다이메틸-7-옥텐-2-올"
             dictionary_value += ingredient.strip()+"_"
 
         dictionary[option] = dictionary_value[:len(dictionary_value)-1]
 
-    return product_name, dictionary
+    return product_info, dictionary
 
 
 def get_reputations(soup: BeautifulSoup):
@@ -146,10 +150,15 @@ def do_crawl(oliveyoung_id):
         "value") if soup.select_one("#recoBellDispCatNo") else "카테고리리 없음"
 
     # 현재 공식 상품명, 성분 가져오기
-    official_name, product_ingredient = get_cosemtic_ingredient(soup)
+    product_info, product_ingredient = get_cosemtic_ingredient(soup)
+
+    # 성분이 없다면 화장품이 아님
+    if product_ingredient == None:
+        return
 
     # 명칭 합치기
-    product_name += official_name
+    if product_info != None:
+        product_name += product_info
 
     # 상품 평판 가져오기
     reputations = get_reputations(soup)

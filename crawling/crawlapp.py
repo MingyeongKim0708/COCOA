@@ -8,7 +8,9 @@ def digit(num):
     return i
 
 
-for i in range(40, 1000):
+# (a, b)  a부터 b까지  (b, a, -1) b부터 a 까지
+for i in range(223000):
     d = digit(i)
     no = "A000000"+"0"*(6-d)+str(i)
+    print(no)
     do_crawl(no)
