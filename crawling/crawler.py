@@ -173,15 +173,12 @@ def do_crawl(oliveyoung_id):
         "ul.sel_option_list>li") else None
 
     review_amount = int(soup.select_one(
-        "div.star_area>p.total>em").get_text(strip=True).replace(",", ""))
+        "div.star_area>p.total>em").get_text(strip=True).replace(",", "")) if soup.select_one(
+        "div.star_area>p.total>em") else 0
     page_cosmetic_id = insert_cosmetic(oliveyoung_id, product_name, "page",
                                        product_producer, product_category, reputations, review_amount, 0)
 
     if items == None:
-        service
-        review_amount = int(soup.select_one(
-            "div.star_area>p.total>em").get_text(strip=True).replace(",", ""))
-
         cosmetic_id = insert_cosmetic(oliveyoung_id, product_name, "nooption",
                                       product_producer, product_category, reputations, review_amount)
 
