@@ -108,7 +108,6 @@ def do_crawl(oliveyoung_id):
         print("already has it")
         return
 
-    global soup
     url = f"https://www.oliveyoung.co.kr/store/goods/getGoodsDetail.do?goodsNo={oliveyoung_id}"
 
     # Selenium WebDriver 설정 (ChromeDriver 자동 다운로드)
@@ -225,3 +224,55 @@ def do_crawl(oliveyoung_id):
 
 
 # do_crawl("A000000219097")
+def do_review_croll(oliveyoung_id):
+
+    global soup
+    url = f"https://www.oliveyoung.co.kr/store/goods/getGoodsDetail.do?goodsNo={oliveyoung_id}"
+
+    # Selenium WebDriver 설정 (ChromeDriver 자동 다운로드)
+    service = Service(ChromeDriverManager().install())
+    options = webdriver.ChromeOptions()
+    options.add_argument("--headless")  # 백그라운드에서 실행
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--window-size=1920,1080")
+
+    # WebDriver 실행
+    driver = webdriver.Chrome(service=service, options=options)
+    driver.get(url)
+
+    # 페이지 로딩 대기
+    time.sleep(2)
+
+    # 상세정보 탭 클릭 (안전하게 시도) - 실패한다면 리뷰가 없음음 페이지로 간주하여 return
+    try:
+        tab = driver.find_element(By.CSS_SELECTOR, "a.goods_reputation")
+        ActionChains(driver).move_to_element(tab).click().perform()
+        time.sleep(1)
+    except:
+        return
+
+    # 페이지 소스를 가져와 BeautifulSoup으로 파싱
+    soup = BeautifulSoup(driver.page_source, "html.parser")
+
+    image_lis = soup.select("ul.prd_thumb_list>li")
+
+    for image_li in image_lis:
+        img_tag = image_li.find("img")
+        if img_tag:
+            src = img_tag.get("src")
+            # 썸네일 사이즈를 85 → 550으로 바꿔주는 작업
+            newsrc = src.replace("/85/", "/550/")
+            print(newsrc)
+            # s3에 넣자
+
+    for i in range(2, 9):
+        try:
+            tab = driver.find_element(By.CSS_SELECTOR, "a.goods_reputation")
+            ActionChains(driver).move_to_element(tab).click().perform()
+            time.sleep(1)
+        except:
+            return
+
+    return 1

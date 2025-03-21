@@ -146,3 +146,27 @@ def insert_ingredient_text(cosmetic_id: int, product_ingredients: dict):
         return False
     finally:
         conn.close()
+
+
+def get_all_distinct_parent_cosmetics():
+    # 특정 화장품이 same_cosmetics 테이블에 존재하는지 확인하는 함수
+    query = """
+    SELECT DISTINCT parent_cosmetic_oliveyoung_id 
+    FROM same_cosmetics;
+    """
+
+    conn = get_db_connection()
+    if not conn:
+        return False
+
+    try:
+        with conn.cursor() as cur:
+            cur.execute(query)
+            results = cur.fetchall()
+            # 결과를 리스트로 변
+            return [row[0] for row in results]
+    except Exception as e:
+        print("동일 상품 조회 오류:", e)
+        return False
+    finally:
+        conn.close()
