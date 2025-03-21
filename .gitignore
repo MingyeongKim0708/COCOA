@@ -1,0 +1,12 @@
+# JetBrains IDE (IntelliJ IDEA) 관련 파일 (Git에 올릴 필요 없음)
+**/.idea/
+**/.vscode/
+**/workspace.xml
+**/shelf/
+
+# 환경 변수 파일 (보안상의 이유로 Git에 업로드 금지)
+**/.env
+
+# Node.js 프로젝트 관련 (필요시 추가)
+**/node_modules/
+**/package-lock.json
