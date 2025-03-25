@@ -1,10 +1,10 @@
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center text-center">
-      <div className="text-desc font-cute">
+      <div className="font-cute text-desc">
         오직 당신을 위한 화장품을 찾아주는
       </div>
-      <div className="text-logo font-cocoa text-pink1">COCOA</div>
+      <div className="font-cocoa text-logo text-pink1">COCOA</div>
       <a href="./main" className="text-brown2">
         main page 이동
       </a>

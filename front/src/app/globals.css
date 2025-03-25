@@ -4,8 +4,8 @@
 
 :root {
   /* 메인 색상 */
-  --color-black: #000000;
-  --color-white: #ffffff;
+  --color-black: #000;
+  --color-white: #fff;
 
   /* 빨강 계열 */
   --color-red1: #c1121f;
@@ -43,20 +43,20 @@
   padding-left: 1rem;
   padding-right: 1rem;
   background-color: var(--color-white);
-  -ms-overflow-style: none; /* 인터넷 익스플로러 */
-  scrollbar-width: none; /* 파이어폭스 */
   color: var(--color-gray1);
   font-size: 1rem;
   line-height: 1.3rem;
+  -ms-overflow-style: none; /* 인터넷 익스플로러 */
+  scrollbar-width: none; /* 파이어폭스 */
 }
 
 html {
   height: 100%;
+  background-color: var(--color-pink4);
+  box-sizing: border-box;
   overflow: auto;
   -ms-overflow-style: none; /* IE & Edge */
   scrollbar-width: none; /* Firefox */
-  background-color: var(--color-pink4);
-  box-sizing: border-box;
 }
 
 html::-webkit-scrollbar {
@@ -81,6 +81,6 @@ button {
 }
 
 /* 디버깅용  */
-* {
-  outline: 1px solid red; /* 요소별 높이 체크 */
-}
+/* * {
+  outline: 1px solid red;
+} */
