@@ -9,9 +9,6 @@ COPY public public
 COPY package.json .
 COPY next.config.ts .
 
-# 의존성 설치 (실행에 필요한 최소한만)
-RUN npm ci --omit=dev
-
 # 포트 개방
 EXPOSE 3000
 
