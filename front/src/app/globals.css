@@ -40,14 +40,22 @@
   max-width: 39rem; /* 약 624px */
   height: 100%;
   margin: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
   background-color: var(--color-white);
   color: var(--color-gray1);
   font-size: 1rem;
   line-height: 1.3rem;
   -ms-overflow-style: none; /* 인터넷 익스플로러 */
   scrollbar-width: none; /* 파이어폭스 */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 html {

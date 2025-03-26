@@ -4,6 +4,8 @@ import localFont from "next/font/local";
 import type { Metadata } from "next";
 import { Lilita_One, Jua } from "next/font/google";
 
+import BottomNav from "@/app/_components/common/BottomNav";
+
 const freesentation = localFont({
   src: "../../public/fonts/FreesentationVF.ttf",
   variable: "--font-freesentation",
@@ -37,6 +39,7 @@ export default function RootLayout({
         className={`${freesentation.className} ${lilita.variable} ${jua.variable}`}
       >
         <div className="app-container">{children}</div>
+        <BottomNav />
       </body>
     </html>
   );

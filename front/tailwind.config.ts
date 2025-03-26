@@ -5,6 +5,7 @@ const config: Config = {
     "./src/app/**/*.{ts,tsx}",
     "./src/components/**/*.{ts,tsx}",
     "./src/pages/**/*.{ts,tsx}",
+    "./src/utils/**/*.{ts,tsx}", // ← cn 함수 등도 포함 가능
   ],
   theme: {
     extend: {
