@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:18-slim
 
 # 작업 디렉토리 설정
 WORKDIR /app
@@ -8,6 +8,8 @@ COPY .next .next
 COPY public public
 COPY package.json .
 COPY next.config.ts .
+COPY node_modules node_modules
+
 
 # 포트 개방
 EXPOSE 3000
