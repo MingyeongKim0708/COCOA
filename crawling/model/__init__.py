@@ -1,0 +1,1 @@
+from .cosmetic import Cosmetic
