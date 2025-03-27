@@ -23,7 +23,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
-        System.out.println(oAuth2User);
+//        System.out.println(oAuth2User);
 
         // 어느 소셜 서비스에서 온 값인지 확인하기 위한 registrationId
         String registrationId = userRequest.getClientRegistration().getRegistrationId();

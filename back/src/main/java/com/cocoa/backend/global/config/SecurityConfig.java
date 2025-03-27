@@ -2,6 +2,7 @@ package com.cocoa.backend.global.config;
 
 import com.cocoa.backend.domain.user.service.CustomOAuth2UserService;
 import com.cocoa.backend.global.security.CustomSuccessHandler;
+import com.cocoa.backend.global.security.JWTFilter;
 import com.cocoa.backend.global.util.JWTUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -31,6 +33,8 @@ public class SecurityConfig {
                 // form 로그인 방식, HTTP Basic 인증 방식 비활성화
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
+                // JWTFilter 추가
+                .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 // oauth2
                 .oauth2Login((oauth2) -> oauth2
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
