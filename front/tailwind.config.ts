@@ -5,6 +5,7 @@ const config: Config = {
     "./src/app/**/*.{ts,tsx}",
     "./src/components/**/*.{ts,tsx}",
     "./src/pages/**/*.{ts,tsx}",
+    "./src/utils/**/*.{ts,tsx}", // ← cn 함수 등도 포함 가능
   ],
   theme: {
     extend: {
@@ -52,7 +53,7 @@ const config: Config = {
         size1: ["2rem", { lineHeight: "2.6rem" }], // Figma의 Title1, Body1에 상응
         size2: ["1.5rem", { lineHeight: "1.95rem" }],
         size3: ["1.25rem", { lineHeight: "1.625rem" }],
-        size4: ["1rem", { lineHeight: "1.3rem" }],
+        size4: ["1rem", { lineHeight: "1.3rem" }], // 기본 크기
         size5: ["0.75rem", { lineHeight: "0.975rem" }],
         size6: ["0.625rem", { lineHeight: "0.8125rem" }],
 
@@ -65,6 +66,24 @@ const config: Config = {
         head: "900",
         title: "680",
         body: "410",
+      },
+
+      // 여백, 높이, 넓이
+      padding: {
+        base: "var(--base-width)",
+        nav: "var(--bottom-nav-height)",
+        header: "var(--top-header-height)",
+      },
+      height: {
+        nav: "var(--bottom-nav-height)",
+        header: "var(--top-header-height)",
+      },
+      width: {
+        base: "var(--base-width)",
+        header: "var(--top-header-width)",
+      },
+      maxWidth: {
+        base: "var(--base-width)",
       },
     },
   },

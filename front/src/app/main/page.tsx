@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import Card from "./_component/Card";
+import BottomNav from "../_components/common/BottomNav";
 
 export default function MainPage() {
   return (
@@ -9,14 +9,8 @@ export default function MainPage() {
       <a href="/" className="text-size2 text-brown1">
         root로 이동
       </a>
-      <div className="flex flex-row gap-4">
-        <Card
-          className={"id bg-gray4 text-head0 font-title text-red1"}
-          number={4}
-        />
-        <Card number={2} />
-        <Card number={3} />
-      </div>
+
+      <BottomNav />
       <hr />
       <h1 className="text-head0 font-head">head0 스타일</h1>
       <h1 className="text-head1 font-head text-red1">head1 스타일</h1>

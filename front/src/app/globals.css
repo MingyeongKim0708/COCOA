@@ -3,6 +3,11 @@
 @tailwind utilities;
 
 :root {
+  --base-width: 39rem; /* 624 px */
+  --top-header-width: 37.75rem; /* 604px */
+  --top-header-height: 3.4375rem; /* 55px */
+  --bottom-nav-height: 3.75rem; /* 60px */
+
   /* 메인 색상 */
   --color-black: #000;
   --color-white: #fff;
@@ -38,16 +43,23 @@
 /* 전역 레이아웃용 wrapper 클래스 */
 .app-container {
   max-width: 39rem; /* 약 624px */
-  height: 100%;
   margin: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
   background-color: var(--color-white);
   color: var(--color-gray1);
   font-size: 1rem;
   line-height: 1.3rem;
   -ms-overflow-style: none; /* 인터넷 익스플로러 */
   scrollbar-width: none; /* 파이어폭스 */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 html {
@@ -65,6 +77,8 @@ html::-webkit-scrollbar {
 
 body {
   height: 100%;
+  justify-content: center;
+  align-items: center;
   font-family: var(--font-freesentation), sans-serif;
   overflow: auto;
   -ms-overflow-style: none;

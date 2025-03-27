@@ -5,9 +5,9 @@ export default function Home() {
         오직 당신을 위한 화장품을 찾아주는
       </div>
       <div className="font-cocoa text-logo text-pink1">COCOA</div>
-      <a href="./main" className="text-brown2">
-        main page 이동
-      </a>
+      <div className="border border-brown3 p-2 text-head1 text-brown2">
+        <a href="./main">main page 이동</a>
+      </div>
       <h1 className="text-head0 font-head">head0 스타일</h1>
       <h1 className="text-head1 font-head text-red1">head1 스타일</h1>
       <h2 className="text-head2 font-head text-red2">head2 스타일</h2>
@@ -23,6 +23,7 @@ export default function Home() {
       <div className="text-size4 font-body text-pink3">body4 스타일</div>
       <div className="text-size5 font-body text-pink4">body5 스타일</div>
       <div className="text-size6 font-body text-gray2">body6 스타일</div>
+      <div>commit test</div>
     </div>
   );
 }
