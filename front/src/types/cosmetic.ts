@@ -5,7 +5,7 @@ export interface Cosmetic {
   brand: string;
   categoryId: number;
   images: string[];
-  keywords: string[];
+  keywords: Record<string, number>[];
   isLiked: boolean;
   likeCount: number;
   reviewCount: number;
