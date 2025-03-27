@@ -3,6 +3,8 @@ package com.cocoa.backend.domain.user.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Getter
@@ -31,15 +33,18 @@ public class User {
     private Short birthDay;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "gender", length = 10, nullable = false)
+    @Column(name = "gender", length = 10, columnDefinition = "gender", nullable = false)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private Gender gender;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "skin_type", length = 20, nullable = false)
+    @Column(name = "skin_type", length = 20, columnDefinition = "skin_type", nullable = false)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private SkinType skinType;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "skin_tone", length = 20, nullable = false)
+    @Column(name = "skin_tone", length = 20, columnDefinition = "skin_tone", nullable = false)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private SkinTone skinTone;
 
     @Column(name = "key_words", columnDefinition = "jsonb")
