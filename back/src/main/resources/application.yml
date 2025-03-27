@@ -1,3 +1,5 @@
+client:
+  url: ${CLIENT_BASE_URL}
 spring:
   application:
     name: back
@@ -31,3 +33,4 @@ spring:
             user-name-attribute: id
   jwt:
     secret: ${JWT_SECRET}
+    accesstoken-expires-in: ${ACCESSTOKEN_EXPIRES_IN}

@@ -13,10 +13,8 @@ import java.util.Date;
 
 @Component
 public class JWTUtil {
-
     private final SecretKey SECRET_KEY;
 
-    // 생성자 : 내부에서 SECRET_KEY 초기화 + utf8로 인코딩 변경, hs256 방식으로 암호화 진행
     public JWTUtil(@Value("${spring.jwt.secret}") String secret) {
         SECRET_KEY = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
     }
