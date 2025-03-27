@@ -23,6 +23,7 @@ export default function Home() {
       <div className="text-size4 font-body text-pink3">body4 스타일</div>
       <div className="text-size5 font-body text-pink4">body5 스타일</div>
       <div className="text-size6 font-body text-gray2">body6 스타일</div>
+      <div>commit test</div>
     </div>
   );
 }
