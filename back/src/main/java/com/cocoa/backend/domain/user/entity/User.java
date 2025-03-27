@@ -32,15 +32,15 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gender", length = 10, nullable = false)
-    private String gender;
+    private Gender gender;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "skin_type", length = 20, nullable = false)
-    private String skinType;
+    private SkinType skinType;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "skin_tone", length = 20, nullable = false)
-    private String skinTone;
+    private SkinTone skinTone;
 
     @Column(name = "key_words", columnDefinition = "jsonb")
     private String keyWords;

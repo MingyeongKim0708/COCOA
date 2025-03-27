@@ -3,7 +3,6 @@ package com.cocoa.backend.domain.user.service;
 import com.cocoa.backend.domain.user.dto.CustomOAuth2UserDTO;
 import com.cocoa.backend.domain.user.dto.KakaoResponse;
 import com.cocoa.backend.domain.user.dto.OAuth2Response;
-import com.cocoa.backend.domain.user.dto.UserDTO;
 import com.cocoa.backend.domain.user.entity.User;
 import com.cocoa.backend.domain.user.repository.UserRepository;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
