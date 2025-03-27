@@ -47,9 +47,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             userRepository.save(user);
         }
 
-        UserDTO userDTO = new UserDTO();
-        userDTO.setProviderId(providerId);
+        CustomOAuth2UserDTO customOAuth2UserDTO = new CustomOAuth2UserDTO();
+        customOAuth2UserDTO.setProviderId(providerId);
 
-        return new CustomOAuth2UserDTO(userDTO);
+        return customOAuth2UserDTO;
     }
 }
