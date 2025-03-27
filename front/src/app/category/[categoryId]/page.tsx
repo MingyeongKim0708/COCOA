@@ -59,7 +59,6 @@ export default function MainPage() {
           likeCount={193}
         />
       </div>
-      <Footer />
     </div>
   );
 }

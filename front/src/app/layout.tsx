@@ -4,7 +4,7 @@ import localFont from "next/font/local";
 import type { Metadata } from "next";
 import { Lilita_One, Jua } from "next/font/google";
 
-import BottomNav from "@/app/_components/common/BottomNav";
+import LayoutWithDynamicPadding from "./_components/common/LayoutWithDynamicPadding";
 
 const freesentation = localFont({
   src: "../../public/fonts/FreesentationVF.ttf",
@@ -38,8 +38,7 @@ export default function RootLayout({
       <body
         className={`${freesentation.className} ${lilita.variable} ${jua.variable}`}
       >
-        <div className="app-container">{children}</div>
-        <BottomNav />
+        <LayoutWithDynamicPadding>{children}</LayoutWithDynamicPadding>
       </body>
     </html>
   );
