@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 
-export default function MainPage() {
+export default function MyPage() {
   return (
     <div>
       <div className="text-head0 font-title text-pink1">마이 페이지입니다.</div>
