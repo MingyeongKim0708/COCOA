@@ -26,6 +26,7 @@ const jua = Jua({
 export const metadata: Metadata = {
   title: "COCOA",
   description: "오직 당신을 위한 화장품을 찾아주는 COCOA",
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
