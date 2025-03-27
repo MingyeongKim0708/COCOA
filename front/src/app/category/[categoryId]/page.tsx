@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 
-import Footer from "@/app/_components/common/Footer";
 import ProductCard from "@/app/_components/product/ProductCard";
 import PageHeader from "@/app/_components/common/PageHeader";
 
