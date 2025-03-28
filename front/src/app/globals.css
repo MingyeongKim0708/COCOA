@@ -46,7 +46,6 @@
   margin: auto;
   padding-left: 1.25rem;
   padding-right: 1.25rem;
-  background-color: var(--color-white);
   color: var(--color-gray1);
   font-size: 1rem;
   line-height: 1.3rem;
@@ -64,7 +63,6 @@
 
 html {
   height: 100%;
-  background-color: var(--color-pink4);
   box-sizing: border-box;
   overflow: auto;
   -ms-overflow-style: none; /* IE & Edge */
