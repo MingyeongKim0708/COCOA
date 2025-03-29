@@ -1,4 +1,4 @@
-from crawler import do_crawl
+from crawler.product_crawler import crawl_product_detail
 
 
 def digit(num):
@@ -9,8 +9,8 @@ def digit(num):
 
 
 # (a, b)  a부터 b까지  (b, a, -1) b부터 a 까지
-for i in range(223000):
+for i in range(212391, 220000):
     d = digit(i)
     no = "A000000"+"0"*(6-d)+str(i)
     print(no)
-    do_crawl(no)
+    crawl_product_detail(no)

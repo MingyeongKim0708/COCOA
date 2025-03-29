@@ -10,3 +10,4 @@
 # Node.js 프로젝트 관련 (필요시 추가)
 **/node_modules/
 **/package-lock.json
+**/__pycache__/
