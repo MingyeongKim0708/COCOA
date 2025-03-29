@@ -1,6 +1,8 @@
 import logging
 from crawler.parse_ingredient import parse_ingredient_by_cosmetic_id
 from db.cosmetic_dao import get_cosmetic_by_oliveyoung_id_and_opt_no, insert_cosmetic_from_object
+from db.category_dao import get_category_id_by_category_no
+from db.review_dao import insert_cosmetic_reviews
 from s3.upload import upload_image_to_s3
 from crawler.driver import create_driver
 from model.cosmetic import Cosmetic
@@ -9,6 +11,7 @@ import time
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium import webdriver
+import requests
 
 # 로깅 설정
 logging.basicConfig(level=logging.INFO)
@@ -25,7 +28,6 @@ def crawl_reviews(oliveyoung_id):
     # WebDriver 실행
     driver = create_driver()
     driver.get(url)
-
     # 페이지 로딩 대기
     time.sleep(2)
 
@@ -40,15 +42,21 @@ def crawl_reviews(oliveyoung_id):
     # 페이지 소스를 가져와 BeautifulSoup으로 파싱
     soup = BeautifulSoup(driver.page_source, "html.parser")
 
-    # 크롤링된 화장품 정보 가져오기기
+    # 크롤링된 화장품 정보 가져오기
     parent_cosmetic = get_cosmetic_by_oliveyoung_id_and_opt_no(
         oliveyoung_id, 0)
 
     update_cosmetic_images(parent_cosmetic, soup)
 
     if parent_cosmetic.category.startswith(COLOR_CATEGORY):
+        # 카테고리 업데이트
+        parent_cosmetic.category = get_category_id_by_category_no(
+            parent_cosmetic.category[:15])
         crawl_color_cosmetic_review(parent_cosmetic, soup, driver)
     else:
+        # 카테고리 업데이트
+        parent_cosmetic.category = get_category_id_by_category_no(
+            parent_cosmetic.category[:15])
         crawl_one_cosmetic_review(parent_cosmetic, soup, driver)
 
     driver.quit()
@@ -113,38 +121,58 @@ def crawl_color_cosmetic_review(cosmetic: Cosmetic, soup: BeautifulSoup, driver:
     return
 
 
-def crawl_one_cosmetic_review(parent_cosmetic: Cosmetic,  soup: BeautifulSoup, driver: webdriver):
-    review_strings = []
-    cosmetic_id = insert_cosmetic_from_object(parent_cosmetic)
-    parse_ingredient_by_cosmetic_id(parent_cosmetic.cosmetic_id, cosmetic_id)
+def crawl_one_cosmetic_review(cosmetic: Cosmetic,  soup: BeautifulSoup, driver: webdriver):
+    reviews = []
+    cosmetic_id = insert_cosmetic_from_object(cosmetic)
+    parse_ingredient_by_cosmetic_id(cosmetic.cosmetic_id, cosmetic_id)
 
     page_block = 0
     # 리뷰가 10페이지가 넘어갈 때
     while has_next_page(soup):
-        review_strings.extend(collect_reviews_from_page(soup))
+        reviews.extend(collect_reviews_from_page(soup))
         for i in range(2, 10):
             if not click_review_page(driver, page_block * 10 + i):
                 break
             soup = BeautifulSoup(driver.page_source, "html.parser")
-            review_strings.extend(collect_reviews_from_page(soup))
+            reviews.extend(collect_reviews_from_page(soup))
         if not click_next(driver):
             break
         soup = BeautifulSoup(driver.page_source, "html.parser")
         page_block += 1
 
+        # if page_block % 1000 == 0:
+        #     # 하둡에 리퀘스트
+        #     logger.info(cosmetic_id, "-", review_strings)
+        #     data = {
+        #         "cosmetic_id": cosmetic_id,
+        #         "reviews": review_strings
+        #     }
+        #     response = requests.post(
+        #         "http://localhost:5000/analyze/crawl", json=data)
+        #     logger.info(response)
+        #     review_strings = []
+
     for i in range(page_block * 10 + 2, page_block * 10 + 10):
-        review_strings.extend(collect_reviews_from_page(soup))
+        reviews.extend(collect_reviews_from_page(soup))
         if not click_review_page(driver, i):
             break
         soup = BeautifulSoup(driver.page_source, "html.parser")
 
-    logger.info(parent_cosmetic)
-    logger.info(review_strings)
-    logger.info("-"*50)
-
     # 하둡에 리퀘스트
+    logger.info("cosmetic_id: %s reviews_len: %s",
+                cosmetic_id, len(reviews))
+    # data = {
+    #     "cosmetic_id": cosmetic_id,
+    #     "reviews": review_strings,
+    #     "is_last_batch": True
+    # }
+    # response = requests.post(
+    #     "http://j12a507a.ssafy.io:5000/analyze/crawl", json=data)
+    # logger.info(response)
     # cosmetic_id
-    return review_strings
+
+    insert_cosmetic_reviews(cosmetic_id, reviews)
+    return reviews
 
 
 def has_next_page(soup: BeautifulSoup):
@@ -177,4 +205,4 @@ def collect_reviews_from_page(soup: BeautifulSoup):
     return [item.select_one("div.txt_inner").get_text(strip=True) for item in review_list if item.select_one("div.txt_inner")]
 
 
-# logger.info(do_review_crawl("A000000219657"))
+# logger.info(crawl_reviews("A000000219657"))
