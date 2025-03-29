@@ -1,8 +1,8 @@
 import logging
-from db.cosmetic_dao import (insert_cosmetic_from_fields, is_in_child_cosmetic,
+from db.cosmetic_dao import (insert_old_cosmetic_from_fields, is_in_child_cosmetic,
                              insert_same_cosmetic, update_same_cosmetic)
 from db.ingredient_dao import insert_ingredient_text
-from driver import create_driver
+from crawler.driver import create_driver
 from bs4 import BeautifulSoup
 import time
 from selenium.webdriver.common.action_chains import ActionChains
@@ -143,15 +143,15 @@ def crawl_product_detail(oliveyoung_id):
     review_amount = int(safe_select_text(
         soup, "div.star_area > p.total > em", "0").replace(",", ""))
 
-    page_cosmetic_id = insert_cosmetic_from_fields(oliveyoung_id, product_name, "page",
-                                                   product_producer, product_category, reputations, review_amount, 0)
+    page_cosmetic_id = insert_old_cosmetic_from_fields(oliveyoung_id, product_name, "page",
+                                                       product_producer, product_category, reputations, review_amount, 0)
 
     # 모든 옵션 가져오기
     items = soup.select("ul.sel_option_list>li")
 
     if not items:
-        cosmetic_id = insert_cosmetic_from_fields(oliveyoung_id, product_name, "nooption",
-                                                  product_producer, product_category, reputations, review_amount)
+        cosmetic_id = insert_old_cosmetic_from_fields(oliveyoung_id, product_name, "nooption",
+                                                      product_producer, product_category, reputations, review_amount)
 
         insert_same_cosmetic(oliveyoung_id, oliveyoung_id, cosmetic_id)
 
@@ -176,8 +176,8 @@ def crawl_product_detail(oliveyoung_id):
             if is_in_child_cosmetic(child_id, opt_id):
                 update_same_cosmetic(oliveyoung_id, child_id)
             else:
-                cosmetic_id = insert_cosmetic_from_fields(child_id, product_name, option_name,
-                                                          product_producer, product_category, reputations, review_amount, opt_id)
+                cosmetic_id = insert_old_cosmetic_from_fields(child_id, product_name, option_name,
+                                                              product_producer, product_category, reputations, review_amount, opt_id)
                 insert_same_cosmetic(
                     oliveyoung_id, child_id, cosmetic_id, opt_id)
 

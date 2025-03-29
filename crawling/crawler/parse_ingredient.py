@@ -1,8 +1,8 @@
-from db.ingredient_dao import get_cosmetic_ingredient_text_by_cosmetic_id, insert_ingredient_text
+from db.ingredient_dao import get_old_cosmetic_ingredient_text_by_cosmetic_id, insert_ingredient_text
 
 
 def parse_ingredient_by_cosmetic_id(cosmetic_id, newcosmetic_id):
-    dictionary = get_cosmetic_ingredient_text_by_cosmetic_id(cosmetic_id)
+    dictionary = get_old_cosmetic_ingredient_text_by_cosmetic_id(cosmetic_id)
 
     for k, v in dictionary.items():
         dictionary[k] = v.replace("_", ",")

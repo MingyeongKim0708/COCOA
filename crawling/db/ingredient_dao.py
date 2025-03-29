@@ -26,9 +26,10 @@ def insert_ingredient_text(cosmetic_id: int, product_ingredients: dict):
         conn.close()
 
 
-def get_cosmetic_ingredient_text_by_cosmetic_id(cosmetic_id: int) -> dict:
+def get_old_cosmetic_ingredient_text_by_cosmetic_id(cosmetic_id: int) -> dict:
     query = """
-    SELECT ingredient_text FROM old_cosmetic_ingredient_text
+    SELECT ingredient_text 
+    FROM old_cosmetic_ingredient_text
     WHERE cosmetic_id = %s
     """
 
@@ -40,10 +41,15 @@ def get_cosmetic_ingredient_text_by_cosmetic_id(cosmetic_id: int) -> dict:
         with conn.cursor() as cur:
             cur.execute(query, (cosmetic_id,))
             row = cur.fetchone()
-            if row:
-                return json.loads(row[1])
+            result = row[0]
+
+            if isinstance(result, str):
+                return json.loads(result)  # 문자열이면 파싱
+            elif isinstance(result, dict):
+                return result              # 이미 dict면 그대로 반환
             else:
                 return {}
+
     except Exception as e:
         print("상품 조회 오류:", e)
         return False

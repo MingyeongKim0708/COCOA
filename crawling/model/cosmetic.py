@@ -10,7 +10,7 @@ class Cosmetic:
     name: str | None
     option_name: str | None
     producer: str | None
-    category: str | None
+    category: int | str | None
     target_skin: str | None
     reputation1: str | None
     reputation2: str | None

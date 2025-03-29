@@ -4,14 +4,16 @@ from datetime import datetime
 from model.cosmetic import Cosmetic
 
 
-def insert_cosmetic_from_fields(oliveyoung_id: str, product_name: str, option_name: str,
-                                product_producer: str, product_category: str, reputations: list, review_amount: int, option_id: int = 1) -> int:
+def insert_old_cosmetic_from_fields(oliveyoung_id: str, product_name: str, option_name: str,
+                                    product_producer: str, product_category: str, reputations: list, review_amount: int, option_id: int = 1) -> int:
     # 화장품 정보를 삽입하는 함수 (삽입된 화장품의 cosmetic_id 반환)
     query = """
     INSERT INTO cosmetics (oliveyoung_id, option_id, name, option_name, producer, category, 
                            reputation1, reputation2, reputation3, reputation4, 
                            created_by, created_at, updated_by, updated_at, oliveyoung_review_amount)
-    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    VALUES (%s, %s, %s, %s, %s, %s, 
+            %s, %s, %s, %s,
+            %s, %s, %s, %s, %s)
     RETURNING cosmetic_id;
     """
 
@@ -39,11 +41,14 @@ def insert_cosmetic_from_fields(oliveyoung_id: str, product_name: str, option_na
 
 def insert_cosmetic_from_object(cosmetic: Cosmetic):
     query = """
-    INSERT INTO cosmetics (oliveyoung_id, option_id, name, option_name, producer, category, 
+    INSERT INTO cosmetics (oliveyoung_id, option_id, name, option_name, brand, category_id, 
                                 reputation1, reputation2, reputation3, reputation4,
                                 image_url1, image_url2, image_url3,
                                 created_by, created_at, updated_by, updated_at, oliveyoung_review_amount)
-    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    VALUES (%s, %s, %s, %s, %s, %s, 
+            %s, %s, %s, %s,
+            %s, %s, %s,
+            %s, %s, %s, %s, %s)
     RETURNING cosmetic_id;
     """
 
@@ -57,8 +62,8 @@ def insert_cosmetic_from_object(cosmetic: Cosmetic):
         with conn.cursor() as cur:
             cur.execute(query, (cosmetic.oliveyoung_id, cosmetic.option_id, cosmetic.name,
                                 cosmetic.option_name, cosmetic.producer, cosmetic.category,
-                                cosmetic.reputation1, cosmetic.reputation2, cosmetic.reputation3,
-                                cosmetic.reputation4, cosmetic.image_url1, cosmetic.image_url2, cosmetic.image_url3,
+                                cosmetic.reputation1, cosmetic.reputation2, cosmetic.reputation3, cosmetic.reputation4,
+                                cosmetic.image_url1, cosmetic.image_url2, cosmetic.image_url3,
                                 user, now, user, now, cosmetic.oliveyoung_review_amount))
             cosmetic_id = cur.fetchone()[0]
         return cosmetic_id
@@ -177,7 +182,6 @@ def get_cosmetic_by_oliveyoung_id_and_opt_no(oliveyoung_id, opt_no) -> Cosmetic:
         with conn.cursor() as cur:
             cur.execute(query, (oliveyoung_id, opt_no))
             row = cur.fetchone()
-            print(row)
             if row:
                 return Cosmetic(*row)
             else:
