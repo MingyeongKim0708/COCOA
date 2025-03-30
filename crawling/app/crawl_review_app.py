@@ -11,6 +11,6 @@ oliveyoung_ids = get_all_distinct_parent_cosmetics()
 
 
 # 분할해서 크롤링 합시다 8864 개 추정 1310개 정도씩 하면 될 듯듯
-for i in range(4, 1000):
-    logger.info("index %s", i)
+for i in range(8801, 8865):
+    logger.info("index %s oliveyoung_id %s", i, oliveyoung_ids[i])
     review_string = crawl_reviews(oliveyoung_ids[i])

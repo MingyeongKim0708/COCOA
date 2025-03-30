@@ -130,7 +130,7 @@ def crawl_one_cosmetic_review(cosmetic: Cosmetic,  soup: BeautifulSoup, driver: 
     # 리뷰가 10페이지가 넘어갈 때
     while has_next_page(soup):
         reviews.extend(collect_reviews_from_page(soup))
-        for i in range(2, 10):
+        for i in range(2, 11):
             if not click_review_page(driver, page_block * 10 + i):
                 break
             soup = BeautifulSoup(driver.page_source, "html.parser")
@@ -152,7 +152,7 @@ def crawl_one_cosmetic_review(cosmetic: Cosmetic,  soup: BeautifulSoup, driver: 
         #     logger.info(response)
         #     review_strings = []
 
-    for i in range(page_block * 10 + 2, page_block * 10 + 10):
+    for i in range(page_block * 10 + 2, page_block * 10 + 12):
         reviews.extend(collect_reviews_from_page(soup))
         if not click_review_page(driver, i):
             break
@@ -205,4 +205,4 @@ def collect_reviews_from_page(soup: BeautifulSoup):
     return [item.select_one("div.txt_inner").get_text(strip=True) for item in review_list if item.select_one("div.txt_inner")]
 
 
-# logger.info(crawl_reviews("A000000219657"))
+# logger.info(crawl_reviews("A000000207459"))
