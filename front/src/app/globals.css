@@ -1,30 +1,100 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --base-width: 39rem; /* 624 px */
+  --top-header-width: 37.75rem; /* 604px */
+  --top-header-height: 3.4375rem; /* 55px */
+  --bottom-nav-height: 3.75rem; /* 60px */
+
+  /* 메인 색상 */
+  --color-black: #000;
+  --color-white: #fff;
+
+  /* 빨강 계열 */
+  --color-red1: #c1121f;
+  --color-red2: #ff4848;
+
+  /* 파랑 계열 */
+  --color-blue1: #0062ff;
+  --color-blue2: #605dec;
+
+  /* 회색 계열 */
+  --color-gray1: #3d3d3d;
+  --color-gray2: #8f8f8f;
+  --color-gray3: #c3c3c3;
+  --color-gray4: #cfced3;
+  --color-gray5: #f3f3f3;
+
+  /* 핑크 계열 */
+  --color-pink1: #ff837a;
+  --color-pink2: #fa9ba3;
+  --color-pink3: #f3c5bb;
+  --color-pink4: #fae9e6;
+
+  /* 브라운 계열 */
+  --color-brown1: #8b6459;
+  --color-brown2: #9f8982;
+  --color-brown3: #cdbab4;
+  --color-brown4: #eae2df;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* 전역 레이아웃용 wrapper 클래스 */
+.app-container {
+  max-width: 39rem; /* 약 624px */
+  margin: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  background-color: var(--color-white);
+  color: var(--color-gray1);
+  font-size: 1rem;
+  line-height: 1.3rem;
+  -ms-overflow-style: none; /* 인터넷 익스플로러 */
+  scrollbar-width: none; /* 파이어폭스 */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+html {
+  height: 100%;
+  background-color: var(--color-pink4);
+  box-sizing: border-box;
+  overflow: auto;
+  -ms-overflow-style: none; /* IE & Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+html::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  font-family: var(--font-freesentation), sans-serif;
+  overflow: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-.id {
-  color: aqua;
+body::-webkit-scrollbar {
+  display: none;
 }
+
+a,
+button {
+  cursor: pointer;
+}
+
+/* 디버깅용  */
+/* * {
+  outline: 1px solid red;
+} */
