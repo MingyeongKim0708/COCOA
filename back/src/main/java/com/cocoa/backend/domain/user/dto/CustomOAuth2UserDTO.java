@@ -26,6 +26,6 @@ public class CustomOAuth2UserDTO implements OAuth2User {
 
     @Override
     public String getName() {
-        return "";
+        return providerId;
     }
 }

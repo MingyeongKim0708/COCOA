@@ -20,7 +20,7 @@ public class User {
     @Column(name = "provider_id", nullable = false)
     private String providerId;
 
-    @Column(name = "nickname", nullable = false)
+    @Column(name = "nickname")
     private String nickname;
 
     @Column(name = "birth_year")
@@ -33,20 +33,20 @@ public class User {
     private Short birthDay;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "gender", length = 10, columnDefinition = "gender", nullable = false)
+    @Column(name = "gender", length = 10, columnDefinition = "gender")
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private Gender gender;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "skin_type", length = 20, columnDefinition = "skin_type", nullable = false)
+    @Column(name = "skin_type", length = 20, columnDefinition = "skin_type")
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private SkinType skinType;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "skin_tone", length = 20, columnDefinition = "skin_tone", nullable = false)
+    @Column(name = "skin_tone", length = 20, columnDefinition = "skin_tone")
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private SkinTone skinTone;
 
-    @Column(name = "key_words", columnDefinition = "jsonb")
-    private String keyWords;
+//    @Column(name = "key_words", columnDefinition = "jsonb")
+//    private String keyWords;
 }

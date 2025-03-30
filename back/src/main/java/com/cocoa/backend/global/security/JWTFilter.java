@@ -28,10 +28,12 @@ public class JWTFilter extends OncePerRequestFilter {
         // 쿠키에서 토큰 찾기
         String authorization = null;
         Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            log.info("cookie name : {}", cookie.getName());
-            if (cookie.getName().equals("Authorization")) {
-                authorization = cookie.getValue();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                log.info("cookie name : {}", cookie.getName());
+                if (cookie.getName().equals("Authorization")) {
+                    authorization = cookie.getValue();
+                }
             }
         }
         if (authorization == null) {
