@@ -70,7 +70,7 @@ export default function Home() {
           <ContextMenu
             items={items}
             onSelect={handleSelect}
-            className="absolute right-0 top-full mt-2"
+            onClose={() => setMenuOpen(false)}
           />
         )}
       </div>
