@@ -37,9 +37,10 @@ public class JWTUtil {
     }
 
     // 토큰 생성
-    public String createJwt(String providerId, Long expiredMs) {
+    public String createJwt(String providerId, boolean isNewUser, Long expiredMs) {
         return Jwts.builder()
                 .claim("providerId", providerId)
+                .claim("isNewUser", isNewUser)
                 .issuedAt(new Date(System.currentTimeMillis())) // 생성시간
                 .expiration(new Date(System.currentTimeMillis() + expiredMs)) // 만료시간
                 .signWith(SECRET_KEY)

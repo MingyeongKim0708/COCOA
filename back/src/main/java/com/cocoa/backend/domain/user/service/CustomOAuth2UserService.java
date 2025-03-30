@@ -40,17 +40,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 //            return null;
         }
 
-
         // 리소스 서버에서 발급 받은 정보로 사용자를 특정할 아이디값을 만듦
         String providerId = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId();
         log.info("providerId: {}", providerId);
-        User user = userRepository.findByProviderId(providerId);
-
-        if(user == null) {
-            user = new User();
-            user.setProviderId(providerId);
-            userRepository.save(user);
-        }
+        User user = userRepository.findByProviderId(providerId)
+                .orElseGet(() -> {
+                    User newUser = new User();
+                    newUser.setProviderId(providerId);
+                    return userRepository.save(newUser);
+                });
         log.info("service log1");
 
         CustomOAuth2UserDTO customOAuth2UserDTO = new CustomOAuth2UserDTO();
