@@ -5,13 +5,11 @@ const OptionButton = ({
   label,
   selected,
   onSelect,
-  className,
 }: {
   id: string;
   label: string;
   selected: boolean;
   onSelect: (id: string) => void;
-  className?: string;
 }) => {
   return (
     <div
