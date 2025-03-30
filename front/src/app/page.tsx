@@ -89,8 +89,8 @@ export default function Home() {
       <B4 children="B4" className="text-pink3" />
       <B5 children="B5" className="text-pink4" />
       <B6 children="B6" className="text-gray2" />
-      <Tag children="tag-pink" radius="custom" className="bg-pink4" />
-      <Tag children="tag-gray" radius="custom" />
+      <Tag children="tag-pink" className="bg-pink4" />
+      <Tag children="tag-gray" />
 
       <Button
         children="button"

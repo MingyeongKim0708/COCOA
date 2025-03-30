@@ -13,7 +13,7 @@ const Tag = ({
 
   return (
     <span
-      className={`rounded-${radius} whitespace-nowrap ${hasBgInClassName ? "" : "bg-gray5"} px-2 py-[0.125rem] font-body ${className}`}
+      className={`rounded-${radius ? radius : "custom"} whitespace-nowrap ${hasBgInClassName ? "" : "bg-gray5"} px-2 py-[0.125rem] font-body ${className}`}
     >
       {children}
     </span>
