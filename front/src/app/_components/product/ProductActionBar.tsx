@@ -19,7 +19,7 @@ const ProductActionBar = ({
     alert("비교함에 담았습니다!");
   };
 
-  const toggleLike = () => {
+  const haddleToggleLike = () => {
     if (isLiked) {
       setIsLiked(false);
       setCount((prev) => prev - 1);
