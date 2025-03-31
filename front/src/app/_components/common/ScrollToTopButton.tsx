@@ -12,9 +12,9 @@ const ScrollToTopButton = () => {
   return (
     <button
       onClick={scrollToTop}
-      className={cn(
-        "fixed bottom-[4.5rem] right-4 z-50 rounded-full bg-pink2 p-2 text-white shadow-md",
-      )}
+      className={
+        "fixed bottom-[4.5rem] right-4 z-50 rounded-full bg-pink2 p-2 text-white shadow-md"
+      }
       aria-label="스크롤 최상단으로 이동"
     >
       <ChevronUp size={24} />
