@@ -85,6 +85,11 @@ const config: Config = {
       maxWidth: {
         base: "var(--base-width)",
       },
+
+      // 모서리 둥글기
+      borderRadius: {
+        custom: "0.625rem", //10px
+      },
     },
   },
   plugins: [],
