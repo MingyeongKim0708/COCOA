@@ -1,17 +1,15 @@
-package com.cocoa.backend.domain.catogory.service;
+package com.cocoa.backend.domain.cosmetic.service;
 
 // 프론트로 보낼 DTO
-
-import com.cocoa.backend.domain.catogory.dto.response.CategoryResponseDto;
+import com.cocoa.backend.domain.cosmetic.dto.response.CategoryResponseDto;
 
 // JPA 엔티티(DB에서 가져온 데이터)
-import com.cocoa.backend.domain.catogory.entity.Category;
+import com.cocoa.backend.domain.cosmetic.entity.Category;
 
 // DB와 통신하는 역할
-import com.cocoa.backend.domain.catogory.repository.CategoryRepository;
+import com.cocoa.backend.domain.cosmetic.repository.CategoryRepository;
 
 // 이 클래스가 서비스 계층임을 나타냄. Spring이 자동으로 Bean 등록해줌
-import com.cocoa.backend.global.exception.CustomException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

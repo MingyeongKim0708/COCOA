@@ -1,4 +1,4 @@
-package com.cocoa.backend.domain.catogory.dto.response;
+package com.cocoa.backend.domain.cosmetic.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

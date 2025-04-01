@@ -1,4 +1,4 @@
-package com.cocoa.backend.domain.catogory.entity;
+package com.cocoa.backend.domain.cosmetic.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
