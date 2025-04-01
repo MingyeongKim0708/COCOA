@@ -1,27 +1,35 @@
+import { useRouter } from "next/navigation";
 import ProductActionBar from "./ProductActionBar";
 import ProductTags from "./ProductTags";
+import type { Cosmetic } from "@/types/cosmetic";
 
-interface ProductCardProps {
-  imageUrl: string;
-  brand: string;
-  name: string;
-  tags: string[];
-  likeCount: number;
-  isLiked: boolean;
-}
+type ProductCardProps = Pick<
+  Cosmetic,
+  "id" | "name" | "brand" | "images" | "keywords" | "isLiked" | "likeCount"
+>;
 
 const ProductCard = ({
-  imageUrl,
-  brand,
+  id,
   name,
-  tags,
-  likeCount,
+  brand,
+  images,
+  keywords,
   isLiked,
+  likeCount,
 }: ProductCardProps) => {
+  const router = useRouter();
+  const goToDetail = () => {
+    router.push(`/product/${id}`);
+  };
+
   return (
-    <div className="w-full max-w-[160px] bg-white pb-4">
+    <div
+      className="w-full max-w-[160px] bg-white pb-4"
+      onClick={goToDetail}
+      role="button"
+    >
       <img
-        src={imageUrl}
+        src={images[0]}
         alt={name}
         className="mx-auto h-[160px] w-[160px] rounded-xl object-cover"
       />
@@ -35,7 +43,7 @@ const ProductCard = ({
         </p>
 
         <div className="mt-2">
-          <ProductTags tags={tags} />
+          <ProductTags tags={keywords.map((kw) => Object.keys(kw)[0])} />
         </div>
 
         <div className="mt-2">
