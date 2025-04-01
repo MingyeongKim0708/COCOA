@@ -1,13 +1,32 @@
+"use client";
+
+import React from "react";
+
+const API_BASE_URL = "http://localhost:8080";
+
 export default function Home() {
+  const kakaoLogin = () => {
+    window.location.href = `${API_BASE_URL}/oauth2/authorization/kakao`;
+  };
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center text-center">
       <div className="font-cute text-desc">
         오직 당신을 위한 화장품을 찾아주는
       </div>
       <div className="font-cocoa text-logo text-pink1">COCOA</div>
+
+      <button
+        onClick={kakaoLogin}
+        className="mt-4 rounded bg-gray-300 px-6 py-3 font-bold text-black hover:bg-yellow-400"
+      >
+        카카오 로그인
+      </button>
+
       <div className="border border-brown3 p-2 text-head1 text-brown2">
         <a href="./main">main page 이동</a>
       </div>
+
       <h1 className="text-head0 font-head">head0 스타일</h1>
       <h1 className="text-head1 font-head text-red1">head1 스타일</h1>
       <h2 className="text-head2 font-head text-red2">head2 스타일</h2>
