@@ -28,7 +28,7 @@ export default function SignUpPage() {
     };
 
     try {
-      const response = await fetch("${baseUrl}/signup", {
+      const response = await fetch(`${baseUrl}/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
