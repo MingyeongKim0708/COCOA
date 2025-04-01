@@ -6,7 +6,6 @@ import java.util.Map;
 
 @Slf4j
 public class KakaoResponse implements OAuth2Response {
-    // 데이터 받을 맵 형식
     private final Map<String, Object> attribute;
 
     public KakaoResponse(Map<String, Object> attribute) {

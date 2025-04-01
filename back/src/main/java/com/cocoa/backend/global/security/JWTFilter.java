@@ -25,6 +25,15 @@ public class JWTFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        log.info("doFilterInternal1");
+
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        log.info("doFilterInternal2");
+
         // 쿠키에서 토큰 찾기
         String authorization = null;
         Cookie[] cookies = request.getCookies();
@@ -50,10 +59,12 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
         String providerId = jwtUtil.getProviderId(token);
+        Long userId = jwtUtil.getUserId(token);
 
         // 회원 정보 객체 생성
         CustomOAuth2UserDTO customOAuth2UserDTO = new CustomOAuth2UserDTO();
         customOAuth2UserDTO.setProviderId(providerId);
+        customOAuth2UserDTO.setUserId(userId);
         // 스프링 시큐리티 인증 토큰 생성
         Authentication authToken = new UsernamePasswordAuthenticationToken(customOAuth2UserDTO, null, customOAuth2UserDTO.getAuthorities());
         // 세션에 사용자 등록

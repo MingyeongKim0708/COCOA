@@ -6,12 +6,14 @@ import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import java.time.LocalDate;
+import java.util.Map;
+
 @Entity
 @Getter
 @Setter
 @Table(name = "users")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -23,14 +25,8 @@ public class User {
     @Column(name = "nickname")
     private String nickname;
 
-    @Column(name = "birth_year")
-    private Short birthYear;
-
-    @Column(name = "birth_month")
-    private Short birthMonth;
-
-    @Column(name = "birth_day")
-    private Short birthDay;
+    @Column(name = "birth_date")
+    private LocalDate birthDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gender", length = 10, columnDefinition = "gender")
@@ -47,6 +43,7 @@ public class User {
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private SkinTone skinTone;
 
-//    @Column(name = "key_words", columnDefinition = "jsonb")
-//    private String keyWords;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "user_id")
+    private UserKeywords userKeywords;
 }

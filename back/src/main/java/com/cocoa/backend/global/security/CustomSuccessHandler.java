@@ -40,29 +40,27 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         log.info("handler success method");
         CustomOAuth2UserDTO customUserDetails = (CustomOAuth2UserDTO) authentication.getPrincipal();
         String providerId = customUserDetails.getProviderId();
+        Long userId = customUserDetails.getUserId();
 
-        User user = userRepository.findByProviderId(providerId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("사용자 없음"));
-        boolean isNewUser = (user.getNickname() == null);
 
-        String token = jwtUtil.createJwt(providerId, isNewUser, ACCESSTOKEN_EXPIRES_IN);
-
+        String token = jwtUtil.createJwt(user.getUserId(), providerId, ACCESSTOKEN_EXPIRES_IN);
         response.addCookie(createCookie("Authorization", token));
         log.info("created jwt accesstoken : {}", token);
-//        response.sendRedirect(CLIENT_URL);
 
-        // 프론트에서 처리할 수 있도록 JSON 응답
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(
-                "{\"isNewUser\": " + isNewUser + "}"
-        );
+        if (user.getNickname() == null) {
+            response.sendRedirect(CLIENT_URL + "/sign-up"); // 회원가입
+        } else {
+            response.sendRedirect(CLIENT_URL + "/main"); // 로그인
+        }
     }
 
     private Cookie createCookie(String key, String value) {
         Cookie cookie = new Cookie(key, value);
+        cookie.setAttribute("SameSite", "None");
         cookie.setMaxAge(60*60*60);
-//        cookie.setSecure(true);
+        cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
 

@@ -13,6 +13,7 @@ import java.util.Map;
 @Setter
 public class CustomOAuth2UserDTO implements OAuth2User {
     private String providerId;
+    private Long userId;
 
     @Override
     public Map<String, Object> getAttributes() {

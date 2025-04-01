@@ -31,18 +31,22 @@ public class JWTUtil {
     public String getProviderId(String token) {
         return validToken(token).get("providerId", String.class);
     }
+    // - userId 확인
+    public Long getUserId(String token) {
+        return validToken(token).get("userId", Long.class);
+    }
     // - 만료일 확인
     public Boolean isExpired(String token) {
         return validToken(token).getExpiration().before(new Date());
     }
 
     // 토큰 생성
-    public String createJwt(String providerId, boolean isNewUser, Long expiredMs) {
+    public String createJwt(Long userId, String providerId, Long expiredMs) {
         return Jwts.builder()
+                .claim("userId", userId)
                 .claim("providerId", providerId)
-                .claim("isNewUser", isNewUser)
-                .issuedAt(new Date(System.currentTimeMillis())) // 생성시간
-                .expiration(new Date(System.currentTimeMillis() + expiredMs)) // 만료시간
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + expiredMs))
                 .signWith(SECRET_KEY)
                 .compact();
     }

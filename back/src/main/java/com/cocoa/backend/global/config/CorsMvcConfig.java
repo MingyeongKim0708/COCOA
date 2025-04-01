@@ -11,10 +11,13 @@ public class CorsMvcConfig implements WebMvcConfigurer {
     private String CLIENT_URL;
 
     @Override
-    public void addCorsMappings(CorsRegistry corsRegistry) {
-
-        corsRegistry.addMapping("/**")
-                .exposedHeaders("Set-Cookie")
-                .allowedOrigins(CLIENT_URL);
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins(CLIENT_URL)
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
+                .allowedHeaders("*")
+                .exposedHeaders("Authorization", "Set-Cookie")
+                .allowCredentials(true)
+                .maxAge(3600);
     }
 }

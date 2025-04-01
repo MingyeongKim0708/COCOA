@@ -27,7 +27,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         log.info("loadUser: {}", oAuth2User);
 
-        // 어느 소셜 서비스에서 온 값인지 확인하기 위한 registrationId
+        // registrationId - 소셜 서비스 확인
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         log.info("registrationId: {}", registrationId);
 
@@ -37,11 +37,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
         else {
             throw new OAuth2AuthenticationException("Unsupported provider: " + registrationId);
-//            return null;
         }
 
-        // 리소스 서버에서 발급 받은 정보로 사용자를 특정할 아이디값을 만듦
-        String providerId = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId();
+        // providerId = kakao + 회원번호
+        String providerId = oAuth2Response.getProvider()+oAuth2Response.getProviderId();
         log.info("providerId: {}", providerId);
         User user = userRepository.findByProviderId(providerId)
                 .orElseGet(() -> {
@@ -53,6 +52,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         CustomOAuth2UserDTO customOAuth2UserDTO = new CustomOAuth2UserDTO();
         customOAuth2UserDTO.setProviderId(providerId);
+        customOAuth2UserDTO.setUserId(user.getUserId());
         log.info("service log2");
 
         return customOAuth2UserDTO;

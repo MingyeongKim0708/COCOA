@@ -15,7 +15,7 @@ import java.io.IOException;
 @Component
 @Order(1)
 public class OAuth2CallbackLoggingFilter extends OncePerRequestFilter {
-//     인가코드 확인용 필터
+    // 인가코드 확인용 필터
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
