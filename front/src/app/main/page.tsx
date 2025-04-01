@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import BottomNav from "../_components/common/BottomNav";
 
+const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 type UserResponse = {
   userId: number;
   nickname: string;
@@ -18,7 +20,7 @@ export default function MainPage() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const response = await fetch(`http://localhost:8080/users`, {
+      const response = await fetch(`${baseUrl}/users`, {
         credentials: "include",
       });
 

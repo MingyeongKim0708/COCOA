@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 export default function SignUpPage() {
   const router = useRouter();
 
@@ -26,12 +28,12 @@ export default function SignUpPage() {
     };
 
     try {
-      const response = await fetch("http://localhost:8080/signup", {
+      const response = await fetch("${baseUrl}/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // 쿠키 자동 포함
+        credentials: "include",
         body: JSON.stringify(payload),
       });
 

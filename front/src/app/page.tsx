@@ -2,11 +2,11 @@
 
 import React from "react";
 
-const API_BASE_URL = "http://localhost:8080";
+const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export default function Home() {
-  const kakaoLogin = () => {
-    window.location.href = `${API_BASE_URL}/oauth2/authorization/kakao`;
+  const handleKakaoLogin = () => {
+    window.location.href = `${baseUrl}/oauth2/authorization/kakao`;
   };
 
   return (
@@ -17,7 +17,7 @@ export default function Home() {
       <div className="font-cocoa text-logo text-pink1">COCOA</div>
 
       <button
-        onClick={kakaoLogin}
+        onClick={handleKakaoLogin}
         className="mt-4 rounded bg-gray-300 px-6 py-3 font-bold text-black hover:bg-yellow-400"
       >
         카카오 로그인
