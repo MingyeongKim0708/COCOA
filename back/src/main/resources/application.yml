@@ -1,3 +1,5 @@
+server:
+  address: 0.0.0.0
 client:
   url: ${CLIENT_BASE_URL}
 spring:
