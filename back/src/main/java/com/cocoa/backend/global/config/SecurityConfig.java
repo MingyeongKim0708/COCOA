@@ -53,8 +53,8 @@ public class SecurityConfig {
                         .successHandler(customSuccessHandler)
                 )
                 .authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/").permitAll()
-                .anyRequest().authenticated())
+                        .requestMatchers("/", "/oauth2/**", "/login/**").permitAll()
+                        .anyRequest().authenticated())
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
