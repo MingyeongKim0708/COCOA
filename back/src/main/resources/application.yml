@@ -13,6 +13,9 @@ spring:
     database: postgresql
     hibernate:
       ddl-auto: update
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
 springdoc:
   api-docs:
     path: /api-docs
