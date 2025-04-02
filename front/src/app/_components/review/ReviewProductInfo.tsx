@@ -1,0 +1,37 @@
+import type { CosmeticInfo } from "@/types/cosmeticInfo";
+import Tag from "../common/Tag";
+import B4 from "../common/B4";
+import T5 from "../common/T5";
+
+interface ReviewProductInfoProps {
+  cosmeticInfo: CosmeticInfo | null;
+}
+
+const ReviewProductInfo = ({ cosmeticInfo }: ReviewProductInfoProps) => {
+  if (cosmeticInfo == null) return;
+  return (
+    <div className="flex gap-3">
+      <img
+        src={cosmeticInfo.imageUrl}
+        alt="profile image"
+        className="h-20 w-20 flex-shrink-0 rounded-lg object-cover"
+      />
+      <div className="flex flex-col justify-between">
+        <T5 children={cosmeticInfo.brand}></T5>
+        <B4
+          children={cosmeticInfo.name}
+          className="line-clamp-2 text-ellipsis break-words"
+        ></B4>
+        <div className="flex flex-row gap-x-3 overflow-hidden">
+          {Object.keys(cosmeticInfo.keywords)
+            .slice(0, 3)
+            .map((key) => (
+              <Tag children={key}></Tag>
+            ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ReviewProductInfo;
