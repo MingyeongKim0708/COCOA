@@ -83,6 +83,8 @@ body {
   overflow: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
+  touch-action: manipulation; /* 더블탭 줌 방지 */
+  overscroll-behavior: none;
 }
 
 body::-webkit-scrollbar {
