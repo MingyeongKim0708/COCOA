@@ -3,5 +3,5 @@ export interface CosmeticInfo {
   name: string;
   brand: string;
   imageUrl: string;
-  keywords: Record<string, string>;
+  keywords: Record<string, number>;
 }
