@@ -39,14 +39,21 @@ spring:
     accesstoken-expires-in: ${SPRING_ACCESSTOKEN_EXPIRES_IN}
 logging:
   level:
+    root: info
+    org.springframework: warn
     org.springframework.security: DEBUG
     org.springframework.security.oauth2: DEBUG
     org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient: DEBUG
     org.springframework.web.reactive.function.client: DEBUG
     reactor.netty.http.client: DEBUG
+    com.cocoa.backend: DEBUG
 reactor:
   netty:
     http:
       client:
         wiretap: true
-
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html

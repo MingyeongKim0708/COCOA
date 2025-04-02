@@ -22,6 +22,9 @@ public class User {
     @Column(name = "provider_id", nullable = false)
     private String providerId;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @Column(name = "nickname")
     private String nickname;
 

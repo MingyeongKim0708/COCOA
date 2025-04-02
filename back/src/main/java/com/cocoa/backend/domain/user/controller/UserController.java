@@ -42,6 +42,7 @@ public class UserController {
                 .orElseThrow(() -> new RuntimeException("이미 등록된 사용자거나 잘못된 요청입니다."));
 
         // 사용자 정보 업데이트
+//        user.setImageUrl("default.png");
         user.setNickname(requestDTO.getNickname());
         user.setBirthDate(requestDTO.getBirthDate());
         user.setGender(requestDTO.getGender());

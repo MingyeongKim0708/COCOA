@@ -52,10 +52,16 @@ public class JWTFilter extends OncePerRequestFilter {
         }
         String token = authorization;
 
+        try {
+            jwtUtil.validToken(token);
+        } catch (Exception e) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "accessToken이 유효하지 않습니다");
+            return;
+        }
+
         if (jwtUtil.isExpired(token)) {
             log.info("token expired");
             filterChain.doFilter(request, response);
-
             return;
         }
         String providerId = jwtUtil.getProviderId(token);

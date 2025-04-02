@@ -19,7 +19,7 @@ const ProductActionBar = ({
     alert("비교함에 담았습니다!");
   };
 
-  const toggleLike = () => {
+  const haddleToggleLike = () => {
     if (isLiked) {
       setIsLiked(false);
       setCount((prev) => prev - 1);
@@ -42,7 +42,7 @@ const ProductActionBar = ({
 
       <button
         type="button"
-        onClick={toggleLike}
+        onClick={haddleToggleLike}
         className="flex cursor-pointer items-center gap-1"
       >
         <Heart size={16} fill={isLiked ? "#ff4848" : "none"} stroke="#ff4848" />
