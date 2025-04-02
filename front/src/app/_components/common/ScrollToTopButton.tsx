@@ -1,7 +1,6 @@
 "use client";
 
 import { ChevronUp } from "lucide-react";
-import { cn } from "@/utils/cn";
 
 const ScrollToTopButton = () => {
   const scrollToTop = () => {
