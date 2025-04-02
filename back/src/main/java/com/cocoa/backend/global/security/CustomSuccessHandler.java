@@ -3,6 +3,7 @@ package com.cocoa.backend.global.security;
 import com.cocoa.backend.domain.user.dto.CustomOAuth2UserDTO;
 import com.cocoa.backend.domain.user.entity.User;
 import com.cocoa.backend.domain.user.repository.UserRepository;
+import com.cocoa.backend.global.util.CookieUtil;
 import com.cocoa.backend.global.util.JWTUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -27,6 +28,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     @Value("${spring.jwt.accesstoken-expires-in}")
     private Long ACCESSTOKEN_EXPIRES_IN;
 
+    @Value("${spring.jwt.refreshtoken-expires-in}")
+    private Long REFRESHTOKEN_EXPIRES_IN;
+
     @Value("${client.url}")
     private String CLIENT_URL;
 
@@ -45,25 +49,15 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("사용자 없음"));
 
-        String token = jwtUtil.createJwt(user.getUserId(), providerId, ACCESSTOKEN_EXPIRES_IN);
-        response.addCookie(createCookie("Authorization", token));
-        log.info("created jwt accesstoken : {}", token);
+        String accessToken = jwtUtil.createJwt(user.getUserId(), providerId, ACCESSTOKEN_EXPIRES_IN);
+        String refreshToken = jwtUtil.createJwt(userId, providerId, REFRESHTOKEN_EXPIRES_IN);
+        response.addCookie(CookieUtil.createCookie("Authorization", accessToken, (int)(ACCESSTOKEN_EXPIRES_IN / 1000)));
+        response.addCookie(CookieUtil.createCookie("RefreshToken", refreshToken, (int)(REFRESHTOKEN_EXPIRES_IN / 1000)));
 
         if (user.getNickname() == null) {
             response.sendRedirect(CLIENT_URL + "/sign-up"); // 회원가입
         } else {
             response.sendRedirect(CLIENT_URL + "/main"); // 로그인
         }
-    }
-
-    private Cookie createCookie(String key, String value) {
-        Cookie cookie = new Cookie(key, value);
-        cookie.setAttribute("SameSite", "None");
-        cookie.setMaxAge(60*60*60);
-        cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-
-        return cookie;
     }
 }
