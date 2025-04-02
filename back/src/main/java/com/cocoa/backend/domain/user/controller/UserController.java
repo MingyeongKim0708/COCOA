@@ -6,8 +6,10 @@ import com.cocoa.backend.domain.user.dto.response.UserTestResponseDTO;
 import com.cocoa.backend.domain.user.entity.User;
 import com.cocoa.backend.domain.user.repository.UserRepository;
 import com.cocoa.backend.domain.user.service.UserService;
+import com.cocoa.backend.global.response.ApiResponse;
 import com.cocoa.backend.global.util.JWTUtil;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,34 +22,34 @@ import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
+@RequestMapping("/user")
 @RestController
 public class UserController {
     private final UserService userService;
-    private final JWTUtil jwtUtil;
 
-    @Value("${spring.jwt.accesstoken-expires-in}")
-    private Long ACCESSTOKEN_EXPIRES_IN;
-
-    public UserController( UserService userService, JWTUtil jwtUtil) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody SignupRequestDTO requestDTO, Authentication authentication, HttpServletResponse response) {
-        CustomOAuth2UserDTO userDetails = (CustomOAuth2UserDTO) authentication.getPrincipal();
-
+    public ResponseEntity<ApiResponse<Void>> signup(@RequestBody SignupRequestDTO requestDTO, Authentication authentication, HttpServletResponse response) {
         log.info("/signup api 요청");
-
+        CustomOAuth2UserDTO userDetails = (CustomOAuth2UserDTO) authentication.getPrincipal();
         userService.signup(requestDTO, userDetails.getUserId(), userDetails.getProviderId(), response);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(null));
+    }
+
+    @PostMapping("/token-refresh")
+    public ResponseEntity<ApiResponse<Void>> refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        userService.tokenRefresh(request, response);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(null));
     }
 
     // 테스트
-    @GetMapping("/users")
-    public ResponseEntity<?> getUser(Authentication authentication) {
+    @GetMapping
+    public ResponseEntity<ApiResponse<UserTestResponseDTO>> getUser(Authentication authentication) {
         CustomOAuth2UserDTO userDetails = (CustomOAuth2UserDTO) authentication.getPrincipal();
         UserTestResponseDTO userInfo = userService.getUserInfo(userDetails.getUserId());
-        return ResponseEntity.status(HttpStatus.OK).body(userInfo);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(userInfo));
     }
 }

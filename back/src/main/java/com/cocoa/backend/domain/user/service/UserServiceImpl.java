@@ -3,11 +3,14 @@ package com.cocoa.backend.domain.user.service;
 import com.cocoa.backend.domain.user.dto.reqeust.SignupRequestDTO;
 import com.cocoa.backend.domain.user.dto.response.UserTestResponseDTO;
 import com.cocoa.backend.domain.user.entity.User;
+import com.cocoa.backend.domain.user.errorcode.TokenErrorCode;
 import com.cocoa.backend.domain.user.repository.UserRepository;
+import com.cocoa.backend.global.exception.CustomException;
 import com.cocoa.backend.global.redis.RedisService;
 import com.cocoa.backend.global.util.CookieUtil;
 import com.cocoa.backend.global.util.JWTUtil;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -57,6 +60,47 @@ public class UserServiceImpl implements UserService {
         // 쿠키 전송
         response.addCookie(CookieUtil.createCookie("Authorization", accessToken, (int)(ACCESSTOKEN_EXPIRES_IN / 1000)));
         response.addCookie(CookieUtil.createCookie("RefreshToken", refreshToken, (int)(REFRESHTOKEN_EXPIRES_IN / 1000)));
+    }
+
+    @Override
+    public void tokenRefresh(HttpServletRequest request, HttpServletResponse response) {
+        String refreshToken = null;
+
+        // 1. 쿠키에서 RefreshToken 추출
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("RefreshToken".equals(cookie.getName())) {
+                    refreshToken = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        if (refreshToken == null) {
+            throw new CustomException(TokenErrorCode.REFRESH_TOKEN_NOT_FOUND);
+        }
+
+        // 2. 만료 여부 확인
+        if (jwtUtil.isExpired(refreshToken)) {
+            throw new CustomException(TokenErrorCode.REFRESH_TOKEN_EXPIRED);
+        }
+
+        // 3. 사용자 정보 추출
+        Long userId = jwtUtil.getUserId(refreshToken);
+        String providerId = jwtUtil.getProviderId(refreshToken);
+
+        // 4. Redis에서 저장된 RefreshToken과 비교
+        String storedToken = redisService.getRefreshToken(userId);
+        if (storedToken == null || !storedToken.equals(refreshToken)) {
+            throw new CustomException(TokenErrorCode.REFRESH_TOKEN_MISMATCH);
+        }
+
+        // 5. AccessToken 재발급
+        String newAccessToken = jwtUtil.createJwt(userId, providerId, ACCESSTOKEN_EXPIRES_IN);
+
+        // 6. 쿠키로 전송
+        Cookie newAccessCookie = CookieUtil.createCookie("Authorization", newAccessToken, (int)(ACCESSTOKEN_EXPIRES_IN / 1000));
+        response.addCookie(newAccessCookie);
     }
 
     @Override

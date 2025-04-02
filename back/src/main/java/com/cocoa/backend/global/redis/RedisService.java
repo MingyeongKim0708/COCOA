@@ -5,6 +5,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +23,9 @@ public class RedisService {
 	}
 	private String getHelpfulKey(long userId) {
 		return "user:" + userId + ":helpful";
+	}
+	private String getRefreshTokenKey(Long userId) {
+		return "user:" + userId + ":refreshToken";
 	}
 
 	// 관심 리뷰 추가
@@ -42,5 +46,20 @@ public class RedisService {
 	// 관심 여부 확인
 	public boolean isHelpfulForMe(long userId, long reviewId) {
 		return redisTemplate.opsForSet().isMember(getHelpfulKey(userId), String.valueOf(reviewId));
+	}
+
+	// refreshToken 등록
+	public void saveRefreshToken(Long userId, String refreshToken, long expireTimeMs) {
+		redisTemplate.opsForValue().set(getRefreshTokenKey(userId), refreshToken, expireTimeMs, TimeUnit.MILLISECONDS);
+	}
+
+	// refreshToken 조회
+	public String getRefreshToken(Long userId) {
+		return redisTemplate.opsForValue().get(getRefreshTokenKey(userId));
+	}
+
+	// refreshToken 삭제
+	public void deleteRefreshToken(Long userId) {
+		redisTemplate.delete(getRefreshTokenKey(userId));
 	}
 }
