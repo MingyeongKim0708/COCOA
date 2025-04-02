@@ -62,7 +62,15 @@ const ReviewCard = ({ review }: ReviewProps) => {
     <div className="relative flex w-full flex-col gap-y-2 py-2 text-start">
       <ReviewProductInfo cosmeticInfo={review.cosmetic} />
       <ReviewUserInfo user={review.user} />
-      <div>
+      <div className="gap-1 py-1">
+        {review.satisfied ? (
+          <B5 children="이 회원님은 제품에 만족했어요" className="text-pink1" />
+        ) : (
+          <B5
+            children="이 회원님은 제품에 만족하지 않았어요"
+            className="text-gray2"
+          />
+        )}
         <B4 children={review.content} />
       </div>
       <div className="flex justify-between p-2">
