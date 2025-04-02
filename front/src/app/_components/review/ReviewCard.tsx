@@ -6,9 +6,7 @@ import HelpfulButton from "./HelpfulButton";
 import { useState } from "react";
 import ContextMenu from "../common/ContextMenu";
 import { EllipsisVertical } from "lucide-react";
-import B3 from "../common/B3";
 import B4 from "../common/B4";
-import B2 from "../common/B2";
 import B5 from "../common/B5";
 
 interface ReviewProps {
@@ -65,7 +63,7 @@ const ReviewCard = ({ review }: ReviewProps) => {
       <ReviewProductInfo cosmeticInfo={review.cosmetic} />
       <ReviewUserInfo user={review.user} />
       <div>
-        <B4>{review.content}</B4>
+        <B4 children={review.content} />
       </div>
       <div className="flex justify-between p-2">
         <HelpfulButton
@@ -74,7 +72,7 @@ const ReviewCard = ({ review }: ReviewProps) => {
           onClick={() => handleHelpful()}
         />
         <div className="flex items-center justify-between gap-1">
-          <B5 children={review.createdAt} className="text-gray4"></B5>
+          <B5 children={review.createdAt} className="text-gray4" />
           <button onClick={() => setMenuOpen((prev) => !prev)}>
             <EllipsisVertical size={20} />
           </button>

@@ -17,16 +17,16 @@ const ReviewProductInfo = ({ cosmeticInfo }: ReviewProductInfoProps) => {
         className="h-20 w-20 flex-shrink-0 rounded-lg object-cover"
       />
       <div className="flex flex-col justify-between">
-        <T5 children={cosmeticInfo.brand}></T5>
+        <T5 children={cosmeticInfo.brand} />
         <B4
           children={cosmeticInfo.name}
           className="line-clamp-2 text-ellipsis break-words"
-        ></B4>
+        />
         <div className="flex flex-row gap-x-3 overflow-hidden">
           {Object.keys(cosmeticInfo.keywords)
             .slice(0, 3)
             .map((key) => (
-              <Tag children={key}></Tag>
+              <Tag children={key} />
             ))}
         </div>
       </div>

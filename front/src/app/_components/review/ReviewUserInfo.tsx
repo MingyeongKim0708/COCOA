@@ -1,9 +1,6 @@
-"use client";
-
 import { User } from "@/types/user";
 import T3 from "../common/T3";
 import Tag from "../common/Tag";
-import T2 from "../common/T2";
 
 interface ReviewUserInfoProps {
   user: User | null;
@@ -19,12 +16,12 @@ const ReviewUserInfo = ({ user }: ReviewUserInfoProps) => {
         className="h-20 w-20 rounded-full object-cover"
       />
       <div className="flex flex-col justify-around">
-        <T3>{user.nickname}</T3>
+        <T3 children={user.nickname} />
         <div className="flex flex-row gap-x-3">
-          <Tag children={user.ageGroup}></Tag>
-          <Tag children={user.gender}></Tag>
-          <Tag children={user.skinType}></Tag>
-          <Tag children={user.skinTone}></Tag>
+          <Tag children={user.ageGroup} />
+          <Tag children={user.gender} />
+          <Tag children={user.skinType} />
+          <Tag children={user.skinTone} />
         </div>
       </div>
     </div>
