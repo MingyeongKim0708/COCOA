@@ -42,6 +42,8 @@ public class SecurityConfig {
         this.jwtUtil = jwtUtil;
     }
 
+    // 현재 모든 api 요청 허용 .anyRequest().permitAll()
+    // 로그인한 사용자만 접근 허용하려면 .anyRequest().authenticated() 활성화
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -57,7 +59,15 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/", "/api/oauth2/**", "/api/login/**", "/oauth2/**", "/login/**").permitAll()
-                        .anyRequest().authenticated())
+//                        .anyRequest().authenticated())
+                        .anyRequest().permitAll())
+                .exceptionHandling((exception) -> exception
+                        .authenticationEntryPoint(((request, response, authException) -> {
+                            response.setContentType("application/json");
+                            response.setCharacterEncoding("UTF-8");
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.getWriter().write("{\"error\": \"Unauthorized - Invalid token\"}");
+                        })))
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
@@ -91,6 +101,7 @@ public class SecurityConfig {
                 "/swagger-resources/**",
                 "/swagger-ui/**",
                 "/swagger-ui.html",
+                "/api-docs/**",
                 "/ws/**"
         );
     }
