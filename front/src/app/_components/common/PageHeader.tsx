@@ -16,7 +16,7 @@ const PageHeader = ({
     <header className="fixed left-0 right-0 top-0 z-50 flex w-full justify-center bg-transparent">
       <div
         className={cn(
-          "h-header max-w-base flex w-full items-center border-b border-gray5 bg-white p-5",
+          "flex h-header w-full max-w-base items-center border-b border-gray5 bg-white p-5",
           className,
         )}
       >

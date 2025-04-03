@@ -1,5 +1,7 @@
 "use client";
 
+const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 import H1 from "./_components/common/H1";
 import H0 from "./_components/common/H0";
 import Logo from "./_components/common/Logo";
@@ -46,16 +48,27 @@ export default function Home() {
     console.log("선택했다:", item);
     setMenuOpen(false);
   };
-
+  const handleKakaoLogin = () => {
+    window.location.href = `${baseUrl}/oauth2/authorization/kakao`;
+  };
   return (
     <div className="flex min-h-screen flex-col items-center justify-center text-center">
       <div className="font-cute text-desc">
         오직 당신을 위한 화장품을 찾아주는
       </div>
+
       <Logo />
+
       <div className="border border-brown3 p-2 text-head1 text-brown2">
         <a href="./main">main page 이동</a>
       </div>
+
+      <button
+        onClick={handleKakaoLogin}
+        className="mt-4 rounded bg-gray-300 px-6 py-3 font-bold text-black hover:bg-yellow-400"
+      >
+        카카오 로그인
+      </button>
 
       <div className="text-body p-2 text-brown2">
         <button onClick={() => setActiveModal("ingredient")}>성분 보기</button>

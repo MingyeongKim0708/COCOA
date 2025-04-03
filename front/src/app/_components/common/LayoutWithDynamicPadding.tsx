@@ -9,7 +9,6 @@ import BottomNav from "./BottomNav";
 // PageHeader 없음
 const noHeaderRoutes = [
   "/", // Landing
-  "/sign-up", // 회원가입
   "/sign-up/complete", // 회원가입 완료
   "/home", // 홈
   "/search", // 검색
