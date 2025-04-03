@@ -101,8 +101,8 @@ public class SecurityConfig {
                 "/swagger-resources/**",
                 "/swagger-ui/**",
                 "/swagger-ui.html",
-                "/api-docs/**",
-                "/ws/**"
+                "/ws/**",
+                "/api-docs/**"
         );
     }
 }
