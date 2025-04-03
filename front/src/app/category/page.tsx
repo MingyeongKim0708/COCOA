@@ -130,7 +130,7 @@ export default function CategoryPage() {
   return (
     <>
       <PageHeader title="카테고리" />
-      <div className="ml-[-1.25rem] w-[100vw]">
+      <div className="ml-[-1.25rem]">
         <div className="flex h-[calc(100vh-7rem)]">
           {/* 왼쪽 고정 메뉴 */}
           <div
