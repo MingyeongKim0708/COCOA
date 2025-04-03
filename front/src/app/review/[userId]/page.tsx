@@ -16,7 +16,7 @@ export default function ReviewListPage() {
     cosmeticId: 0,
     content:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum quae sed cum assumenda error quidem rem, quibusdam ut, corporis distinctio repudiandae quod. Enim omnis maxime, aliquam in cumque labore dolores.",
-    sentiment: false,
+    satisfied: false,
     helpfulCount: 0,
     user: {
       id: 0,
@@ -37,7 +37,7 @@ export default function ReviewListPage() {
     cosmeticId: 0,
     content:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum quae sed cum assumenda error quidem rem, quibusdam ut, corporis distinctio repudiandae quod. Enim omnis maxime, aliquam in cumque labore dolores.",
-    sentiment: false,
+    satisfied: true,
     helpfulCount: 0,
     user: null,
     cosmetic: {
