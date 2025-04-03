@@ -3,7 +3,6 @@ package com.cocoa.backend.domain.user.controller;
 import com.cocoa.backend.domain.user.dto.CustomOAuth2UserDTO;
 import com.cocoa.backend.domain.user.dto.reqeust.SignupRequestDTO;
 import com.cocoa.backend.domain.user.dto.response.UserTestResponseDTO;
-import com.cocoa.backend.domain.user.errorcode.TokenErrorCode;
 import com.cocoa.backend.domain.user.errorcode.UserErrorCode;
 import com.cocoa.backend.domain.user.service.UserService;
 import com.cocoa.backend.global.exception.CustomException;
