@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import BottomNav from "../_components/common/BottomNav";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -12,17 +13,22 @@ type UserResponse = {
   birthDate: string;
   skinType: string;
   skinTone: string;
-  topKeywords?: Record<string, number>; // ✅ 추가
+  topKeywords?: Record<string, number>;
 };
 
 export default function MainPage() {
   const [user, setUser] = useState<UserResponse | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUser = async () => {
-      const response = await fetch(`${baseUrl}/users`, {
+      const response = await fetch(`${baseUrl}/user`, {
         credentials: "include",
       });
+
+      if (response.status === 401) {
+        router.push("/");
+      }
 
       if (!response.ok) {
         console.error("유저 조회 실패");
@@ -30,7 +36,7 @@ export default function MainPage() {
       }
 
       const userData = await response.json();
-      setUser(userData);
+      setUser(userData.data);
     };
 
     fetchUser();
