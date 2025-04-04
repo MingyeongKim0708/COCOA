@@ -21,11 +21,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class UserController {
     private final UserService userService;
-    private final RedisService redisService;
 
     public UserController(UserService userService, RedisService redisService) {
         this.userService = userService;
-        this.redisService = redisService;
     }
 
     // 추가 정보 입력 (회원가입)
