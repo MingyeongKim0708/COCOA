@@ -1,6 +1,7 @@
 package com.cocoa.backend.domain.user.service;
 
 import com.cocoa.backend.domain.user.dto.reqeust.SignupRequestDTO;
+import com.cocoa.backend.domain.user.dto.response.UserDTO;
 import com.cocoa.backend.domain.user.dto.response.UserResponseDTO;
 import com.cocoa.backend.domain.user.entity.User;
 import com.cocoa.backend.domain.user.errorcode.TokenErrorCode;
@@ -124,14 +125,17 @@ public class UserServiceImpl implements UserService {
             log.info("topKeyWord: {}", topKeywords);
         }
 
-        return new UserResponseDTO(
+        UserDTO userDTO = new UserDTO(
                 user.getUserId(),
                 user.getNickname(),
                 user.getImageUrl(),
                 ageGroup,
                 user.getGender(),
                 user.getSkinType(),
-                user.getSkinTone(),
+                user.getSkinTone()
+        );
+        return new UserResponseDTO(
+                userDTO,
                 topKeywords
         );
     }

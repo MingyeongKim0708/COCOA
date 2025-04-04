@@ -6,12 +6,14 @@ import com.cocoa.backend.domain.user.entity.SkinType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.List;
-import java.util.Map;
-
 @Data
 @AllArgsConstructor
-public class UserResponseDTO {
-    private UserDTO user;
-    private Map<String, Integer> keywords;
+public class UserDTO {
+    private Long id;
+    private String nickname;
+    private String imageUrl;
+    private String ageGroup;
+    private Gender gender;
+    private SkinType skinType;
+    private SkinTone skinTone;
 }
