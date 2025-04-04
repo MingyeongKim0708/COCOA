@@ -1,38 +1,35 @@
 import { AgeGroup, Gender, SkinTone, SkinType, User } from "@/types/user";
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export interface UserStore {
   user: User;
   keywords: Record<string, number> | null;
-  interestProduct: number[] | null;
-  latestProduct: number[] | null;
-  searchLogs: string[] | null;
 
   setUser: (user: User) => void;
-  setKeywords: (keywords: JSON) => void;
-  setInterestProduct: (interest: number[]) => void;
-  setLatestProduct: (latestProduct: number[]) => void;
-  setSearchLogs: (searchLogs: string[]) => void;
+  setKeywords: (keywords: Record<string, number> | null) => void;
 }
 
-export const useUserStore = create<UserStore>((set) => ({
-  user: {
-    id: 0,
-    nickname: "철수",
-    imageUrl: "https://placehold.co/600x400",
-    ageGroup: AgeGroup.teen,
-    gender: Gender.female,
-    skinType: SkinType.dry,
-    skinTone: SkinTone.spring_warm,
-  },
-  keywords: null,
-  interestProduct: null,
-  latestProduct: null,
-  searchLogs: null,
+export const useUserStore = create(
+  persist<UserStore>(
+    (set) => ({
+      user: {
+        id: 0,
+        nickname: "철수",
+        imageUrl: "https://placehold.co/600x400",
+        ageGroup: AgeGroup.teen,
+        gender: Gender.female,
+        skinType: SkinType.dry,
+        skinTone: SkinTone.spring_warm,
+      },
+      keywords: null,
 
-  setUser: (user: User) => set({ user }),
-  setKeywords: (keywords: JSON) => set({ keywords }),
-  setInterestProduct: (interestProduct: number[]) => set({ interestProduct }),
-  setLatestProduct: (latestProduct: number[]) => set({ latestProduct }),
-  setSearchLogs: (searchLogs: string[]) => set({ searchLogs }),
-}));
+      setUser: (user: User) => set({ user }),
+      setKeywords: (keywords: Record<string, number> | null) =>
+        set({ keywords }),
+    }),
+    {
+      name: "user-storage",
+    },
+  ),
+);
