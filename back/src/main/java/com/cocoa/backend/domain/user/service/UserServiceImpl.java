@@ -150,4 +150,11 @@ public class UserServiceImpl implements UserService {
         if (age < 60) return "50대";
         return "60대 이상";
     }
+
+    @Override
+    public void logout(HttpServletResponse response) {
+        // 쿠키 삭제
+        response.addCookie(CookieUtil.createCookie("Authorization", null, 0));
+        response.addCookie(CookieUtil.createCookie("RefreshToken", null, 0));
+    }
 }

@@ -54,4 +54,11 @@ public class UserController {
         log.info("userInfo: {}", userInfo);
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(userInfo));
     }
+
+    // 로그아웃
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse<Void>> logout(HttpServletResponse response) {
+        userService.logout(response);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ApiResponse.success(null));
+    }
 }
