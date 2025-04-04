@@ -1,4 +1,3 @@
-import type { CosmeticInfo } from "@/types/cosmeticInfo";
 import Tag from "../common/Tag";
 import B4 from "../common/B4";
 import T5 from "../common/T5";
