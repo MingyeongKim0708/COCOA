@@ -60,7 +60,7 @@ const ReviewCard = ({ review }: ReviewProps) => {
 
   return (
     <div className="relative flex w-full flex-col gap-y-2 py-2 text-start">
-      <ReviewProductInfo cosmeticInfo={review.cosmetic} />
+      <ReviewProductInfo cosmetic={review.cosmetic} />
       <ReviewUserInfo user={review.user} />
       <div className="gap-1 py-1">
         {review.satisfied ? (

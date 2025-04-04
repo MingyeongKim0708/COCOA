@@ -1,70 +1,65 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { AgeGroup, Gender, SkinTone, SkinType } from "@/types/user";
 import { Review } from "@/types/review";
+import { User } from "@/types/user";
 import ReviewCard from "@/app/_components/review/ReviewCard";
 import PageHeader from "@/app/_components/common/PageHeader";
+import ReviewUserInfo from "@/app/_components/review/ReviewUserInfo";
+import { reviewCosmetic, reviewUser } from "../dummyReviews";
 
-export default function ReviewListPage() {
+interface ReviewPageProps {
+  params: { userId: string };
+}
+
+export default function ReviewListPage({ params }: ReviewPageProps) {
   const router = useRouter();
-  const reviews: Array<Review> = [];
-  const reviewUser: Review = {
-    reviewId: 0,
-    userId: 0,
-    cosmeticId: 0,
-    content:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum quae sed cum assumenda error quidem rem, quibusdam ut, corporis distinctio repudiandae quod. Enim omnis maxime, aliquam in cumque labore dolores.",
-    satisfied: false,
-    helpfulCount: 0,
-    user: {
-      id: 0,
-      nickname: "snsksks",
-      ageGroup: AgeGroup.teen,
-      gender: Gender.female,
-      skinType: SkinType.dry,
-      skinTone: SkinTone.spring_warm,
-      imageUrl: "https://placehold.co/600x400",
-    },
-    cosmetic: null,
-    helpfulForMe: false,
-    createdAt: "2023.10.21",
-  };
-  const reviewCosmetic: Review = {
-    reviewId: 0,
-    userId: 0,
-    cosmeticId: 0,
-    content:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum quae sed cum assumenda error quidem rem, quibusdam ut, corporis distinctio repudiandae quod. Enim omnis maxime, aliquam in cumque labore dolores.",
-    satisfied: true,
-    helpfulCount: 0,
-    user: null,
-    cosmetic: {
-      id: 0,
-      name: "디오디너리 글리코릭 애시드 7% 엑스폴리에이팅 토너 240ml",
-      brand: "ㄴㅁㄹㄴㅁㅇㄴㅁㅇㄴㅁㅇㄴㅁㄴㄴ",
-      imageUrl: "https://placehold.co/600x400",
-      keywords: {
-        촉촉함: 2,
-        촉촉: 2,
-        촉함: 2,
-        촉촉2함: 2,
-        촉촉1함: 2,
-      },
-    },
-    helpfulForMe: false,
-    createdAt: "2023.10.21",
-  };
 
-  console.log(router);
+  const [userInfo, setUserInfo] = useState<User | null>(null);
+  const [reviews, setReviews] = useState<Array<Review> | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    setReviews([reviewCosmetic, reviewUser]);
+  });
+  // 👉 진입 시 cosmetic 정보 가져오기
+  // useEffect(() => {
+  //   if (!params.userId || Array.isArray(params.userId)) return;
+
+  //   const fetchReviews = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const res = await fetch(
+  //         `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/users/${params.userId}`,
+  //       );
+  //       if (!res.ok) throw new Error("failed");
+  //       const data = await res.json();
+  //       setUserInfo(data.user);
+  //       setReviews(data.review);
+  //     } catch (e) {
+  //       setError(true);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchReviews();
+  // }, [params.userId]);
+
   return (
-    <div>
-      <PageHeader title={`리뷰 ${reviews.length}`} showBackButton />
-      <ReviewCard review={reviewUser} />
-      <ReviewCard review={reviewCosmetic} />
-      <ReviewCard review={reviewUser} />
-      <ReviewCard review={reviewCosmetic} />
-    </div>
+    <>
+      <PageHeader
+        title={`리뷰 ${reviews ? reviews.length : 0}`}
+        showBackButton
+      />
+      <div>
+        <ReviewUserInfo user={userInfo} />
+        {reviews?.map((review) => (
+          <ReviewCard key={review.reviewId} review={review} />
+        ))}
+      </div>
+    </>
   );
 }

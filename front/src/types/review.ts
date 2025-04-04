@@ -1,15 +1,13 @@
-import { CosmeticInfo } from "./cosmeticInfo";
+import { Cosmetic } from "./cosmetic";
 import { User } from "./user";
 
 export interface Review {
   reviewId: number;
-  userId: number;
-  cosmeticId: number;
   content: string;
   satisfied: boolean;
   helpfulCount: number;
   user: User | null;
-  cosmetic: CosmeticInfo | null;
+  cosmetic: Cosmetic | null;
   helpfulForMe: boolean;
   createdAt: string;
 }
