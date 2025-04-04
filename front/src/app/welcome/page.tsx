@@ -30,5 +30,7 @@ export default function WelcomePage() {
         router.push("/");
       }
     };
+
+    fetchUser();
   }, []);
 }
