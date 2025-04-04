@@ -11,4 +11,5 @@ public interface  UserService {
     void signup(SignupRequestDTO requestDTO, Long userId, String providerId, HttpServletResponse response);
     UserResponseDTO getUserInfo(Long userId);
     void tokenRefresh(HttpServletRequest request, HttpServletResponse response);
+    void logout(HttpServletResponse response, Long userId);
 }

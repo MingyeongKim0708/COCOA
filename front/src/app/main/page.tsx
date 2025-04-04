@@ -2,9 +2,47 @@
 
 import { useUserStore } from "@/stores/UserStore";
 import BottomNav from "../_components/common/BottomNav";
+import { fetchWrapper } from "@/lib/fetchWrapper";
+import { useRouter } from "next/navigation";
+import { AgeGroup, Gender, SkinTone, SkinType } from "@/types/user";
 
 export default function MainPage() {
   const { user, keywords } = useUserStore();
+  const router = useRouter();
+  const { setUser, setKeywords } = useUserStore();
+
+  const handleLogout = async () => {
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+      const res = await fetchWrapper(`${baseUrl}/user/logout`, {
+        method: "POST",
+      });
+
+      if (res.ok) {
+        // Zustand 초기화
+        setUser({
+          id: 0,
+          nickname: "철수",
+          imageUrl: "https://placehold.co/600x400",
+          ageGroup: AgeGroup.teen,
+          gender: Gender.female,
+          skinType: SkinType.dry,
+          skinTone: SkinTone.spring_warm,
+        });
+        setKeywords(null);
+
+        // 로컬스토리지 비우기 (zustand persist 제거를 원할 경우)
+        localStorage.removeItem("user-storage");
+
+        router.push("/"); // 로그인 페이지나 메인으로 이동
+      } else {
+        alert("로그아웃 실패");
+      }
+    } catch (err) {
+      console.error("로그아웃 중 오류 발생", err);
+      alert("오류 발생");
+    }
+  };
 
   return (
     <div className="text-pink1">
@@ -61,6 +99,9 @@ export default function MainPage() {
           </ul>
         </div>
       )}
+      <div onClick={handleLogout} className="cursor-pointer hover:text-red-500">
+        로그아웃
+      </div>
     </div>
   );
 }
