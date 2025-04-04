@@ -1,0 +1,27 @@
+"use client";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useUserStore } from "@/stores/UserStore";
+
+export default function WelcomePage() {
+  const router = useRouter();
+  const { setUser } = useUserStore();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+      const res = await fetch(`${baseUrl}/user`, {
+        credentials: "include",
+      });
+      if (res.ok) {
+        const userData = await res.json();
+        setUser(userData.data); // Zustand 저장
+        router.push("/home"); // 홈으로 이동
+      } else {
+        router.push("/");
+      }
+    };
+
+    fetchUser();
+  }, []);
+}

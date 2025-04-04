@@ -3,7 +3,7 @@ import { create } from "zustand";
 
 export interface UserStore {
   user: User;
-  keywords: JSON | null;
+  keywords: Record<string, number> | null;
   interestProduct: number[] | null;
   latestProduct: number[] | null;
   searchLogs: string[] | null;

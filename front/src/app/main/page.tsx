@@ -1,48 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useUserStore } from "@/stores/UserStore";
 import BottomNav from "../_components/common/BottomNav";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-type UserResponse = {
-  userId: number;
-  nickname: string;
-  gender: string;
-  birthDate: string;
-  skinType: string;
-  skinTone: string;
-  topKeywords?: Record<string, number>;
-};
-
 export default function MainPage() {
-  const [user, setUser] = useState<UserResponse | null>(null);
-  const router = useRouter();
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const response = await fetch(`${baseUrl}/user`, {
-        credentials: "include",
-      });
-
-      if (response.status === 401) {
-        router.push("/");
-      }
-
-      if (!response.ok) {
-        console.error("유저 조회 실패");
-        return;
-      }
-
-      const userData = await response.json();
-      setUser(userData.data);
-    };
-
-    fetchUser();
-  }, []);
-
-  if (!user) return <p>불러오는 중...</p>;
+  const { user, keywords } = useUserStore();
 
   return (
     <div className="text-pink1">
@@ -50,7 +14,6 @@ export default function MainPage() {
       <a href="/" className="text-size2 text-brown1">
         root로 이동
       </a>
-
       <BottomNav />
       <hr />
 
@@ -74,19 +37,25 @@ export default function MainPage() {
       {/* 마이페이지 */}
       <div className="p-6">
         <h1 className="text-xl font-bold">마이페이지</h1>
+        <p>유저id: {user.id}</p>
         <p>닉네임: {user.nickname}</p>
+        <img
+          src={user.imageUrl}
+          alt="프로필 이미지"
+          className="h-20 w-20 rounded-full border border-gray-300 object-cover"
+        />
         <p>성별: {user.gender}</p>
-        <p>생년월일: {user.birthDate}</p>
+        <p>연령대: {user.ageGroup}</p>
         <p>피부타입: {user.skinType}</p>
         <p>피부톤: {user.skinTone}</p>
       </div>
 
       {/* Top Keywords */}
-      {user.topKeywords && (
+      {keywords && (
         <div className="mt-4">
           <p className="font-semibold">워드 클라우드 주요 키워드</p>
           <ul className="list-inside list-disc text-sm text-gray-700">
-            {Object.entries(user.topKeywords).map(([word, count]) => (
+            {Object.entries(keywords).map(([word, count]) => (
               <li key={word}>
                 {word} ({count})
               </li>

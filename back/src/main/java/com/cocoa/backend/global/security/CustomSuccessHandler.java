@@ -57,7 +57,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         if (user.getNickname() == null) {
             response.sendRedirect(CLIENT_URL + "/sign-up"); // 회원가입
         } else {
-            response.sendRedirect(CLIENT_URL + "/main"); // 로그인
+            response.sendRedirect(CLIENT_URL + "/welcome"); // 로그인
         }
     }
 }

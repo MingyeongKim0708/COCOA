@@ -2,7 +2,7 @@ package com.cocoa.backend.domain.user.controller;
 
 import com.cocoa.backend.domain.user.dto.CustomOAuth2UserDTO;
 import com.cocoa.backend.domain.user.dto.reqeust.SignupRequestDTO;
-import com.cocoa.backend.domain.user.dto.response.UserTestResponseDTO;
+import com.cocoa.backend.domain.user.dto.response.UserResponseDTO;
 import com.cocoa.backend.domain.user.errorcode.UserErrorCode;
 import com.cocoa.backend.domain.user.service.UserService;
 import com.cocoa.backend.global.exception.CustomException;
@@ -44,15 +44,15 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(null));
     }
 
-    // 테스트 : 3000/main에서 user 정보 가져오는지 테스트 (로그인 안하면 root로 이동)
+    // 회원가입/로그인 시 사용자 정보 전달
     @GetMapping
-    public ResponseEntity<ApiResponse<UserTestResponseDTO>> getUser(Authentication authentication) {
+    public ResponseEntity<ApiResponse<UserResponseDTO>> getUser(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new CustomException(UserErrorCode.LOGIN_NEEDED);
         }
 
         CustomOAuth2UserDTO userDetails = (CustomOAuth2UserDTO) authentication.getPrincipal();
-        UserTestResponseDTO userInfo = userService.getUserInfo(userDetails.getUserId());
+        UserResponseDTO userInfo = userService.getUserInfo(userDetails.getUserId());
         log.info("userInfo: {}", userInfo);
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(userInfo));
     }
