@@ -33,6 +33,9 @@ public class UserServiceImpl implements UserService {
     @Value("${spring.jwt.refreshtoken-expires-in}")
     private Long REFRESHTOKEN_EXPIRES_IN;
 
+    @Value("${aws.s3.url}")
+    private String S3_URL;
+
     public UserServiceImpl(UserRepository userRepository, JWTUtil jwtUtil, RedisService redisService) {
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
@@ -45,6 +48,8 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new RuntimeException("이미 등록된 사용자거나 잘못된 요청입니다."));
 
         user.setNickname(requestDTO.getNickname());
+        user.setImageUrl(S3_URL+"/profile-image/default_profile.png");
+        log.info("default_profile.png : {}", user.getImageUrl());
         user.setBirthDate(requestDTO.getBirthDate());
         user.setGender(requestDTO.getGender());
         user.setSkinType(requestDTO.getSkinType());
