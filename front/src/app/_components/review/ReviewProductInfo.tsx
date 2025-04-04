@@ -2,28 +2,29 @@ import type { CosmeticInfo } from "@/types/cosmeticInfo";
 import Tag from "../common/Tag";
 import B4 from "../common/B4";
 import T5 from "../common/T5";
+import { Cosmetic } from "@/types/cosmetic";
 
 interface ReviewProductInfoProps {
-  cosmeticInfo: CosmeticInfo | null;
+  cosmetic: Cosmetic | null;
 }
 
-const ReviewProductInfo = ({ cosmeticInfo }: ReviewProductInfoProps) => {
-  if (cosmeticInfo == null) return;
+const ReviewProductInfo = ({ cosmetic }: ReviewProductInfoProps) => {
+  if (cosmetic == null) return;
   return (
     <div className="flex gap-3">
       <img
-        src={cosmeticInfo.imageUrl}
+        src={cosmetic.images[0]}
         alt="profile image"
         className="h-20 w-20 flex-shrink-0 rounded-lg object-cover"
       />
       <div className="flex flex-col justify-between">
-        <T5 children={cosmeticInfo.brand} />
+        <T5 children={cosmetic.brand} />
         <B4
-          children={cosmeticInfo.name}
+          children={cosmetic.name}
           className="line-clamp-2 text-ellipsis break-words"
         />
-        <div className="flex flex-row gap-x-3 overflow-hidden">
-          {Object.keys(cosmeticInfo.keywords)
+        <div className="no-scrollbar flex flex-row gap-x-3 overflow-x-auto">
+          {Object.keys(cosmetic.keywords)
             .slice(0, 3)
             .map((key) => (
               <Tag children={key} />
