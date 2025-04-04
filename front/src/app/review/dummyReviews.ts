@@ -1,7 +1,7 @@
 import { Review } from "@/types/review";
 import { AgeGroup, Gender, SkinTone, SkinType } from "@/types/user";
 
-const reviewUser: Review = {
+export const reviewUser: Review = {
   reviewId: 0,
   content:
     "Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum quae sed cum assumenda error quidem rem, quibusdam ut, corporis distinctio repudiandae quod. Enim omnis maxime, aliquam in cumque labore dolores.",
@@ -20,7 +20,7 @@ const reviewUser: Review = {
   helpfulForMe: false,
   createdAt: "2023.10.21",
 };
-const reviewCosmetic: Review = {
+export const reviewCosmetic: Review = {
   reviewId: 0,
   content:
     "Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum quae sed cum assumenda error quidem rem, quibusdam ut, corporis distinctio repudiandae quod. Enim omnis maxime, aliquam in cumque labore dolores.",
@@ -39,6 +39,7 @@ const reviewCosmetic: Review = {
       촉촉2함: 2,
       촉촉1함: 2,
     },
+    topKeywords: ["촉촉함", "촉촉", "촉촉2함"],
     optionId: 0,
     category: {
       categoryId: 0,

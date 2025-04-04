@@ -34,7 +34,7 @@ const ProductCard = ({ cosmetic }: ProductCardProps) => {
         </p>
 
         <div className="mt-2">
-          <ProductTags tags={cosmetic.keywords} />
+          <ProductTags tags={cosmetic.topKeywords} />
         </div>
 
         <div className="mt-2">

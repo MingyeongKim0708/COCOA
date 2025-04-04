@@ -1,17 +1,15 @@
 import Tag from "../common/Tag";
 
 interface ProductTagsProps {
-  tags: Record<string, number>;
+  tags: string[];
 }
 
 const ProductTags = ({ tags }: ProductTagsProps) => {
   return (
     <div className="no-scrollbar flex gap-1 overflow-x-auto">
-      {Object.keys(tags)
-        .slice(0, 3)
-        .map((key) => (
-          <Tag children={key} />
-        ))}
+      {tags.map((item) => (
+        <Tag children={item} />
+      ))}
     </div>
   );
 };

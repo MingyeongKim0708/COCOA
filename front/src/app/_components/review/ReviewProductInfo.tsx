@@ -23,11 +23,9 @@ const ReviewProductInfo = ({ cosmetic }: ReviewProductInfoProps) => {
           className="line-clamp-2 text-ellipsis break-words"
         />
         <div className="no-scrollbar flex flex-row gap-x-3 overflow-x-auto">
-          {Object.keys(cosmetic.keywords)
-            .slice(0, 3)
-            .map((key) => (
-              <Tag children={key} />
-            ))}
+          {cosmetic.topKeywords.map((item) => (
+            <Tag children={item} />
+          ))}
         </div>
       </div>
     </div>
