@@ -11,9 +11,11 @@ import java.util.Map;
 
 @Data
 @AllArgsConstructor
-public class UserTestResponseDTO {
+public class UserResponseDTO {
+    private Long id;
     private String nickname;
-    private LocalDate birthDate;
+    private String imageUrl;
+    private String ageGroup;
     private Gender gender;
     private SkinType skinType;
     private SkinTone skinTone;

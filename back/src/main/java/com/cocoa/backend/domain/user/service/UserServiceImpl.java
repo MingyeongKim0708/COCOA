@@ -1,7 +1,7 @@
 package com.cocoa.backend.domain.user.service;
 
 import com.cocoa.backend.domain.user.dto.reqeust.SignupRequestDTO;
-import com.cocoa.backend.domain.user.dto.response.UserTestResponseDTO;
+import com.cocoa.backend.domain.user.dto.response.UserResponseDTO;
 import com.cocoa.backend.domain.user.entity.User;
 import com.cocoa.backend.domain.user.errorcode.TokenErrorCode;
 import com.cocoa.backend.domain.user.repository.UserRepository;
@@ -16,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Map;
 
 @Slf4j
@@ -104,10 +106,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserTestResponseDTO getUserInfo(Long userId) {
+    public UserResponseDTO getUserInfo(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("사용자 없음"));
         log.info("user nickname : {}", user.getNickname());
+
+        String ageGroup = calculateAgeGroup(user.getBirthDate());
 
         Map<String, Integer> topKeywords = null;
         if (user.getUserKeywords() != null) {
@@ -115,13 +119,26 @@ public class UserServiceImpl implements UserService {
             log.info("topKeyWord: {}", topKeywords);
         }
 
-        return new UserTestResponseDTO(
+        return new UserResponseDTO(
+                user.getUserId(),
                 user.getNickname(),
-                user.getBirthDate(),
+                user.getImageUrl(),
+                ageGroup,
                 user.getGender(),
                 user.getSkinType(),
                 user.getSkinTone(),
                 topKeywords
         );
+    }
+
+    private String calculateAgeGroup(LocalDate birthDate) {
+        int age = Period.between(birthDate, LocalDate.now()).getYears();
+
+        if (age < 20) return "10대";
+        if (age < 30) return "20대";
+        if (age < 40) return "30대";
+        if (age < 50) return "40대";
+        if (age < 60) return "50대";
+        return "60대 이상";
     }
 }
