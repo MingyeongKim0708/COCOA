@@ -83,6 +83,8 @@ body {
   overflow: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
+  touch-action: manipulation; /* 더블탭 줌 방지 */
+  overscroll-behavior: none;
 }
 
 body::-webkit-scrollbar {
@@ -92,6 +94,17 @@ body::-webkit-scrollbar {
 a,
 button {
   cursor: pointer;
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
 }
 
 /* 디버깅용  */

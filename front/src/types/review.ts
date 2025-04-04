@@ -6,7 +6,7 @@ export interface Review {
   userId: number;
   cosmeticId: number;
   content: string;
-  sentiment: boolean;
+  satisfied: boolean;
   helpfulCount: number;
   user: User | null;
   cosmetic: CosmeticInfo | null;
