@@ -9,11 +9,12 @@ import PageHeader from "@/app/_components/common/PageHeader";
 import ReviewUserInfo from "@/app/_components/review/ReviewUserInfo";
 import { reviewCosmetic, reviewUser } from "../dummyReviews";
 
-export default function ReviewListPage({
+export default async function ReviewListPage({
   params,
 }: {
-  params: { userId: string };
+  params: Promise<{ userId: string }>;
 }) {
+  const { userId } = await params;
   const router = useRouter();
 
   const [userInfo, setUserInfo] = useState<User | null>(null);
@@ -24,15 +25,16 @@ export default function ReviewListPage({
   useEffect(() => {
     setReviews([reviewCosmetic, reviewUser]);
   }, []);
-  // 👉 진입 시 cosmetic 정보 가져오기
+
+  // // 👉 진입 시 cosmetic 정보 가져오기
   // useEffect(() => {
-  //   if (!params.userId || Array.isArray(params.userId)) return;
+  //   if (!userId || Array.isArray(userId)) return;
 
   //   const fetchReviews = async () => {
   //     try {
   //       setLoading(true);
   //       const res = await fetch(
-  //         `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/users/${params.userId}`,
+  //         `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/users/${userId}`,
   //       );
   //       if (!res.ok) throw new Error("failed");
   //       const data = await res.json();
@@ -46,7 +48,7 @@ export default function ReviewListPage({
   //   };
 
   //   fetchReviews();
-  // }, [params.userId]);
+  // }, [userId]);
 
   return (
     <>
