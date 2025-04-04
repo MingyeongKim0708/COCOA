@@ -7,6 +7,7 @@ import { User } from "@/types/user";
 import ReviewCard from "@/app/_components/review/ReviewCard";
 import PageHeader from "@/app/_components/common/PageHeader";
 import ReviewUserInfo from "@/app/_components/review/ReviewUserInfo";
+import { reviewCosmetic, reviewUser } from "../dummyReviews";
 
 interface ReviewPageProps {
   params: { userId: string };
@@ -20,29 +21,32 @@ export default function ReviewListPage({ params }: ReviewPageProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  // 👉 진입 시 cosmetic 정보 가져오기
   useEffect(() => {
-    if (!params.userId || Array.isArray(params.userId)) return;
+    setReviews([reviewCosmetic, reviewUser]);
+  });
+  // 👉 진입 시 cosmetic 정보 가져오기
+  // useEffect(() => {
+  //   if (!params.userId || Array.isArray(params.userId)) return;
 
-    const fetchReviews = async () => {
-      try {
-        setLoading(true);
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/users/${params.userId}`,
-        );
-        if (!res.ok) throw new Error("failed");
-        const data = await res.json();
-        setUserInfo(data.user);
-        setReviews(data.review);
-      } catch (e) {
-        setError(true);
-      } finally {
-        setLoading(false);
-      }
-    };
+  //   const fetchReviews = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const res = await fetch(
+  //         `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/users/${params.userId}`,
+  //       );
+  //       if (!res.ok) throw new Error("failed");
+  //       const data = await res.json();
+  //       setUserInfo(data.user);
+  //       setReviews(data.review);
+  //     } catch (e) {
+  //       setError(true);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchReviews();
-  }, [params.userId]);
+  //   fetchReviews();
+  // }, [params.userId]);
 
   return (
     <>

@@ -40,7 +40,7 @@ export const reviewCosmetic: Review = {
       촉촉1함: 2,
     },
     topKeywords: ["촉촉함", "촉촉", "촉촉2함"],
-    optionId: 0,
+    optionName: "",
     category: {
       categoryId: 0,
       majorCategory: "케어",
