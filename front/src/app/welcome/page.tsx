@@ -16,14 +16,12 @@ export default function WelcomePage() {
       if (res.ok) {
         const userData = await res.json();
         setUser(userData.data); // Zustand 저장
-        router.push("/main"); // 메인으로 이동
+        router.push("/home"); // 홈으로 이동
       } else {
-        router.push("/login");
+        router.push("/");
       }
     };
 
     fetchUser();
   }, []);
-
-  return <p>로그인 중입니다...</p>;
 }
