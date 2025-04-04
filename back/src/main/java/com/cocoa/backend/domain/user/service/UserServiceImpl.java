@@ -152,7 +152,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void logout(HttpServletResponse response) {
+    public void logout(HttpServletResponse response, Long userId) {
+        // 레디스에서 refreshToken 삭제
+        redisService.deleteRefreshToken(userId);
         // 쿠키 삭제
         response.addCookie(CookieUtil.createCookie("Authorization", null, 0));
         response.addCookie(CookieUtil.createCookie("RefreshToken", null, 0));

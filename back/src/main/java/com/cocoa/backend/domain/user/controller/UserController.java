@@ -57,8 +57,9 @@ public class UserController {
 
     // 로그아웃
     @PostMapping("/logout")
-    public ResponseEntity<ApiResponse<Void>> logout(HttpServletResponse response) {
-        userService.logout(response);
+    public ResponseEntity<ApiResponse<Void>> logout(Authentication authentication, HttpServletResponse response) {
+        CustomOAuth2UserDTO userDetails = (CustomOAuth2UserDTO) authentication.getPrincipal();
+        userService.logout(response, userDetails.getUserId());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ApiResponse.success(null));
     }
 }
