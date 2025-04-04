@@ -9,11 +9,11 @@ import PageHeader from "@/app/_components/common/PageHeader";
 import ReviewUserInfo from "@/app/_components/review/ReviewUserInfo";
 import { reviewCosmetic, reviewUser } from "../dummyReviews";
 
-interface ReviewPageProps {
+export default function ReviewListPage({
+  params,
+}: {
   params: { userId: string };
-}
-
-export default function ReviewListPage({ params }: ReviewPageProps) {
+}) {
   const router = useRouter();
 
   const [userInfo, setUserInfo] = useState<User | null>(null);
@@ -23,7 +23,7 @@ export default function ReviewListPage({ params }: ReviewPageProps) {
 
   useEffect(() => {
     setReviews([reviewCosmetic, reviewUser]);
-  });
+  }, []);
   // 👉 진입 시 cosmetic 정보 가져오기
   // useEffect(() => {
   //   if (!params.userId || Array.isArray(params.userId)) return;
