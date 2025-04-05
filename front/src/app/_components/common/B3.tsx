@@ -7,7 +7,7 @@ const B3 = ({
 }: {
   children: string;
   className?: string;
-  onClick: () => void;
+  onClick?: () => void;
 }) => {
   return (
     <p
