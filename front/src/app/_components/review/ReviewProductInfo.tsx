@@ -24,7 +24,7 @@ const ReviewProductInfo = ({ cosmetic }: ReviewProductInfoProps) => {
         />
         <div className="no-scrollbar flex flex-row gap-x-3 overflow-x-auto">
           {cosmetic.topKeywords.map((item) => (
-            <Tag children={item} />
+            <Tag key={item} children={item} />
           ))}
         </div>
       </div>
