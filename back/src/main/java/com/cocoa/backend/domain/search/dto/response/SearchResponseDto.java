@@ -4,9 +4,9 @@ import lombok.Getter;
 
 @Getter
 public class SearchResponseDto {
-    private String cosmeticId;
-    private String name;
-    private String brand;
+    private final String cosmeticId;
+    private final String name;
+    private final String brand;
 
     public SearchResponseDto(String cosmeticId, String name, String brand) {
         this.cosmeticId = cosmeticId;

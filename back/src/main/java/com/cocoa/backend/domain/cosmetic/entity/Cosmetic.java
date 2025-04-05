@@ -26,6 +26,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "cosmetics")
 public class Cosmetic {
 
+    // strategy = GenerationType.IDENTITY : 자동 증가 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cosmetic_id")
