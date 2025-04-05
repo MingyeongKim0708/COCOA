@@ -30,7 +30,7 @@ const ContextMenu = ({
   return (
     <div
       ref={menuRef}
-      className={`rounded-custom absolute right-0 top-full mt-2 flex w-[6.25rem] flex-col gap-[0.3125rem] bg-gray5 py-[0.625rem] ${className}`}
+      className={`absolute bottom-full right-0 mb-2 flex w-[6.25rem] flex-col gap-[0.3125rem] rounded-custom bg-gray5 py-[0.625rem] ${className}`}
     >
       {items.map((item, index) => {
         return (
