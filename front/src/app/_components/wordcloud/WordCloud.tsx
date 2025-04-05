@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useRef, useState } from "react";
 import { useWordCloud } from "../../../hooks/useWordCloud";
 import { useUserStore } from "@/stores/UserStore";

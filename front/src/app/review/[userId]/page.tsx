@@ -6,7 +6,7 @@ import { Review } from "@/types/review";
 import { User } from "@/types/user";
 import ReviewCard from "@/app/_components/review/ReviewCard";
 import PageHeader from "@/app/_components/common/PageHeader";
-import ReviewUserInfo from "@/app/_components/review/ReviewUserInfo";
+import ReviewUserInfo from "@/app/_components/user/UserInfo";
 import { reviewCosmetic, reviewUser } from "../dummyReviews";
 
 export default async function ReviewListPage({
