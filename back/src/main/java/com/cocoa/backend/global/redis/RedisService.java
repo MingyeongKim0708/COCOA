@@ -62,4 +62,37 @@ public class RedisService {
 	public void deleteRefreshToken(Long userId) {
 		redisTemplate.delete(getRefreshTokenKey(userId));
 	}
+
+
+	// user:{userId}:interest          ← 유저가 관심 등록한 제품
+	// cosmetic:{cosmeticId}:likedBy  ← 제품을 관심 등록한 유저
+
+	// 관심 제품 등록 (양방향 저장)
+	public void addInterestProduct(Long userId, Long cosmeticId) {
+		redisTemplate.opsForSet().add(getInterestKey(userId), String.valueOf(cosmeticId));
+		redisTemplate.opsForSet().add(getCosmeticLikedByKey(cosmeticId), String.valueOf(userId));
+	}
+
+	// 관심 제품 해제 (양방향 제거)
+	public void removeInterestProduct(Long userId, Long cosmeticId) {
+		redisTemplate.opsForSet().remove(getInterestKey(userId), String.valueOf(cosmeticId));
+		redisTemplate.opsForSet().remove(getCosmeticLikedByKey(cosmeticId), String.valueOf(userId));
+	}
+
+	// 관심 여부 확인
+	public boolean isLikedCosmetic(Long userId, Long cosmeticId) {
+		return redisTemplate.opsForSet().isMember(getInterestKey(userId), String.valueOf(cosmeticId));
+	}
+
+	// 해당 제품의 관심 등록 수 조회
+	public long getLikeCountOfCosmetic(Long cosmeticId) {
+		return redisTemplate.opsForSet().size(getCosmeticLikedByKey(cosmeticId));
+	}
+
+	// 내부용 키 생성기
+	private String getCosmeticLikedByKey(Long cosmeticId) {
+		return "cosmetic:" + cosmeticId + ":likedBy";
+	}
+
+
 }
