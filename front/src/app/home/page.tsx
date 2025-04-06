@@ -1,14 +1,33 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
+import PageHeader from "../_components/common/PageHeader";
+import { RecommendationCard } from "./_components/RecommendationCard";
+import { KeywordMarquee } from "./_components/KeywordMarquee";
+import PopularNews from "./_components/PopularNews";
+import SearchBar from "../_components/common/SearchBar";
 
-export default function MainPage() {
+export default function HomePage() {
   return (
     <div>
-      <div className="text-head0 font-title text-pink1">홈 페이지입니다.</div>
-      <a href="/" className="text-size2 text-brown1">
-        Landing으로 이동
-      </a>
-      <div className="flex flex-row gap-4"></div>
+      <PageHeader
+        title={
+          <>
+            안녕하세요 <span className="text-pink1">도브이</span>님
+          </>
+        }
+      />
+      <div className="py-5">
+        <SearchBar />
+      </div>
+
+      {/* 최근 본 제품 추천 */}
+      <RecommendationCard />
+
+      {/* 사용자 키워드 현황 */}
+      <KeywordMarquee />
+
+      {/* 인기 소식 */}
+      <PopularNews />
     </div>
   );
 }
