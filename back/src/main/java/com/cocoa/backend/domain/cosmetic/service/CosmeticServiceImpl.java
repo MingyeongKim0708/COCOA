@@ -10,10 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -88,5 +85,72 @@ public class CosmeticServiceImpl implements CosmeticService {
                 .toList();
     }
 
+    @Override
+    public List<CosmeticResponseDTO> getInterestedCosmetics(Long userId) {
+        Set<String> cosmeticIdStrings = redisService.getInterestedCosmeticIds(userId);
+        if (cosmeticIdStrings == null || cosmeticIdStrings.isEmpty()) return List.of();
+
+        List<Integer> cosmeticIds = cosmeticIdStrings.stream()
+                .map(Integer::parseInt)
+                .toList();
+
+        List<Cosmetic> cosmetics = cosmeticRepository.findAllById(cosmeticIds);
+
+        return cosmetics.stream()
+                .map(c -> {
+                    // 이전 getCosmeticsByCategoryId 내부의 DTO 가공 로직 재사용
+                    Map<String, Integer> keywordsMap = Optional.ofNullable(c.getCosmeticKeywords())
+                            .map(CosmeticKeywords::getKeywords)
+                            .orElse(Collections.emptyMap());
+
+                    List<String> top3Keywords = Optional.ofNullable(c.getCosmeticKeywords())
+                            .map(CosmeticKeywords::getTopKeywords)
+                            .orElse(Collections.emptyMap())
+                            .entrySet().stream()
+                            .filter(e -> e.getKey() != null && e.getValue() != null)
+                            .sorted((a, b) -> b.getValue().compareTo(a.getValue()))
+                            .limit(3)
+                            .map(Map.Entry::getKey)
+                            .toList();
+
+                    List<String> images = List.of(c.getImageUrl1(), c.getImageUrl2(), c.getImageUrl3())
+                            .stream().filter(img -> img != null && !img.isBlank()).toList();
+
+                    CategoryResponseDTO categoryDTO = new CategoryResponseDTO(
+                            c.getCategory().getCategoryId(),
+                            c.getCategory().getMajorCategory(),
+                            c.getCategory().getMiddleCategory(),
+                            c.getCategory().getCategoryNo()
+                    );
+
+                    boolean isLiked = true; // 이미 관심 등록된 제품이니까 true
+                    long likeCount = redisService.getLikeCountOfCosmetic(c.getCosmeticId().longValue());
+
+                    return new CosmeticResponseDTO(
+                            c.getCosmeticId(),
+                            c.getName(),
+                            c.getBrand(),
+                            c.getOptionName(),
+                            images,
+                            keywordsMap,
+                            top3Keywords,
+                            isLiked,
+                            likeCount,
+                            0,
+                            categoryDTO,
+                            Collections.emptyList()
+                    );
+                }).toList();
+    }
+
+    @Override
+    public void addInterest(Long userId, Long cosmeticId) {
+        redisService.addInterestProduct(userId, cosmeticId);
+    }
+
+    @Override
+    public void removeInterest(Long userId, Long cosmeticId) {
+        redisService.removeInterestProduct(userId, cosmeticId);
+    }
 
 }
