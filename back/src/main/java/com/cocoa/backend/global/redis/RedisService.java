@@ -27,6 +27,9 @@ public class RedisService {
 	private String getRefreshTokenKey(Long userId) {
 		return "user:" + userId + ":refreshToken";
 	}
+	private String getCompareKey(long userId) {
+		return "user:" + userId + ":compare";
+	}
 
 	// 관심 리뷰 추가
 	public void addHelpfulReview(long userId, long reviewId) {
@@ -61,5 +64,39 @@ public class RedisService {
 	// refreshToken 삭제
 	public void deleteRefreshToken(Long userId) {
 		redisTemplate.delete(getRefreshTokenKey(userId));
+	}
+
+	// 비교 제품 추가 (최대 2개만 가능, 중복 방지 set 사용)
+	public String addCompareItem(long userId, long cosmeticId) {
+		String key = getCompareKey(userId);
+
+		// 중복이면 false 반환
+		if (Boolean.TRUE.equals(redisTemplate.opsForSet().isMember(key, String.valueOf(cosmeticId)))) {
+			return "ALREADY_EXISTS";
+		}
+
+		// 2개 이상 담기 방지
+		Long size = redisTemplate.opsForSet().size(key);
+		if (size != null && size >= 2) {
+			return "MAX_LIMIT_REACHED";
+		}
+
+		redisTemplate.opsForSet().add(key, String.valueOf(cosmeticId));
+		return "SUCCESS";
+	}
+
+	// 비교 제품 삭제
+	public void removeCompareItem(long userId, long cosmeticId) {
+		redisTemplate.opsForSet().remove(getCompareKey(userId), String.valueOf(cosmeticId));
+	}
+
+	// 비교 제품 전체 조회
+	public Set<String> getCompareItems(long userId) {
+		return redisTemplate.opsForSet().members(getCompareKey(userId));
+	}
+
+	// 비교 제품 등록 여부 확인
+	public boolean isItemInCompare(long userId, long cosmeticId) {
+		return redisTemplate.opsForSet().isMember(getCompareKey(userId), String.valueOf(cosmeticId));
 	}
 }
