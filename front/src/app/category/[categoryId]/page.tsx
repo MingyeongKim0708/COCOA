@@ -12,7 +12,7 @@ export default function CategoryPage() {
       <PageHeader title="스킨케어 / 스킨/토너" showBackButton />
       <div className="grid grid-cols-2 place-items-center gap-2">
         {dummyProducts.map((product) => (
-          <ProductCard key={product.id} {...product} />
+          <ProductCard cosmetic={product} />
         ))}
       </div>
       <ScrollToTopButton />

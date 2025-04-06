@@ -59,7 +59,7 @@ export default function SignUpPage() {
       });
 
       if (response.ok) {
-        router.push("/main");
+        router.push("/welcome");
       } else {
         console.error("회원가입 실패");
       }

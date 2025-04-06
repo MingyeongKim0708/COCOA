@@ -6,16 +6,12 @@ import com.cocoa.backend.domain.user.entity.SkinType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 @Data
 @AllArgsConstructor
-public class UserTestResponseDTO {
-    private String nickname;
-    private LocalDate birthDate;
-    private Gender gender;
-    private SkinType skinType;
-    private SkinTone skinTone;
-    private Map<String, Integer> topKeywords;
+public class UserResponseDTO {
+    private UserDTO user;
+    private Map<String, Integer> keywords;
 }

@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import ReviewProductInfo from "./ReviewProductInfo";
-import ReviewUserInfo from "./ReviewUserInfo";
+import ReviewUserInfo from "../user/UserInfo";
 import type { Review } from "@/types/review";
 import HelpfulButton from "./HelpfulButton";
 import { useState } from "react";
@@ -60,7 +60,7 @@ const ReviewCard = ({ review }: ReviewProps) => {
 
   return (
     <div className="relative flex w-full flex-col gap-y-2 py-2 text-start">
-      <ReviewProductInfo cosmeticInfo={review.cosmetic} />
+      <ReviewProductInfo cosmetic={review.cosmetic} />
       <ReviewUserInfo user={review.user} />
       <div className="gap-1 py-1">
         {review.satisfied ? (
@@ -83,14 +83,14 @@ const ReviewCard = ({ review }: ReviewProps) => {
           <B5 children={review.createdAt} className="text-gray4" />
           <button onClick={() => setMenuOpen((prev) => !prev)}>
             <EllipsisVertical size={20} />
+            {menuOpen && (
+              <ContextMenu
+                items={items}
+                onSelect={handleSelect}
+                onClose={() => setMenuOpen(false)}
+              />
+            )}
           </button>
-          {menuOpen && (
-            <ContextMenu
-              items={items}
-              onSelect={handleSelect}
-              onClose={() => setMenuOpen(false)}
-            />
-          )}
         </div>
       </div>
     </div>

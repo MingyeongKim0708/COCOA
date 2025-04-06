@@ -1,11 +1,14 @@
+import { Category } from "./category";
+
 export interface Cosmetic {
   id: number;
-  optionId: number;
+  optionName: string;
   name: string;
   brand: string;
-  categoryId: number;
+  category: Category;
   images: string[];
-  keywords: Record<string, number>[];
+  keywords: Record<string, number>;
+  topKeywords: string[];
   isLiked: boolean;
   likeCount: number;
   reviewCount: number;

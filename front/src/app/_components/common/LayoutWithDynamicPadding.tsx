@@ -13,6 +13,7 @@ const noHeaderRoutes = [
   "/home", // 홈
   "/search", // 검색
   "/search/result?", //검색 결과
+  "/my", //마이페이지
 ];
 
 // BottomNav 없음
