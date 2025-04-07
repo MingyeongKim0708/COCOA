@@ -113,8 +113,12 @@ public class CosmeticServiceImpl implements CosmeticService {
                             .map(Map.Entry::getKey)
                             .toList();
 
-                    List<String> images = List.of(c.getImageUrl1(), c.getImageUrl2(), c.getImageUrl3())
-                            .stream().filter(img -> img != null && !img.isBlank()).toList();
+                    List<String> images = Stream.of(
+                                    c.getImageUrl1(),
+                                    c.getImageUrl2(),
+                                    c.getImageUrl3()
+                            ).filter(img -> img != null && !img.isBlank())
+                            .toList();
 
                     CategoryResponseDTO categoryDTO = new CategoryResponseDTO(
                             c.getCategory().getCategoryId(),
