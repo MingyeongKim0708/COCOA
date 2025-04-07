@@ -1,13 +1,13 @@
 package com.cocoa.backend.domain.cosmetic.dto.response;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
 
-@Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class CosmeticResponseDTO {
