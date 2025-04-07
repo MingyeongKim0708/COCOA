@@ -3,11 +3,12 @@ import { User } from "./user";
 
 export interface Review {
   reviewId: number;
-  content: string;
-  satisfied: boolean;
-  helpfulCount: number;
   user: User | null;
   cosmetic: Cosmetic | null;
+  content: string;
+  satisfied: boolean;
+  images: string[];
+  helpfulCount: number;
   helpfulForMe: boolean;
   createdAt: string;
 }
