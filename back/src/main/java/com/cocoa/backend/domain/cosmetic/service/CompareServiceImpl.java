@@ -1,5 +1,6 @@
 package com.cocoa.backend.domain.cosmetic.service;
 
+import com.cocoa.backend.domain.cosmetic.dto.response.CompareKeywordDTO;
 import com.cocoa.backend.domain.cosmetic.dto.response.CompareModalResponseDTO;
 import com.cocoa.backend.domain.cosmetic.dto.response.CompareResponseDTO;
 import com.cocoa.backend.domain.cosmetic.entity.Cosmetic;
@@ -72,32 +73,32 @@ public class CompareServiceImpl implements CompareService {
                 .map(Long::intValue)
                 .toList();
         List<Cosmetic> items = cosmeticRepository.findAllById(itemIds);
+
+        // 사용자 키워드와의 교집합
+        UserKeywords userKeywords = userKeywordsRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
+        Set<String> userKeywordSet = userKeywords.getTopKeywords().keySet();
+
         return items.stream().map(item -> {
             // 키워드 상위 5개 추출
-            Map<String, Integer> top5Keywords = null;
+            List<CompareKeywordDTO> top5Keywords = new ArrayList<>();
+            Set<String> matchedKeywords = new HashSet<>();
             if (item.getCosmeticKeywords() != null) {
                 Map<String, Integer> topKeywords = item.getCosmeticKeywords().getTopKeywords();
                 log.info("topKeywords: {}", topKeywords);
 
-                top5Keywords = topKeywords.entrySet().stream()
+                topKeywords.entrySet().stream()
                         .sorted(Map.Entry.<String, Integer>comparingByValue().reversed()) // 빈도순 내림차순
                         .limit(5)
-                        .collect(Collectors.toMap(
-                                Map.Entry::getKey,
-                                Map.Entry::getValue,
-                                (a, b) -> a,
-                                LinkedHashMap::new // 순서 유지
-                        ));
+                        .forEach(entry -> {
+                            String keyword = entry.getKey();
+                            Integer count = entry.getValue();
+                            boolean matched = userKeywordSet.contains(keyword);
+                            if (matched) matchedKeywords.add(keyword);
+                            top5Keywords.add(new CompareKeywordDTO(keyword, count, matched));
+                        });
             }
 
-            // 사용자 키워드와의 교집합
-            UserKeywords userKeywords = userKeywordsRepository.findById(userId)
-                    .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
-            Map<String, Integer> userKeywordMap = userKeywords.getTopKeywords();
-            List<String> matched = top5Keywords.keySet().stream()
-                    .filter(userKeywordMap::containsKey)
-                    .toList();
-            
             // 성분 정보 연결 필요
 
             return new CompareResponseDTO(
@@ -106,7 +107,7 @@ public class CompareServiceImpl implements CompareService {
                     item.getName(),
                     item.getImageUrl1(),
                     top5Keywords,
-                    matched
+                    matchedKeywords
             );
         }).toList();
     }
