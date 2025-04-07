@@ -32,22 +32,42 @@ public class SearchService {
     //→ 내부적으로는 ElasticsearchRepository<SearchDocument, String>를 상속해서, 검색 관련 쿼리를 실행할 수 있어.
     private final SearchRepository searchRepository; // 왜 final
 
-    //searchCosmetics() 메서드는 이름과 브랜드로 화장품을 검색하는 메서드야
-    //SearchRequestDto에는 사용자가 검색하고자 하는 name, brand 정보가 들어 있어.
+    //searchCosmetics() 메서드는 이름과 브랜드로 화장품을 검색하는 메서드
 
     //searchRepository.findByNameContainingOrBrandContaining(...)
     //→ Elasticsearch에서 이름에 특정 단어가 포함되었거나 브랜드에 특정 단어가 포함된 화장품을 찾아줘. → 예: name = "토너", brand = "이니스프리"라면 "토너"를 이름에 포함하거나 브랜드가 "이니스프리"인 모든 상품을 가져옴.
     //결과로 SearchDocument 객체 리스트가 반환돼.
     //→ 이건 Elasticsearch에 저장된 문서(document) 형식이야.
     public List<SearchResponseDto> searchCosmetics(SearchRequestDto requestDto) {
-        log.info("검색 요청 들어옴 : name={}, brand={}", requestDto.getName(), requestDto.getBrand());
-        List<SearchDocument> cosmetics = searchRepository.findByNameContainingOrBrandContaining(
-                requestDto.getName(), requestDto.getBrand());
-        log.info("검색 결과 개수 : {}", cosmetics.size());
+        String name = requestDto.getName();
+        String brand = requestDto.getBrand();
 
-        for (SearchDocument doc : cosmetics) {
-            log.info("📄 Document: {}", doc); // toString() 오버라이딩 되어 있으면 여기서 전체 출력됨
+        log.info("검색 요청 들어옴 : name={}, brand={}", name, brand);
+
+
+        // 둘 다 비어있을 때
+        if ((name == null || name.trim().isEmpty()) && (brand == null || brand.trim().isEmpty())) {
+            log.info("⚠️ name과 brand 둘 다 비어 있어 검색 결과 없음");
+            return List.of();
         }
+
+        List<SearchDocument> cosmetics;
+
+        // name과 brand가 모두 존재할 때
+        if (name != null && !name.trim().isEmpty() && brand != null && !brand.trim().isEmpty()) {
+            cosmetics = searchRepository.findByNameContainingOrBrandContaining(name, brand);
+        }
+        // name만 존재할 때
+        else if (name != null && !name.trim().isEmpty()) {
+            cosmetics = searchRepository.findByNameContaining(name);
+        }
+        // brand만 존재할 때
+        else {
+            cosmetics = searchRepository.findByBrandContaining(brand);
+        }
+
+        log.info("검색 결과 개수 : {}", cosmetics.size());
+        cosmetics.forEach(doc -> log.info("📄 Document: {}", doc));
 
         /*이 부분은 Java의 Stream API를 활용해서, 가져온 SearchDocument 리스트를 클라이언트에 줄 수 있도록 SearchResponseDto로 바꿔주는 과정이야.
 
@@ -72,6 +92,5 @@ new SearchResponseDto(...)
                         search.getBrand()))
                 .collect(Collectors.toList());
     }
-
 
 }

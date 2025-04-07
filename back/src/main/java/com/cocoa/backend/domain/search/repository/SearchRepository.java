@@ -10,10 +10,8 @@ import java.util.List;
 @Repository
 public interface SearchRepository extends ElasticsearchRepository<SearchDocument, String> {
     List<SearchDocument> findByNameContainingOrBrandContaining(String name, String brand);
-//    List<SearchDocument> findByNameContaining(String name, String brand); // 부분 검색 기능
-
-
-
+    List<SearchDocument> findByNameContaining(String name);
+    List<SearchDocument> findByBrandContaining(String brand);
 
 
 //    List<SearchDocument> findByNameContaining(String name, String brand, Pageable pageable);

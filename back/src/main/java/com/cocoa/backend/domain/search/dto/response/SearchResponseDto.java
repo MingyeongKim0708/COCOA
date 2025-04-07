@@ -15,3 +15,5 @@ public class SearchResponseDto {
 
     }
 }
+//cosmeticId, name, brand라는 3개의 필드를 가진 응답 객체.
+//이 응답은 SearchService에서 List<SearchDocument> → List<SearchResponseDto>로 변환되어 반환.
