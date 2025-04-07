@@ -32,4 +32,7 @@ public class SearchDocument {
 
     @Field(type = FieldType.Text)
     private String brand;
+
+    @Field(type = FieldType.Text)
+    private String topKeyword;
 }

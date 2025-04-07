@@ -13,5 +13,5 @@ import lombok.Setter;
 public class SearchRequestDto {
     private String name;
     private String brand;
-//    private String keyword;
+    private String topKeyword;
 }

@@ -21,7 +21,7 @@ import java.util.List;
 public class SearchController {
     private final SearchService searchService;
 
-    @GetMapping("/cosmetics")
+    @GetMapping("")
     public ResponseEntity<ApiResponse<List<SearchResponseDto>>> searchCosmetics(@ModelAttribute SearchRequestDto requestDto) {
         try {
             List<SearchResponseDto> result = searchService.searchCosmetics(requestDto);

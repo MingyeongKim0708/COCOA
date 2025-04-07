@@ -15,7 +15,7 @@ import lombok.Getter;
 @Table(name = "cosmetic_keywords")
 public class CosmeticKeywords {
     @Id
-    private Long cosmeticId;
+    private Integer cosmeticId;
 
     @Column(columnDefinition = "jsonb")
     @Convert(converter = KeywordJsonConverter.class)

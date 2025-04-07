@@ -41,33 +41,47 @@ public class SearchService {
     public List<SearchResponseDto> searchCosmetics(SearchRequestDto requestDto) {
         String name = requestDto.getName();
         String brand = requestDto.getBrand();
+        String topKeyword = requestDto.getTopKeyword();
 
-        log.info("검색 요청 들어옴 : name={}, brand={}", name, brand);
+        log.info("검색 요청 들어옴 : name={}, brand={}, topKeyword={}", name, brand, topKeyword);
+        boolean isNameEmpty = name == null || name.trim().isEmpty();
+        boolean isBrandEmpty = brand == null || brand.trim().isEmpty();
+        boolean isKeywordEmpty = topKeyword == null || topKeyword.trim().isEmpty();
 
-
-        // 둘 다 비어있을 때
-        if ((name == null || name.trim().isEmpty()) && (brand == null || brand.trim().isEmpty())) {
-            log.info("⚠️ name과 brand 둘 다 비어 있어 검색 결과 없음");
+        // 모든 필드가 비어있을 경우
+        if (isNameEmpty && isBrandEmpty && isKeywordEmpty) {
+            log.warn("⚠️ name, brand, topKeyword 모두 비어 있어 검색 불가");
             return List.of();
         }
 
-        List<SearchDocument> cosmetics;
+        List<SearchDocument> results;
 
-        // name과 brand가 모두 존재할 때
-        if (name != null && !name.trim().isEmpty() && brand != null && !brand.trim().isEmpty()) {
-            cosmetics = searchRepository.findByNameContainingOrBrandContaining(name, brand);
+        // 모든 필드가 채워져 있을 경우
+        if (!isNameEmpty && !isBrandEmpty && !isKeywordEmpty) {
+            results = searchRepository.findByNameContainingAndBrandContainingAndTopKeywordContaining(name, brand, topKeyword);
         }
-        // name만 존재할 때
-        else if (name != null && !name.trim().isEmpty()) {
-            cosmetics = searchRepository.findByNameContaining(name);
-        }
-        // brand만 존재할 때
-        else {
-            cosmetics = searchRepository.findByBrandContaining(brand);
+        if (!isNameEmpty && !isBrandEmpty && !isKeywordEmpty) {
+            // name AND brand AND topKeyword
+            results = searchRepository.findByNameContainingAndBrandContainingAndTopKeywordContaining(name, brand, topKeyword);
+        } else if (!isNameEmpty && !isBrandEmpty) {
+            // name AND brand
+            results = searchRepository.findByNameContainingAndBrandContaining(name, brand);
+        } else if (!isNameEmpty && !isKeywordEmpty) {
+            // name AND topKeyword
+            results = searchRepository.findByNameContainingAndTopKeywordContaining(name, topKeyword);
+        } else if (!isBrandEmpty && !isKeywordEmpty) {
+            // brand AND topKeyword
+            results = searchRepository.findByBrandContainingAndTopKeywordContaining(brand, topKeyword);
+        } else if (!isNameEmpty) {
+            results = searchRepository.findByNameContaining(name);
+        } else if (!isBrandEmpty) {
+            results = searchRepository.findByBrandContaining(brand);
+        } else {
+            results = searchRepository.findByTopKeywordContaining(topKeyword);
         }
 
-        log.info("검색 결과 개수 : {}", cosmetics.size());
-        cosmetics.forEach(doc -> log.info("📄 Document: {}", doc));
+        log.info("📦 검색 결과 수: {}", results.size());
+        results.forEach(doc -> log.debug("📄 문서: {}", doc));
 
         /*이 부분은 Java의 Stream API를 활용해서, 가져온 SearchDocument 리스트를 클라이언트에 줄 수 있도록 SearchResponseDto로 바꿔주는 과정이야.
 
@@ -83,13 +97,14 @@ new SearchResponseDto(...)
 
 .collect(Collectors.toList())
 → 변환된 결과들을 다시 리스트 형태로 모아줌.*/
-        return cosmetics.stream()
+        return results.stream()
                 .filter(Objects::nonNull)
                 .filter(doc -> doc.getCosmeticId() != null && doc.getName() != null && doc.getBrand() != null)
                 .map(search -> new SearchResponseDto(
                         search.getCosmeticId(),
                         search.getName(),
-                        search.getBrand()))
+                        search.getBrand(),
+                        search.getTopKeyword()))
                 .collect(Collectors.toList());
     }
 
