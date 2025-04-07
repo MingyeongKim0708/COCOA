@@ -1,13 +1,13 @@
 package com.cocoa.backend.domain.cosmetic.dto.response;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryResponseDto {
+public class CategoryResponseDTO {
 
     private Integer categoryId;
     private String majorCategory;

@@ -2,16 +2,7 @@ package com.cocoa.backend.domain.cosmetic.entity;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,7 +17,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "cosmetics")
 public class Cosmetic {
 
-    // strategy = GenerationType.IDENTITY : 자동 증가 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cosmetic_id")
@@ -47,8 +37,8 @@ public class Cosmetic {
     @Column(name = "brand")
     private String brand;
 
-    @Column(name = "category_id")
-    private Integer categoryId;
+//    @Column(name = "category_id")
+//    private Integer categoryId;
 
     @Column(name = "reputation1")
     private String reputation1;
@@ -89,4 +79,8 @@ public class Cosmetic {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "cosmetic_id")
     private CosmeticKeywords cosmeticKeywords;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 }

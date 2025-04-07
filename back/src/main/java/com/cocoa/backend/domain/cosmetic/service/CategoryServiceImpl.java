@@ -1,7 +1,7 @@
 package com.cocoa.backend.domain.cosmetic.service;
 
 // 프론트로 보낼 DTO
-import com.cocoa.backend.domain.cosmetic.dto.response.CategoryResponseDto;
+import com.cocoa.backend.domain.cosmetic.dto.response.CategoryResponseDTO;
 
 // JPA 엔티티(DB에서 가져온 데이터)
 import com.cocoa.backend.domain.cosmetic.entity.Category;
@@ -34,22 +34,21 @@ public class CategoryServiceImpl implements CategoryService {
 
     // CategoryService에서 정의한 메서드 구현 중 (인터페이스 메서드 구현)
     @Override
-    public List<CategoryResponseDto> getAllCategories() {
+    public List<CategoryResponseDTO> getAllCategories() {
         // Repository에서 모든 카테고리 엔티티를 가져옴 (DB SELECT * FROM cosmetic_categories)
         List<Category> categories = categoryRepository.findAll();
 
-        // log 출력 (변경시 서버 재실행 필요)
         log.info("✅ 카테고리 개수: {}", categories.size());
-        categories.forEach(c ->
-                log.debug("🟣 {} | {} > {}", c.getCategoryId(), c.getMajorCategory(), c.getMiddleCategory())
-        );
+//        categories.forEach(c ->
+//                log.debug("🟣 {} | {} > {}", c.getCategoryId(), c.getMajorCategory(), c.getMiddleCategory())
+//        );
 
         // 가져온 List<Category>를 스트림으로 변환(for문 처럼 하나씩 처리할 수 있음)
         return categories.stream()
                 // 각 Category 객체를 CategoryResponseDto로 변환
                 // map은 변환 작업을 위한 함수
                 // collect는 변환된 결과를 다시 List로 모아서 리턴
-                .map(c -> new CategoryResponseDto(
+                .map(c -> new CategoryResponseDTO(
                         c.getCategoryId(),
                         c.getMajorCategory(),
                         c.getMiddleCategory(),
