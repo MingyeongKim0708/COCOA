@@ -58,9 +58,6 @@ public class SearchService {
 
         // 모든 필드가 채워져 있을 경우
         if (!isNameEmpty && !isBrandEmpty && !isKeywordEmpty) {
-            results = searchRepository.findByNameContainingAndBrandContainingAndTopKeywordContaining(name, brand, topKeyword);
-        }
-        if (!isNameEmpty && !isBrandEmpty && !isKeywordEmpty) {
             // name AND brand AND topKeyword
             results = searchRepository.findByNameContainingAndBrandContainingAndTopKeywordContaining(name, brand, topKeyword);
         } else if (!isNameEmpty && !isBrandEmpty) {
