@@ -1,0 +1,6 @@
+flask
+pyspark
+konlpy
+jpype1
+psycopg2-binary
+python-dotenv
