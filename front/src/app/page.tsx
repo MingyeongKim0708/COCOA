@@ -8,7 +8,7 @@ export default function Home() {
   };
   return (
     <div className="relative z-0 mx-[-1.25rem] flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-white via-pink3 to-brown1 text-center">
-      <div className="absolute top-[calc(50%-6.5rem)] pt-0 font-cute text-desc">
+      <div className="absolute top-[calc(50%-7rem)] pt-0 font-cute text-desc">
         <p
           className="outlined-text relative text-brown1"
           data-content="오직 당신을 위한 화장품을 찾아주는"
@@ -21,10 +21,10 @@ export default function Home() {
       <img
         src="/logo_pink.svg"
         alt="logo"
-        className="absolute left-1/2 top-[calc(50%-3.5rem)] w-[200px] -translate-x-1/2 -translate-y-1/2"
+        className="absolute left-1/2 top-[calc(50%-3.5rem)] w-56 -translate-x-1/2 -translate-y-1/2"
       />
 
-      <div className="absolute bottom-12 w-[80%]">
+      <div className="absolute bottom-12 w-3/4">
         <button
           onClick={handleKakaoLogin}
           className="relative flex h-[3rem] w-full items-center justify-center rounded-[12px] bg-[#FEE500] font-semibold tracking-wider text-[#000000D9] transition hover:brightness-95 active:brightness-90"
@@ -34,7 +34,7 @@ export default function Home() {
             alt="kakao"
             className="absolute left-[1rem] h-5 w-5"
           />
-          카카오 로그인
+          카카오톡으로 시작하기
         </button>
       </div>
       <img
