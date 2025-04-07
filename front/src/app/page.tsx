@@ -27,12 +27,12 @@ export default function Home() {
       <div className="absolute bottom-12 w-3/4">
         <button
           onClick={handleKakaoLogin}
-          className="relative flex h-[3rem] w-full items-center justify-center rounded-[12px] bg-[#FEE500] font-semibold tracking-wider text-[#000000D9] transition hover:brightness-95 active:brightness-90"
+          className="relative flex h-12 w-full items-center justify-center rounded-xl bg-[#FEE500] font-semibold tracking-wider text-[#000000D9] transition hover:brightness-95 active:brightness-90"
         >
           <img
             src="/kakao-icon.svg"
             alt="kakao"
-            className="absolute left-[1rem] h-5 w-5"
+            className="absolute left-4 h-5 w-5"
           />
           카카오톡으로 시작하기
         </button>
