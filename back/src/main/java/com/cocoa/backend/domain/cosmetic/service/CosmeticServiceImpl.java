@@ -5,6 +5,8 @@ import com.cocoa.backend.domain.cosmetic.dto.response.CosmeticResponseDTO;
 import com.cocoa.backend.domain.cosmetic.entity.Cosmetic;
 import com.cocoa.backend.domain.cosmetic.entity.CosmeticKeywords;
 import com.cocoa.backend.domain.cosmetic.repository.CosmeticRepository;
+import com.cocoa.backend.global.exception.CustomException;
+import com.cocoa.backend.global.exception.InterestErrorCode;
 import com.cocoa.backend.global.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -149,11 +151,17 @@ public class CosmeticServiceImpl implements CosmeticService {
 
     @Override
     public void addInterest(Long userId, Long cosmeticId) {
+        if (redisService.isLikedCosmetic(userId, cosmeticId)) {
+            throw new CustomException(InterestErrorCode.ALREADY_INTERESTED);
+        }
         redisService.addInterestProduct(userId, cosmeticId);
     }
 
     @Override
     public void removeInterest(Long userId, Long cosmeticId) {
+        if (!redisService.isLikedCosmetic(userId, cosmeticId)) {
+            throw new CustomException(InterestErrorCode.INTEREST_NOT_FOUND);
+        }
         redisService.removeInterestProduct(userId, cosmeticId);
     }
 
