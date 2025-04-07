@@ -1,7 +1,7 @@
 {
   "name": "COCOA",
   "short_name": "COCOA",
-  "start_url": "/",
+  "start_url": "/home",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#fec5bb",

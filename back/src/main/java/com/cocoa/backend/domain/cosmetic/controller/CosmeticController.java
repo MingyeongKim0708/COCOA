@@ -1,11 +1,13 @@
 package com.cocoa.backend.domain.cosmetic.controller;
 
 import com.cocoa.backend.domain.cosmetic.dto.request.CompareRequestDTO;
-import com.cocoa.backend.domain.cosmetic.dto.response.CategoryResponseDto;
+import com.cocoa.backend.domain.cosmetic.dto.response.CategoryResponseDTO;
 import com.cocoa.backend.domain.cosmetic.dto.response.CompareModalResponseDTO;
 import com.cocoa.backend.domain.cosmetic.dto.response.CompareResponseDTO;
+import com.cocoa.backend.domain.cosmetic.dto.response.CosmeticResponseDTO;
 import com.cocoa.backend.domain.cosmetic.service.CategoryService;
 import com.cocoa.backend.domain.cosmetic.service.CompareService;
+import com.cocoa.backend.domain.cosmetic.service.CosmeticService;
 import com.cocoa.backend.domain.user.dto.CustomOAuth2UserDTO;
 import com.cocoa.backend.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +16,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -23,18 +28,33 @@ public class CosmeticController {
 
     private final CategoryService categoryService;
     private final CompareService compareService;
+    private final CosmeticService cosmeticService;
 
-    public CosmeticController(CategoryService categoryService, CompareService compareService) {
+    public CosmeticController(CategoryService categoryService, CompareService compareService, CosmeticService cosmeticService) {
         this.categoryService = categoryService;
         this.compareService = compareService;
+        this.cosmeticService = cosmeticService;
     }
 
     @Operation(summary = "카테고리 전체 조회", description = "모든 카테고리를 조회합니다.")
     @GetMapping("/category")
-    public ResponseEntity<ApiResponse<List<CategoryResponseDto>>> getAllCategires() {
+    public ResponseEntity<ApiResponse<List<CategoryResponseDTO>>> getAllCategires() {
         log.info("GET /category 요청 처리 시작");
-        List<CategoryResponseDto> categories = categoryService.getAllCategories();
+        List<CategoryResponseDTO> categories = categoryService.getAllCategories();
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(categories));
+    }
+
+    @Operation(summary = "카테고리별 제품 조회", description = "해당 카테고리에 속한 제품을 조회합니다.")
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<ApiResponse<List<CosmeticResponseDTO>>> getCosmeticsByCategory(
+            @PathVariable Integer categoryId,
+            Authentication authentication) {
+
+        CustomOAuth2UserDTO userDetails = (CustomOAuth2UserDTO) authentication.getPrincipal();
+        Long userId = userDetails.getUserId();
+
+        List<CosmeticResponseDTO> cosmetics = cosmeticService.getCosmeticsByCategoryId(categoryId, userId);
+        return ResponseEntity.ok(ApiResponse.success(cosmetics));
     }
 
     @Operation(summary = "비교함에 등록 및 교체", description = "originalItemId가 존재하지 않으면 등록, 존재하면 교체")
