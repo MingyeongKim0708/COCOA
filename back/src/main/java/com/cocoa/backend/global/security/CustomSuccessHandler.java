@@ -59,5 +59,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         } else {
             response.sendRedirect(CLIENT_URL + "/welcome"); // 로그인
         }
+
+        log.info("✅ 발급된 AccessToken: {}", accessToken);
+        log.info("✅ 발급된 RefreshToken: {}", refreshToken);
+
     }
 }
