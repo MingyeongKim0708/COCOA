@@ -24,7 +24,7 @@ public class CosmeticResponseDTO {
     private List<String> topKeywords;
 
     // 사용자별 관심 여부
-    private boolean isLiked;
+    private boolean liked;
     private long likeCount;
     private int reviewCount;
 
