@@ -114,7 +114,6 @@ new SearchResponseDto(...)
                             : "profile-image/default_profile.png";
 
                     String fullImageUrl = String.format("%s/%s", s3Url, imageUrl1);
-                    log.info("S3 URL 환경변수 : {}", s3Url);
 
                     // ✅ S3_URL과 경로를 결합
                     return new SearchResponseDto(
