@@ -11,8 +11,8 @@ import UserInfo from "@/app/_components/user/UserInfo";
 import { fetchWrapper } from "@/lib/fetchWrapper";
 
 interface ReviewListProps {
-  userId?: number;
-  cosmeticId?: number;
+  userId?: string;
+  cosmeticId?: string;
 }
 
 export default function ReviewListPage({ userId }: ReviewListProps) {
