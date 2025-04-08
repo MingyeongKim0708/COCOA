@@ -6,12 +6,14 @@ import com.cocoa.backend.domain.cosmetic.dto.response.CompareResponseDTO;
 import com.cocoa.backend.domain.cosmetic.entity.Cosmetic;
 import com.cocoa.backend.domain.cosmetic.errorcode.CompareErrorCode;
 import com.cocoa.backend.domain.cosmetic.repository.CosmeticRepository;
+import com.cocoa.backend.domain.user.entity.User;
 import com.cocoa.backend.domain.user.entity.UserKeywords;
 import com.cocoa.backend.domain.user.errorcode.UserErrorCode;
 import com.cocoa.backend.domain.user.repository.UserKeywordsRepository;
 import com.cocoa.backend.domain.user.repository.UserRepository;
 import com.cocoa.backend.global.exception.CustomException;
 import com.cocoa.backend.global.redis.RedisService;
+import com.cocoa.backend.global.util.UserUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -24,11 +26,13 @@ public class CompareServiceImpl implements CompareService {
     private final RedisService redisService;
     private final CosmeticRepository cosmeticRepository;
     private final UserKeywordsRepository userKeywordsRepository;
+    private final UserRepository userRepository;
 
-    public CompareServiceImpl(RedisService redisService, CosmeticRepository cosmeticRepository, UserKeywordsRepository userKeywordsRepository) {
+    public CompareServiceImpl(RedisService redisService, CosmeticRepository cosmeticRepository, UserKeywordsRepository userKeywordsRepository, UserRepository userRepository) {
         this.redisService = redisService;
         this.cosmeticRepository = cosmeticRepository;
         this.userKeywordsRepository = userKeywordsRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -81,11 +85,21 @@ public class CompareServiceImpl implements CompareService {
                 .map(Long::intValue)
                 .toList();
         List<Cosmetic> items = cosmeticRepository.findAllById(itemIds);
+        log.info("레디스에 등록된 itemIds : {}", itemIds);
 
         // 사용자 키워드와의 교집합
-        UserKeywords userKeywords = userKeywordsRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
-        Set<String> userKeywordSet = userKeywords.getTopKeywords().keySet();
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
+        Set<String> userKeywordSet = new HashSet<>();
+        userKeywordSet.add(String.valueOf(user.getGender()));
+        userKeywordSet.add(String.valueOf(user.getSkinType()));
+        userKeywordSet.add(String.valueOf(user.getSkinTone()));
+        String ageGroup = UserUtil.calculateAgeGroup(user.getBirthDate());
+        userKeywordSet.add(ageGroup);
+
+        UserKeywords userKeywords = userKeywordsRepository.findById(userId).orElse(null);
+        if (userKeywords != null && userKeywords.getTopKeywords() != null) {
+            userKeywordSet.addAll(userKeywords.getTopKeywords().keySet());
+        }
 
         return items.stream().map(item -> {
             // 키워드 상위 5개 추출

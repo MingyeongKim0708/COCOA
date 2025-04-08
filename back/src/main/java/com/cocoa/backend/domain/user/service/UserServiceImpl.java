@@ -10,6 +10,7 @@ import com.cocoa.backend.global.exception.CustomException;
 import com.cocoa.backend.global.redis.RedisService;
 import com.cocoa.backend.global.util.CookieUtil;
 import com.cocoa.backend.global.util.JWTUtil;
+import com.cocoa.backend.global.util.UserUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -117,7 +118,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new RuntimeException("사용자 없음"));
         log.info("user nickname : {}", user.getNickname());
 
-        String ageGroup = calculateAgeGroup(user.getBirthDate());
+        String ageGroup = UserUtil.calculateAgeGroup(user.getBirthDate());
 
         Map<String, Integer> topKeywords = null;
         if (user.getUserKeywords() != null) {
@@ -138,17 +139,6 @@ public class UserServiceImpl implements UserService {
                 userDTO,
                 topKeywords
         );
-    }
-
-    private String calculateAgeGroup(LocalDate birthDate) {
-        int age = Period.between(birthDate, LocalDate.now()).getYears();
-
-        if (age < 20) return "10대";
-        if (age < 30) return "20대";
-        if (age < 40) return "30대";
-        if (age < 50) return "40대";
-        if (age < 60) return "50대";
-        return "60대 이상";
     }
 
     @Override
