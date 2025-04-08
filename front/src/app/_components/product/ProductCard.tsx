@@ -39,6 +39,7 @@ const ProductCard = ({ cosmetic }: ProductCardProps) => {
 
         <div className="mt-2">
           <ProductActionBar
+            productId={cosmetic.id}
             likeCount={cosmetic.likeCount}
             isLiked={cosmetic.isLiked}
           />

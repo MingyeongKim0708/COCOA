@@ -57,6 +57,14 @@ public class CosmeticController {
         return ResponseEntity.ok(ApiResponse.success(cosmetics));
     }
 
+    @Operation(summary = "비교함에 등록된 제품id 조회")
+    @GetMapping("/compare-ids")
+    public ResponseEntity<ApiResponse<List<Integer>>> getCompareItemIds(Authentication authentication) {
+        CustomOAuth2UserDTO userDetails = (CustomOAuth2UserDTO) authentication.getPrincipal();
+        List<Integer> compareItemIds = compareService.getCompareItemIds(userDetails.getUserId());
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(compareItemIds));
+    }
+
     @Operation(summary = "비교함에 등록 및 교체", description = "originalItemId가 존재하지 않으면 등록, 존재하면 교체")
     @PostMapping("/compare")
     public ResponseEntity<ApiResponse<Void>> addOrReplaceCompareItems(@RequestBody CompareRequestDTO requestDTO, Authentication authentication) {

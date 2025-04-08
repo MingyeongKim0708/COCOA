@@ -32,6 +32,14 @@ public class CompareServiceImpl implements CompareService {
     }
 
     @Override
+    public List<Integer> getCompareItemIds(Long userId) {
+        return redisService.getCompareItems(userId).stream()
+                .map(Long::parseLong)
+                .map(Long::intValue)
+                .toList();
+    }
+
+    @Override
     public void addOrReplaceCompareItem(Long userId, Long originalItemId, Long newItemId) {
         if (redisService.isItemInCompare(userId, newItemId)) {
             throw new CustomException(CompareErrorCode.ALREADY_EXISTS);
