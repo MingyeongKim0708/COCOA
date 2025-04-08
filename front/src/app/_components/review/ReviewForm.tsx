@@ -76,7 +76,7 @@ export default function ReviewForm({
   };
 
   const reviewGuideBody = (
-    <div className="flex flex-col gap-4 text-sm">
+    <div className="flex flex-col gap-4">
       <p>
         <b>
           당신의 경험을 더 자세히 알려주신다면
