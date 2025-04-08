@@ -34,35 +34,35 @@ public class RedisService {
 		return "user:" + userId + ":compare";
 	}
 
-	// 관심 리뷰 추가
-	public void addHelpfulReview(long userId, long reviewId) {
-		redisTemplate.opsForSet().add(getHelpfulKey(userId), String.valueOf(reviewId));
-	}
+    // 관심 리뷰 추가
+    public void addHelpfulReview(long userId, long reviewId) {
+        redisTemplate.opsForSet().add(getHelpfulKey(userId), String.valueOf(reviewId));
+    }
 
-	// 관심 리뷰 삭제
-	public void removeHelpfulReview(long userId, long reviewId) {
-		redisTemplate.opsForSet().remove(getHelpfulKey(userId), String.valueOf(reviewId));
-	}
+    // 관심 리뷰 삭제
+    public void removeHelpfulReview(long userId, long reviewId) {
+        redisTemplate.opsForSet().remove(getHelpfulKey(userId), String.valueOf(reviewId));
+    }
 
-	// 관심 리뷰 조회
-	public Set<String> getHelpfulReviewIds(long userId) {
-		return redisTemplate.opsForSet().members(getHelpfulKey(userId));
-	}
+    // 관심 리뷰 조회
+    public Set<String> getHelpfulReviewIds(long userId) {
+        return redisTemplate.opsForSet().members(getHelpfulKey(userId));
+    }
 
-	// 관심 여부 확인
-	public boolean isHelpfulForMe(long userId, long reviewId) {
-		return redisTemplate.opsForSet().isMember(getHelpfulKey(userId), String.valueOf(reviewId));
-	}
+    // 관심 여부 확인
+    public boolean isHelpfulForMe(long userId, long reviewId) {
+        return redisTemplate.opsForSet().isMember(getHelpfulKey(userId), String.valueOf(reviewId));
+    }
 
-	// refreshToken 등록
-	public void saveRefreshToken(Long userId, String refreshToken, long expireTimeMs) {
-		redisTemplate.opsForValue().set(getRefreshTokenKey(userId), refreshToken, expireTimeMs, TimeUnit.MILLISECONDS);
-	}
+    // refreshToken 등록
+    public void saveRefreshToken(Long userId, String refreshToken, long expireTimeMs) {
+        redisTemplate.opsForValue().set(getRefreshTokenKey(userId), refreshToken, expireTimeMs, TimeUnit.MILLISECONDS);
+    }
 
-	// refreshToken 조회
-	public String getRefreshToken(Long userId) {
-		return redisTemplate.opsForValue().get(getRefreshTokenKey(userId));
-	}
+    // refreshToken 조회
+    public String getRefreshToken(Long userId) {
+        return redisTemplate.opsForValue().get(getRefreshTokenKey(userId));
+    }
 
     // refreshToken 삭제
     public void deleteRefreshToken(Long userId) {

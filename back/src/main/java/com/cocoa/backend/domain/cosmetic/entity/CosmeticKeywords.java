@@ -3,7 +3,6 @@ package com.cocoa.backend.domain.cosmetic.entity;
 import java.util.Map;
 
 import com.cocoa.backend.global.converter.KeywordJsonConverter;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;

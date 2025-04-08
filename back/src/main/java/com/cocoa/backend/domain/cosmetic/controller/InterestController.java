@@ -33,6 +33,7 @@ public class InterestController {
         return ResponseEntity.ok(ApiResponse.success("관심 제품 등록 성공"));
     }
 
+    @Operation(summary = "관심 제품 해제", description = "관심 제품을 해제합니다.")
     @DeleteMapping("/{cosmeticId}/like")
     public ResponseEntity<ApiResponse<String>> removeInterest(
             @PathVariable Long cosmeticId,
@@ -42,6 +43,7 @@ public class InterestController {
         return ResponseEntity.ok(ApiResponse.success("관심 제품 해제 성공"));
     }
 
+    @Operation(summary = "관심 제품 목록 조회", description = "관심 제품 목록을 조회합니다.")
     @GetMapping("/likes")
     public ResponseEntity<ApiResponse<List<CosmeticResponseDTO>>> getLikedCosmetics(
             Authentication authentication) {
