@@ -5,7 +5,6 @@ import com.cocoa.backend.domain.cosmetic.entity.Cosmetic;
 import com.cocoa.backend.domain.search.dto.request.SearchRequestDto;
 import com.cocoa.backend.domain.search.dto.response.SearchResponseDto;
 import com.cocoa.backend.domain.search.entity.SearchDocument;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.cocoa.backend.domain.search.repository.SearchCosmeticRepository;
 import com.cocoa.backend.domain.search.repository.SearchRepository;
@@ -26,9 +25,6 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Slf4j
 public class SearchService {
-
-    @Value("${S3_URL}")
-    private String s3Url;
 
     // final : final
     //→ 한 번 초기화되면 변경되지 않음을 보장해.
@@ -113,7 +109,7 @@ new SearchResponseDto(...)
                             ? cosmetic.getImageUrl1()
                             : "profile-image/default_profile.png";
 
-                    String fullImageUrl = String.format("%s/%s", s3Url, imageUrl1);
+                    String fullImageUrl = String.format("%s", imageUrl1);
 
                     // ✅ S3_URL과 경로를 결합
                     return new SearchResponseDto(
