@@ -93,10 +93,10 @@ public class SearchIndexService {
         Map<String, Integer> keywords = optional.get().getKeywords();
         if (keywords == null || keywords.isEmpty()) return "";
 
-        // 상위 5개의 키워드만 선택
+        // 상위 3개의 키워드만 선택
         return keywords.entrySet().stream()
                 .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue())) // 내림차순
-                .limit(5)
+                .limit(3)
                 .map(Map.Entry::getKey)
                 .collect(Collectors.joining(","));
     }
