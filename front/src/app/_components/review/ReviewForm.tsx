@@ -79,9 +79,8 @@ export default function ReviewForm({
     <div className="flex flex-col gap-4 text-sm">
       <p>
         <b>
-          당신의 경험을 더 자세히 알려주신다면 좀 더 정확한 맞춤 추천이
-          <br />
-          가능해요.
+          당신의 경험을 더 자세히 알려주신다면
+          <br /> 좀 더 정확한 맞춤 추천이 가능해요.
         </b>
       </p>
       <div>
@@ -124,13 +123,13 @@ export default function ReviewForm({
           />
         </>
       )}
-      <div className="flex flex-col gap-3 py-2">
+      <div className="flex flex-col gap-5 pt-4">
         <ReviewProductInfo cosmetic={cosmetic} />
 
         {/* 만족도 */}
-        <div className="flex flex-col items-center text-center">
+        <div className="flex flex-col items-center gap-2 text-center">
           <T4 children="해당 상품 사용 경험이 긍정적이셨나요?" />
-          <div className="mt-2 flex gap-6">
+          <div className="flex gap-6">
             <button onClick={() => setSatisfied(true)} className="p-2">
               <ThumbsUp
                 className={`${satisfied === true ? "text-pink1" : "text-gray3"} w-20`}
@@ -158,7 +157,7 @@ export default function ReviewForm({
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder="제품 사용 후기를 자유롭게 작성해 주세요."
-            className="min-h-36 w-full resize-none rounded-lg border border-gray-300 p-4 focus:outline-none focus:ring-2 focus:ring-pink1"
+            className="min-h-72 w-full resize-none rounded-lg border border-gray-300 p-4 focus:outline-none focus:ring-2 focus:ring-pink1"
           />
         </div>
 
@@ -173,7 +172,7 @@ export default function ReviewForm({
           />
         </div>
 
-        <div className="px-3">
+        <div className="flex justify-center">
           <Button onClick={handleSubmit}>
             {initialReview ? "리뷰 수정하기" : "리뷰 등록하기"}
           </Button>

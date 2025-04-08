@@ -26,11 +26,11 @@ export default function ReviewImageGrid({
   return (
     <div className="flex flex-row gap-3 overflow-x-auto py-2">
       {previews.map((src, idx) => (
-        <div key={idx} className="relative">
+        <div key={idx} className="relative block w-24 flex-shrink-0">
           <img
             src={src}
             alt={`img-${idx}`}
-            className="h-16 w-16 flex-shrink-0 rounded-lg border border-gray-300 object-cover"
+            className="h-24 w-24 flex-shrink-0 rounded-lg border border-gray3 object-fill"
           />
           {editable && onRemove && (
             <button
@@ -48,7 +48,7 @@ export default function ReviewImageGrid({
         <>
           <label
             htmlFor="image-upload"
-            className="flex h-16 w-16 flex-shrink-0 cursor-pointer items-center justify-center rounded-lg border border-dashed border-gray-300 text-3xl text-gray-400"
+            className="flex h-24 w-24 flex-shrink-0 cursor-pointer items-center justify-center rounded-lg border border-dashed border-gray2 text-size2 text-gray2"
           >
             +
           </label>

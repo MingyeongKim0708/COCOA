@@ -8,9 +8,11 @@ import ReviewCard from "@/app/_components/review/ReviewCard";
 import PageHeader from "@/app/_components/common/PageHeader";
 import { reviewCosmetic, reviewUser } from "@/mocks/dummyReviews";
 import UserInfo from "@/app/_components/user/UserInfo";
+import { fetchWrapper } from "@/lib/fetchWrapper";
 
 interface ReviewListProps {
-  userId: string;
+  userId?: number;
+  cosmeticId?: number;
 }
 
 export default function ReviewListPage({ userId }: ReviewListProps) {
@@ -25,20 +27,19 @@ export default function ReviewListPage({ userId }: ReviewListProps) {
     setReviews([reviewCosmetic, reviewUser]);
   }, []);
 
-  // // 👉 진입 시 cosmetic 정보 가져오기
   useEffect(() => {
     if (!userId || Array.isArray(userId)) return;
 
     const fetchReviews = async () => {
       try {
         setLoading(true);
-        const res = await fetch(
+        const res = await fetchWrapper(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/users/${userId}`,
         );
         if (!res.ok) throw new Error("failed");
         const data = await res.json();
         setUserInfo(data.user);
-        setReviews(data.review);
+        setReviews(data.reviews);
       } catch (e) {
         setError(true);
       } finally {
@@ -47,14 +48,25 @@ export default function ReviewListPage({ userId }: ReviewListProps) {
     };
 
     fetchReviews();
-  }, [userId]);
+  }, []);
+
+  const reviewRequest = async () => {
+    const res = await fetchWrapper(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/users/${userId}`,
+    );
+    if (!res.ok) throw new Error("failed");
+    const data = await res.json();
+    setReviews(reviews?.concat(data.reviews) || null);
+  };
 
   return (
     <>
-      <PageHeader
-        title={`리뷰 ${reviews ? reviews.length : 0}`}
-        showBackButton
-      />
+      {
+        <PageHeader
+          title={`리뷰 ${reviews ? reviews.length : 0}`}
+          showBackButton
+        />
+      }
       <div>
         <UserInfo user={userInfo} />
         {reviews?.map((review) => (
