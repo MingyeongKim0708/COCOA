@@ -20,8 +20,8 @@ public class CosmeticResponseDTO {
     private List<String> images;
 
     // 키워드 정보
-    private Map<String, Integer> keywords;
-    private List<String> topKeywords;
+    private Map<String, Integer> keywords; // 15개짜리로 변경
+    private List<String> topKeywords; // 3개 5개든 필요한만큼 보내주는걸로(가중치 필요없는곳)
 
     // 사용자별 관심 여부
     private boolean liked;
