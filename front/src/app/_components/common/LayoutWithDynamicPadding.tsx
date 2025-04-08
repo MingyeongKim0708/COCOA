@@ -10,7 +10,6 @@ import BottomNav from "./BottomNav";
 const noHeaderRoutes = [
   "/", // Landing
   "/sign-up/complete", // 회원가입 완료
-  "/home", // 홈
   "/search", // 검색
   "/search/result?", //검색 결과
   "/my", //마이페이지
