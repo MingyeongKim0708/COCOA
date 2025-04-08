@@ -2,24 +2,27 @@
 
 import ReviewForm from "@/app/_components/review/ReviewForm";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Cosmetic } from "@/types/cosmetic";
 import { dummyProducts } from "@/mocks/dummyProducts";
 import { fetchWrapper } from "@/lib/fetchWrapper";
 
-export default function ReviewWritePage() {
+function ReviewWritePage() {
   const searchParams = useSearchParams();
-  let cosmeticId = searchParams.get("cosmeticId");
+  const cosmeticId = searchParams.get("cosmeticId");
 
   const [cosmetic, setCosmetic] = useState<Cosmetic | null>(null);
   const router = useRouter();
 
   useEffect(() => {
-    if (!cosmeticId) setCosmetic(dummyProducts[0]);
-    // ${process.env.NEXT_PUBLIC_API_BASE_URL}
-    fetch(`localhost:8080/cosmetics/${cosmeticId}`)
-      .then((res) => res.json())
-      .then((data) => setCosmetic(data));
+    if (!cosmeticId) {
+      setCosmetic(dummyProducts[0]);
+    } else {
+      // ${process.env.NEXT_PUBLIC_API_BASE_URL}
+      fetch(`localhost:8080/cosmetics/${cosmeticId}`)
+        .then((res) => res.json())
+        .then((data) => setCosmetic(data));
+    }
   }, [cosmeticId]);
 
   const handleSubmit = async ({
@@ -59,5 +62,13 @@ export default function ReviewWritePage() {
     <ReviewForm cosmetic={cosmetic} onSubmit={handleSubmit} />
   ) : (
     <div>로딩 중...</div>
+  );
+}
+export default function ReviewWriteSuspense() {
+  return (
+    // You could have a loading skeleton as the `fallback` too
+    <Suspense>
+      <ReviewWritePage />
+    </Suspense>
   );
 }

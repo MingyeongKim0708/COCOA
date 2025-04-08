@@ -1,11 +1,10 @@
+"use client";
+
 import UserReviewListPage from "@/app/_components/review/UserReviewListPage";
 
-interface ReviewPageProps {
-  params: {
-    userId: string;
-  };
-}
+import { useParams } from "next/navigation";
 
-export default function Page({ params }: ReviewPageProps) {
+export default function Page() {
+  const params = useParams<{ userId: string }>();
   return <UserReviewListPage userId={params.userId} />;
 }

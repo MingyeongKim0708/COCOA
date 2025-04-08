@@ -1,15 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import ReviewForm from "@/app/_components/review/ReviewForm";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Review } from "@/types/review";
 import { fetchWrapper } from "@/lib/fetchWrapper";
 
-export default function ReviewEditPage() {
+function ReviewEditPage() {
   const searchParams = useSearchParams();
-  let reviewId = searchParams.get("reviewId");
+  const reviewId = searchParams.get("reviewId");
 
   const [review, setReview] = useState<Review | null>(null);
   const router = useRouter();
@@ -70,5 +70,14 @@ export default function ReviewEditPage() {
     />
   ) : (
     <div>로딩 중...</div>
+  );
+}
+
+export default function ReviewEditSuspense() {
+  return (
+    // You could have a loading skeleton as the `fallback` too
+    <Suspense>
+      <ReviewEditPage />
+    </Suspense>
   );
 }
