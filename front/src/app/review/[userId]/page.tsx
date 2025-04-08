@@ -1,5 +1,11 @@
 import UserReviewListPage from "@/app/_components/review/UserReviewListPage";
 
-export default function Page({ params }: { params: { userId: string } }) {
+interface PageProps {
+  params: {
+    userId: string;
+  };
+}
+
+export default function Page({ params }: PageProps) {
   return <UserReviewListPage userId={params.userId} />;
 }
