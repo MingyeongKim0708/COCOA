@@ -32,20 +32,6 @@ export default function WelcomePage() {
         console.error("로그인 오류", err);
         router.push("/");
       }
-
-      //   const res = await fetch(`${baseUrl}/user`, {
-      //     credentials: "include",
-      //   });
-      //   if (res.ok) {
-      //     const data = await res.json();
-
-      //     setUser(data.data.user);
-      //     setKeywords(data.data.keywords);
-
-      //     router.push("/home"); // 홈으로 이동
-      //   } else {
-      //     router.push("/");
-      //   }
     };
 
     fetchUser();
