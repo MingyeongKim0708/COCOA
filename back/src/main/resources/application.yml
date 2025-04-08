@@ -46,6 +46,10 @@ spring:
     elasticsearch:
       repositories:
         enabled: true
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
   elasticsearch:
     uris: ${ELASTIC_HOST}:${ELASTIC_PORT}
     username: ${ELASTIC_USERNAME}

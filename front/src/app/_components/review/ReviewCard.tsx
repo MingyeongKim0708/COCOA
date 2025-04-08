@@ -8,6 +8,8 @@ import ContextMenu from "../common/ContextMenu";
 import { EllipsisVertical } from "lucide-react";
 import B4 from "../common/B4";
 import B5 from "../common/B5";
+import ReviewImageGrid from "./ReviewImageGrid";
+import { fetchWrapper } from "@/lib/fetchWrapper";
 
 interface ReviewProps {
   review: Review;
@@ -37,14 +39,15 @@ const ReviewCard = ({ review }: ReviewProps) => {
     if (helpfulCount < 0) return; // 만약을 위한 예외 처리
 
     try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
       setIsLoading(true); // 요청 시작
       if (helpfulForMe) {
-        // await fetch(`/api/review/${review.reviewId}/helpful`, {
+        // await fetchWrapper(`${baseUrl}/review/${review.reviewId}/helpful`, {
         //   method: "DELETE",
         // });
         setHelpfulCount((c) => c - 1);
       } else {
-        // await fetch(`/api/review/${review.reviewId}/helpful`, {
+        // await fetchWrapper(`${baseUrl}/review/${review.reviewId}/helpful`, {
         //   method: "POST",
         // });
         setHelpfulCount((c) => c + 1);
@@ -73,6 +76,7 @@ const ReviewCard = ({ review }: ReviewProps) => {
         )}
         <B4 children={review.content} />
       </div>
+      <ReviewImageGrid urls={review.images} />
       <div className="flex justify-between p-2">
         <HelpfulButton
           helpfulCount={helpfulCount}
