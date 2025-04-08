@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { useUserStore } from "@/stores/UserStore";
 import PageHeader from "../_components/common/PageHeader";
 import { RecommendationCard } from "./_components/RecommendationCard";
 import { KeywordMarquee } from "./_components/KeywordMarquee";
@@ -7,12 +8,13 @@ import PopularNews from "./_components/PopularNews";
 import SearchBar from "../_components/common/SearchBar";
 
 export default function HomePage() {
+  const { user, keywords } = useUserStore();
   return (
     <div>
       <PageHeader
         title={
           <>
-            안녕하세요 <span className="text-pink1">도브이</span>님
+            안녕하세요 <span className="text-pink1">{user.nickname}</span>님
           </>
         }
       />

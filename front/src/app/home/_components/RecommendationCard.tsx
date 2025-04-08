@@ -1,7 +1,9 @@
 import T3 from "@/app/_components/common/T3";
 import Tag from "@/app/_components/common/Tag";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 interface RecommendedCosmetics {
   cosmeticId: number;
@@ -29,6 +31,17 @@ const cosmetics: RecommendedCosmetics[] = [
 ];
 
 export function RecommendationCard() {
+  const settings = {
+    dots: false,
+    infinite: true,
+    autoplay: true,
+    autoplaySpeed: 5000,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: false,
+  };
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const current = cosmetics[currentIndex];
 
@@ -39,6 +52,15 @@ export function RecommendationCard() {
   const handleNext = () => {
     setCurrentIndex((prev) => (prev === cosmetics.length - 1 ? 0 : prev + 1));
   };
+
+  // 자동 넘김 기능 (5초 간격)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      handleNext();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <section className="pb-5">
@@ -81,7 +103,7 @@ export function RecommendationCard() {
             {current.keywordList.map((kw, i) => (
               <Tag
                 key={i}
-                className="h-1/3 w-full bg-pink1 text-center text-white"
+                className="flex h-1/3 w-full items-center justify-center bg-pink1 text-white"
               >
                 {kw}
               </Tag>
