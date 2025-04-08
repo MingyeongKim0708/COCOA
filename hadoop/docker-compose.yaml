@@ -1,0 +1,127 @@
+services:
+  namenode:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: namenode
+    hostname: namenode
+    ports:
+      - "9000:9000"
+    volumes:
+      - namenode_data:/data/namenode
+      - secondarynamenode_data:/data/namesecondary
+      - shared_ssh:/root/.ssh
+    command: >
+      /bin/bash -c "
+      set -e;
+      if [ ! -d /data/namenode/current ]; then
+        echo '>>> Formatting HDFS'; hdfs namenode -format;
+      fi &&
+      echo '>>> Starting SSH'; /usr/sbin/sshd &&
+      echo '>>> Starting DFS'; start-dfs.sh &&
+      echo '>>> Starting YARN'; start-yarn.sh &&
+      echo '>>> Initializing HDFS directories'; /usr/local/bin/init-hdfs.sh &&
+      tail -f /dev/null"
+    networks:
+      hadoop_net:
+        aliases:
+          - namenode
+          
+  datanode-1:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: datanode-1
+    hostname: datanode-1
+    volumes:
+      - datanode1_data:/data/datanode
+      - datanode1_yarn_local:/data/yarn/local
+      - datanode1_yarn_logs:/data/yarn/logs
+      - shared_ssh:/root/.ssh
+    command: >
+      /bin/bash -c "
+      /usr/sbin/sshd & 
+      hdfs datanode & 
+      yarn nodemanager & 
+      tail -f /dev/null"
+    networks:
+      - hadoop_net
+      
+  datanode-2:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: datanode-2
+    hostname: datanode-2
+    volumes:
+      - datanode2_data:/data/datanode
+      - datanode2_yarn_local:/data/yarn/local
+      - datanode2_yarn_logs:/data/yarn/logs
+      - shared_ssh:/root/.ssh
+    command: >
+      /bin/bash -c "
+      /usr/sbin/sshd & 
+      hdfs datanode & 
+      yarn nodemanager & 
+      tail -f /dev/null"
+    networks:
+      - hadoop_net
+      
+  datanode-3:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: datanode-3
+    hostname: datanode-3
+    volumes:
+      - datanode3_data:/data/datanode
+      - datanode3_yarn_local:/data/yarn/local
+      - datanode3_yarn_logs:/data/yarn/logs
+      - shared_ssh:/root/.ssh
+    command: >
+      /bin/bash -c "
+      /usr/sbin/sshd & 
+      hdfs datanode & 
+      yarn nodemanager & 
+      tail -f /dev/null"
+    networks:
+      - hadoop_net
+ 
+  flask-api:
+    build:
+      context: ./
+      dockerfile: flask-api/Dockerfile
+    container_name: flask-api
+    hostname: flask-api
+    ports:
+      - "5000:5000"
+    volumes:
+      - shared_ssh:/root/.ssh
+    command: >
+      /bin/bash -c "
+      /app/flask-api/init-hdfs.sh &&
+      python ./flask-api/app.py"
+    depends_on:
+      - namenode
+    networks:
+      - hadoop_net
+
+networks:
+  hadoop_net:
+    driver: bridge
+    
+volumes:
+  shared_ssh:
+  namenode_data:
+  secondarynamenode_data:
+  datanode1_data:
+  datanode2_data:
+  datanode3_data:
+  yarn_local:
+  yarn_logs:
+  datanode1_yarn_local:
+  datanode1_yarn_logs:
+  datanode2_yarn_local:
+  datanode2_yarn_logs:
+  datanode3_yarn_local:
+  datanode3_yarn_logs:

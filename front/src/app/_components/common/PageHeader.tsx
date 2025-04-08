@@ -2,7 +2,7 @@ import { cn } from "@/utils/cn";
 import BackButton from "./BackButton";
 
 interface PageHeaderProps {
-  title?: string | null;
+  title?: React.ReactNode;
   showBackButton?: boolean;
   className?: string;
 }

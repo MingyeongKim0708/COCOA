@@ -10,3 +10,5 @@ const Card = ({ number, className }: CardProps) => {
 };
 
 export default Card;
+
+// home에서 안씀..

@@ -19,6 +19,7 @@ export const reviewUser: Review = {
   cosmetic: null,
   helpfulForMe: false,
   createdAt: "2023.10.21",
+  images: [],
 };
 export const reviewCosmetic: Review = {
   reviewId: 0,
@@ -52,4 +53,5 @@ export const reviewCosmetic: Review = {
   },
   helpfulForMe: false,
   createdAt: "2023.10.21",
+  images: [],
 };
