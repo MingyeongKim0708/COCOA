@@ -21,7 +21,7 @@ public class CosmeticResponseDTO {
 
     // 키워드 정보
     private Map<String, Integer> keywords; // 15개짜리로 변경
-    private List<String> topKeywords; // 3개 5개든 필요한만큼 보내주는걸로(가중치 필요없는곳)
+    private List<String> topKeywords; // 태그로 쓸 3개 보내줌(가중치 표시 필요없는곳)
 
     // 사용자별 관심 여부
     private boolean liked;
