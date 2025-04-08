@@ -68,7 +68,7 @@ export default function UserReviewListPage({ userId }: UserReviewListProps) {
         />
       }
       <div>
-        <UserInfo user={userInfo} />
+        {userInfo ? <UserInfo user={userInfo} /> : null}
         {reviews?.map((review) => (
           <ReviewCard key={review.reviewId} review={review} />
         ))}
