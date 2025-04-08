@@ -16,7 +16,7 @@ export default function CompareItemSection({
 }: Props) {
   if (!data) {
     return (
-      <div className="bg-gray2/20 flex h-[300px] items-center justify-center rounded-xl text-gray3">
+      <div className="flex h-[200px] items-center justify-center rounded-xl text-gray3">
         비교 제품 없음
       </div>
     );

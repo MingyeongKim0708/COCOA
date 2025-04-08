@@ -13,3 +13,10 @@ export interface CompareKeyword {
   count: number;
   matched: boolean;
 }
+
+export interface CompareModalItem {
+  itemId: number;
+  brand: string;
+  name: string;
+  imageUrl: string;
+}

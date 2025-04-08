@@ -2,7 +2,7 @@
 
 import CompareReplaceModal from "@/app/compare/_components/CompareRelaceModal";
 import { fetchWrapper } from "@/lib/fetchWrapper";
-import { ComparedCosmetic } from "@/types/compare";
+import { ComparedCosmetic, CompareModalItem } from "@/types/compare";
 import { BarChart2, Heart } from "lucide-react";
 import { useState } from "react";
 
@@ -22,7 +22,7 @@ const ProductActionBar = ({
   const [isLiked, setIsLiked] = useState(initialLiked);
   const [count, setCount] = useState(likeCount);
   const [showModal, setShowModal] = useState(false);
-  const [compareItems, setCompareItems] = useState<any[]>([]); // API 반환에 따라 타입 구체화 가능
+  const [compareItems, setCompareItems] = useState<CompareModalItem[]>([]); // API 반환에 따라 타입 구체화 가능
   const [newItemId, setNewItemId] = useState<number | null>(null);
 
   const handleCompare = async () => {
