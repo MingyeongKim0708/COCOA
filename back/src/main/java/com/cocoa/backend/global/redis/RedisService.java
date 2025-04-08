@@ -104,5 +104,4 @@ public class RedisService {
         return "cosmetic:" + cosmeticId + ":likedBy";
     }
 
-
 }
