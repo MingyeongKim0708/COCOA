@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -10,12 +11,11 @@ import { reviewCosmetic, reviewUser } from "@/mocks/dummyReviews";
 import UserInfo from "@/app/_components/user/UserInfo";
 import { fetchWrapper } from "@/lib/fetchWrapper";
 
-interface ReviewListProps {
-  userId?: string;
-  cosmeticId?: string;
+interface UserReviewListProps {
+  userId: string;
 }
 
-export default function ReviewListPage({ userId }: ReviewListProps) {
+export default function UserReviewListPage({ userId }: UserReviewListProps) {
   const router = useRouter();
 
   const [userInfo, setUserInfo] = useState<User | null>(null);
