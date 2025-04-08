@@ -16,7 +16,7 @@ const ProductCard = ({ cosmetic }: ProductCardProps) => {
   return (
     <div
       className="w-full max-w-[160px] bg-white pb-4"
-      onClick={goToDetail}
+      // onClick={goToDetail}
       role="button"
     >
       <img

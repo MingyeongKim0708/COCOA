@@ -1,5 +1,6 @@
 "use client";
 
+import CompareReplaceModal from "@/app/compare/_components/CompareRelaceModal";
 import { fetchWrapper } from "@/lib/fetchWrapper";
 import { ComparedCosmetic } from "@/types/compare";
 import { BarChart2, Heart } from "lucide-react";
@@ -31,6 +32,7 @@ const ProductActionBar = ({
         method: "GET",
       });
       const ids: number[] = (await response.json()).data;
+      console.log("레디스에 등록된 비교제품id : ", ids);
 
       if (ids.includes(productId)) {
         alert("이미 비교함에 등록된 제품입니다.");
@@ -39,7 +41,7 @@ const ProductActionBar = ({
 
       // 비교함 등록
       if (ids.length < 2) {
-        await fetchWrapper("/compare", {
+        await fetchWrapper(`${baseUrl}/compare`, {
           method: "POST",
           body: JSON.stringify({
             originalItemId: null,
@@ -64,6 +66,23 @@ const ProductActionBar = ({
     }
   };
 
+  const handleReplace = async (replacedId: number, newId: number) => {
+    try {
+      await fetchWrapper(`${baseUrl}/compare`, {
+        method: "POST",
+        body: JSON.stringify({
+          originalItemId: replacedId,
+          newItemId: newId,
+        }),
+      });
+      setShowModal(false);
+      alert("비교 제품이 교체되었습니다.");
+    } catch (err) {
+      alert("교체 중 오류가 발생했습니다.");
+      console.error(err);
+    }
+  };
+
   const haddleToggleLike = () => {
     if (isLiked) {
       setIsLiked(false);
@@ -84,6 +103,15 @@ const ProductActionBar = ({
         <BarChart2 />
         <span>비교</span>
       </button>
+
+      {showModal && newItemId !== null && (
+        <CompareReplaceModal
+          items={compareItems}
+          newItemId={newItemId}
+          onSelectReplace={handleReplace}
+          onClose={() => setShowModal(false)}
+        />
+      )}
 
       <button
         type="button"
