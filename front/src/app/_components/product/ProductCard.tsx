@@ -12,7 +12,7 @@ const ProductCard = ({ cosmetic }: ProductCardProps) => {
   const goToDetail = () => {
     router.push(`/product/${cosmetic.id}`);
   };
-
+  console.log("화장품 정보 : ", cosmetic);
   return (
     <div
       className="w-full max-w-[160px] bg-white pb-4"

@@ -11,7 +11,7 @@ const noHeaderRoutes = [
   "/", // Landing
   "/sign-up/complete", // 회원가입 완료
   "/search", // 검색
-  "/search/result?", //검색 결과
+  "/search/result", //검색 결과
   "/my", //마이페이지
 ];
 
