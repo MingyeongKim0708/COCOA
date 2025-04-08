@@ -42,7 +42,7 @@ export default function PopularNews() {
       // - 오늘 저장된 뉴스가 있다면 사용
       setNews(JSON.parse(cachedNews));
     } else {
-      // - 오늘 처음이거나 캐시 없음 → API 호출
+      // -오늘 처음이거나 캐시 없음 → API 호출
       //   fetchWrapper("/api/news")
       //     .then((res) => res.json())
       //     .then((data: NewsItem[]) => {
