@@ -17,8 +17,8 @@ export default function CategoryDetailPage() {
   const params = useParams();
   const categoryId = Number(params?.categoryId);
   const { user } = useUserStore();
-  const [products, setProducts] = useState<Cosmetic[]>([]);
-  const [allProducts, setAllProducts] = useState<Cosmetic[]>([]); // 전체 제품용
+  const [cosmetics, setCosmetics] = useState<Cosmetic[]>([]);
+  const [allCosmetics, setAllCosmetics] = useState<Cosmetic[]>([]); // 전체 제품용
   const [isCustomMode, setIsCustomMode] = useState(true); // 기본: 맞춤 추천
 
   const searchParams = useSearchParams();
@@ -31,25 +31,25 @@ export default function CategoryDetailPage() {
   // console.log("Product in map:", products);
 
   useEffect(() => {
-    const fetchCustomProducts = async () => {
+    const fetchCustomCosmetics = async () => {
       const res = await fetchWrapper(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/category/${categoryId}/custom`,
       );
       const data = await res.json();
-      setProducts(data);
+      setCosmetics(data);
     };
 
-    const fetchAllProducts = async () => {
+    const fetchAllCosmetics = async () => {
       const res = await fetchWrapper(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/category/${categoryId}`,
       );
       const data = await res.json();
-      setAllProducts(data.data);
+      setAllCosmetics(data.data);
     };
 
     if (categoryId && user?.id) {
-      fetchCustomProducts();
-      fetchAllProducts();
+      fetchCustomCosmetics();
+      fetchAllCosmetics();
     }
   }, [categoryId, user?.id]);
 
@@ -86,25 +86,25 @@ export default function CategoryDetailPage() {
         <Toggle isOn={isCustomMode} onToggle={handleToggle} />
       </div>
       {isCustomMode ? (
-        products.length === 0 ? (
+        cosmetics.length === 0 ? (
           <p className="pt-4 text-center text-gray2">
             아직 사용자 맞춤 키워드가 없어 <br />
             추천할 수 있는 제품이 없어요 😢
           </p>
         ) : (
           <div className="grid grid-cols-2 place-items-center gap-2">
-            {products.map((product) => {
-              // console.log("Product in map:", product);
+            {cosmetics.map((cosmetic) => {
+              // console.log("화장품 정보:", cosmetic);
               return (
-                <ProductCard cosmetic={product} key={product.cosmeticId} />
+                <ProductCard cosmetic={cosmetic} key={cosmetic.cosmeticId} />
               );
             })}
           </div>
         )
       ) : (
         <div className="grid grid-cols-2 place-items-center gap-2">
-          {allProducts.map((product) => (
-            <ProductCard cosmetic={product} key={product.cosmeticId} />
+          {allCosmetics.map((cosmetic) => (
+            <ProductCard cosmetic={cosmetic} key={cosmetic.cosmeticId} />
           ))}
         </div>
       )}
