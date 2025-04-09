@@ -8,7 +8,7 @@ import type { SearchResponse } from "@/types/search";
 import { convertSearchToCosmetic } from "@/utils/convertSearchToCosmetic";
 import ScrollToTopButton from "@/app/_components/common/ScrollToTopButton";
 
-export default function SearchResultsPage() {
+function SearchResultsPage() {
   // Next.js에서 페이지 이동을 도와줌
   const router = useRouter();
   // 현재 주소(url)에 붙은 쿼리 파라미터를 가져옴
@@ -103,7 +103,7 @@ export default function SearchResultsPage() {
     </div>
   );
 }
-export function SearchResultsSuspense() {
+export default function SearchResultsSuspense() {
   return (
     <Suspense>
       <SearchResultsPage />
