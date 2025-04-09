@@ -14,11 +14,7 @@ const ProductCard = ({ cosmetic }: ProductCardProps) => {
   };
   console.log("화장품 정보 : ", cosmetic);
   return (
-    <div
-      className="w-full max-w-[160px] bg-white pb-4"
-      // onClick={goToDetail}
-      role="button"
-    >
+    <div className="w-full max-w-[160px] bg-white pb-4" role="button">
       <div onClick={goToDetail}>
         <img
           src={cosmetic.images[0]}
@@ -42,7 +38,7 @@ const ProductCard = ({ cosmetic }: ProductCardProps) => {
 
       <div className="mt-2">
         <ProductActionBar
-          productId={cosmetic.id}
+          productId={cosmetic.cosmeticId}
           likeCount={cosmetic.likeCount}
           isLiked={cosmetic.isLiked}
         />
