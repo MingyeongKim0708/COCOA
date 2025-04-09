@@ -8,12 +8,14 @@ public class SearchResponseDto {
     private final String name;
     private final String brand;
     private final String topKeyword;
+    private final String imageUrl1;
 
-    public SearchResponseDto(String cosmeticId, String name, String brand, String topKeyword) {
+    public SearchResponseDto(String cosmeticId, String name, String brand, String topKeyword, String imageUrl1) {
         this.cosmeticId = cosmeticId;
         this.name = name;
         this.brand = brand;
         this.topKeyword = topKeyword;
+        this.imageUrl1 = imageUrl1;
 
     }
 }
