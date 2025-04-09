@@ -26,10 +26,10 @@ export default function ComparePage() {
   const left = items[0];
   const right = items[1];
 
-  const matched = ["촉촉", "히알루론산", "아이스크림"];
-  // left && right
-  //   ? [...new Set([...left.matchedKeywords, ...right.matchedKeywords])]
-  //   : [];
+  const matched =
+    left && right
+      ? [...new Set([...left.matchedKeywords, ...right.matchedKeywords])]
+      : [];
 
   useEffect(() => {
     setTimeout(() => setProgress(true), 100);
