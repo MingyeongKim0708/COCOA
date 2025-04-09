@@ -47,7 +47,7 @@ export const reviewCosmetic: Review = {
       majorCategory: "케어",
       middleCategory: "스킨",
     },
-    isLiked: false,
+    liked: false,
     likeCount: 0,
     reviewCount: 0,
     ingredient: "",

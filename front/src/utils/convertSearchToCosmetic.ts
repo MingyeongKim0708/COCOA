@@ -19,7 +19,7 @@ export function convertSearchToCosmetic(item: SearchResponse): Cosmetic {
     ],
     keywords: {}, // 기본값으로 비워진 객체
     topKeywords: item.topKeyword?.split(",") ?? [],
-    isLiked: false,
+    liked: false,
     likeCount: 0,
     reviewCount: 0,
     ingredient: "",
