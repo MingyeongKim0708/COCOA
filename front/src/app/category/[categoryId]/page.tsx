@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useCallback, useRef } from "react";
 
 import ProductCard from "@/app/_components/product/ProductCard";
 import PageHeader from "@/app/_components/common/PageHeader";
@@ -25,6 +25,11 @@ export default function CategoryDetailPage() {
   const majorCategory = searchParams.get("major");
   const middleCategory = searchParams.get("middle");
 
+  // 무한 스크롤
+  const [lastId, setLastId] = useState<number | null>(null); // cursor
+  const [hasNext, setHasNext] = useState(true); // 다음 페이지 존재 여부
+  const [isLoading, setIsLoading] = useState(false); // 로딩 중인지
+
   // console.log("categoryId:", categoryId); // 확인용
   // console.log("API 요청 URL:", `/category/${categoryId}/custom`);
   // console.log("API URL:", process.env.NEXT_PUBLIC_API_BASE_URL);
@@ -43,8 +48,8 @@ export default function CategoryDetailPage() {
       const res = await fetchWrapper(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/category/${categoryId}`,
       );
-      const data = await res.json();
-      setAllCosmetics(data.data);
+      const json = await res.json();
+      setAllCosmetics(json.data.data);
     };
 
     if (categoryId && user?.id) {
@@ -52,6 +57,55 @@ export default function CategoryDetailPage() {
       fetchAllCosmetics();
     }
   }, [categoryId, user?.id]);
+
+  const fetchMoreAllCosmetics = async () => {
+    if (isLoading || !hasNext) return;
+
+    setIsLoading(true);
+
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+    const url = `${baseUrl}/category/${categoryId}?size=20${lastId ? `&lastId=${lastId}` : ""}`;
+
+    try {
+      const res = await fetchWrapper(url);
+      const json = await res.json();
+
+      const newData: Cosmetic[] = json.data.data;
+      const nextCursor: number | null = json.data.nextCursor;
+      const hasNextPage: boolean = json.data.hasNext;
+
+      // setAllCosmetics((prev) => [...prev, ...newData]);
+      setAllCosmetics((prev) => {
+        const prevIds = new Set(prev.map((c) => c.cosmeticId));
+        const filtered = newData.filter((c) => !prevIds.has(c.cosmeticId));
+        return [...prev, ...filtered];
+      });
+      setLastId(nextCursor);
+      setHasNext(hasNextPage);
+    } catch (e) {
+      console.error("무한스크롤 요청 에러:", e);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const observerRef = useRef<IntersectionObserver | null>(null);
+
+  const loadMoreRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (isLoading) return;
+      if (observerRef.current) observerRef.current.disconnect();
+
+      observerRef.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasNext) {
+          fetchMoreAllCosmetics(); // 스크롤 끝에 도달하면 추가 로딩
+        }
+      });
+
+      if (node) observerRef.current.observe(node);
+    },
+    [isLoading, hasNext],
+  );
 
   const handleToggle = () => {
     setIsCustomMode((prev) => !prev);
@@ -103,9 +157,19 @@ export default function CategoryDetailPage() {
         )
       ) : (
         <div className="grid grid-cols-2 place-items-center gap-2">
-          {allCosmetics.map((cosmetic) => (
-            <ProductCard cosmetic={cosmetic} key={cosmetic.cosmeticId} />
-          ))}
+          {allCosmetics.map((cosmetic, index) => {
+            const isLast = index === allCosmetics.length - 1;
+            return (
+              <div key={cosmetic.cosmeticId} ref={isLast ? loadMoreRef : null}>
+                <ProductCard cosmetic={cosmetic} />
+              </div>
+            );
+          })}
+          {isLoading && (
+            <div className="col-span-2 py-4 text-center text-gray2">
+              불러오는 중...
+            </div>
+          )}
         </div>
       )}
 

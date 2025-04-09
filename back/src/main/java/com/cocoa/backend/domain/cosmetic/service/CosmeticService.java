@@ -12,4 +12,6 @@ public interface CosmeticService {
     void addInterest(Long userId, Long cosmeticId);
     void removeInterest(Long userId, Long cosmeticId);
 
+    List<CosmeticResponseDTO> getCosmeticsByCursor(Integer categoryId, Integer lastId, int size, Long userId);
+
 }
