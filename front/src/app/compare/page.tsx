@@ -7,6 +7,7 @@ import CompareItemSection from "./_components/CompareItemSection";
 import B4 from "../_components/common/B4";
 import { useUserStore } from "@/stores/UserStore";
 import { ComparedCosmetic } from "@/types/compare";
+import T4 from "../_components/common/T4";
 
 export default function ComparePage() {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -25,10 +26,10 @@ export default function ComparePage() {
   const left = items[0];
   const right = items[1];
 
-  const matched =
-    left && right
-      ? [...new Set([...left.matchedKeywords, ...right.matchedKeywords])]
-      : [];
+  const matched = ["촉촉", "히알루론산", "아이스크림"];
+  // left && right
+  //   ? [...new Set([...left.matchedKeywords, ...right.matchedKeywords])]
+  //   : [];
 
   useEffect(() => {
     setTimeout(() => setProgress(true), 100);
@@ -38,20 +39,20 @@ export default function ComparePage() {
     <div>
       <PageHeader title="비교하기" />
       {left && right && (
-        <B4 className="pt-5 text-center">
-          <p>
-            <span className="font-[680] text-red2">{user.nickname}</span>
-            님과 겹치는 키워드는
-          </p>
+        <div className="flex flex-col items-center pt-5">
+          <div className="flex flex-row">
+            <T4 className="text-red2">{user.nickname}</T4>
+            <B4>님과 겹치는 키워드는</B4>
+          </div>
           {matched.length > 0 ? (
             <p>
-              <span className="font-[680] text-red2">{matched.join(", ")}</span>
+              <span className="font-title text-red2">{matched.join(", ")}</span>
               입니다
             </p>
           ) : (
-            <p className="font-[680] text-gray4">없습니다</p>
+            <p className="font-title text-gray4">없습니다</p>
           )}
-        </B4>
+        </div>
       )}
       <div className="grid grid-cols-2 gap-4 pt-6">
         <CompareItemSection data={left} side="left" progress={progress} />
