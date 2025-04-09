@@ -25,8 +25,8 @@ public class CosmeticServiceImpl implements CosmeticService {
 
     @Override
     public List<CosmeticResponseDTO> getCosmeticsByCategoryId(Integer categoryId, Long userId) {
-        List<Cosmetic> cosmetics = cosmeticRepository.findByCategory_CategoryId(categoryId);
         long start = System.currentTimeMillis();
+        List<Cosmetic> cosmetics = cosmeticRepository.findByCategory_CategoryId(categoryId);
         long end = System.currentTimeMillis();
         log.info("전체 조회 API 응답 시간: {} ms", (end - start));
         

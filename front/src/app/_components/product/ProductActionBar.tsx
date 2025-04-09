@@ -4,26 +4,35 @@ import CompareReplaceModal from "@/app/compare/_components/CompareRelaceModal";
 import { fetchWrapper } from "@/lib/fetchWrapper";
 import { ComparedCosmetic, CompareModalItem } from "@/types/compare";
 import { BarChart2, Heart } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface ProductActionBarProps {
   productId: number;
   likeCount: number;
-  isLiked: boolean;
+  liked: boolean;
 }
 
 const ProductActionBar = ({
   productId,
   likeCount,
-  isLiked: initialLiked,
+  liked: initialLiked,
 }: ProductActionBarProps) => {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-  const [isLiked, setIsLiked] = useState(initialLiked);
+  const [liked, setLiked] = useState(initialLiked);
   const [count, setCount] = useState(likeCount);
   const [showModal, setShowModal] = useState(false);
   const [compareItems, setCompareItems] = useState<CompareModalItem[]>([]); // API 반환에 따라 타입 구체화 가능
   const [newItemId, setNewItemId] = useState<number | null>(null);
+
+  // 이 부분 추가
+  useEffect(() => {
+    setLiked(initialLiked);
+  }, [initialLiked]);
+
+  useEffect(() => {
+    setCount(likeCount);
+  }, [likeCount]);
 
   const handleCompare = async () => {
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -83,14 +92,45 @@ const ProductActionBar = ({
     }
   };
 
-  const haddleToggleLike = () => {
-    if (isLiked) {
-      setIsLiked(false);
-      setCount((prev) => prev - 1);
-    } else {
-      setIsLiked(true);
-      setCount((prev) => prev + 1);
+  const toggleLike = async () => {
+    try {
+      const url = `${baseUrl}/cosmetic/${productId}/like`;
+
+      if (liked) {
+        // 관심 해제
+        const res = await fetchWrapper(url, {
+          method: "DELETE",
+        });
+        const result = await res.json();
+
+        if (result.success) {
+          setLiked(false);
+          setCount((prev) => prev - 1);
+        } else {
+          alert(result.message);
+        }
+      } else {
+        // 관심 등록
+        const res = await fetchWrapper(url, {
+          method: "POST",
+        });
+        const result = await res.json();
+
+        if (result.success) {
+          setLiked(true);
+          setCount((prev) => prev + 1);
+        } else {
+          alert(result.message);
+        }
+      }
+    } catch (error) {
+      alert("요청 중 오류가 발생했습니다.");
+      console.error(error);
     }
+  };
+
+  const handleToggleLike = async () => {
+    await toggleLike();
   };
 
   return (
@@ -115,10 +155,10 @@ const ProductActionBar = ({
 
       <button
         type="button"
-        onClick={haddleToggleLike}
+        onClick={handleToggleLike}
         className="flex cursor-pointer items-center gap-1"
       >
-        <Heart size={16} fill={isLiked ? "#ff4848" : "none"} stroke="#ff4848" />
+        <Heart size={16} fill={liked ? "#ff4848" : "none"} stroke="#ff4848" />
         <span>{count}</span>
       </button>
     </div>

@@ -6,7 +6,7 @@ interface ProductTagsProps {
 
 const ProductTags = ({ tags }: ProductTagsProps) => {
   return (
-    <div className="no-scrollbar flex gap-1 overflow-x-auto">
+    <div className="no-scrollbar flex min-h-[24.81px] gap-1 overflow-x-auto">
       {tags.map((item) => (
         <Tag key={item} children={item} />
       ))}
