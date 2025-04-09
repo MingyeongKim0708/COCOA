@@ -22,6 +22,6 @@ export function convertSearchToCosmetic(item: SearchResponse): Cosmetic {
     isLiked: false,
     likeCount: 0,
     reviewCount: 0,
-    ingredient: [],
+    ingredient: "",
   };
 }
