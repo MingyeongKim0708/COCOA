@@ -17,5 +17,5 @@ public class CompareResponseDTO {
     String imageUrl;
     List<CompareKeywordDTO> top5Keywords;
     Set<String> matchedKeywords;
-//    String ingredients;
+    String ingredients;
 }

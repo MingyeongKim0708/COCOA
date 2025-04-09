@@ -4,7 +4,9 @@ import com.cocoa.backend.domain.cosmetic.dto.response.CompareKeywordDTO;
 import com.cocoa.backend.domain.cosmetic.dto.response.CompareModalResponseDTO;
 import com.cocoa.backend.domain.cosmetic.dto.response.CompareResponseDTO;
 import com.cocoa.backend.domain.cosmetic.entity.Cosmetic;
+import com.cocoa.backend.domain.cosmetic.entity.CosmeticIngredientText;
 import com.cocoa.backend.domain.cosmetic.errorcode.CompareErrorCode;
+import com.cocoa.backend.domain.cosmetic.repository.CosmeticIngredientTextRepository;
 import com.cocoa.backend.domain.cosmetic.repository.CosmeticRepository;
 import com.cocoa.backend.domain.user.entity.User;
 import com.cocoa.backend.domain.user.entity.UserKeywords;
@@ -27,12 +29,14 @@ public class CompareServiceImpl implements CompareService {
     private final CosmeticRepository cosmeticRepository;
     private final UserKeywordsRepository userKeywordsRepository;
     private final UserRepository userRepository;
+    private final CosmeticIngredientTextRepository cosmeticIngredientTextRepository;
 
-    public CompareServiceImpl(RedisService redisService, CosmeticRepository cosmeticRepository, UserKeywordsRepository userKeywordsRepository, UserRepository userRepository) {
+    public CompareServiceImpl(RedisService redisService, CosmeticRepository cosmeticRepository, UserKeywordsRepository userKeywordsRepository, UserRepository userRepository, CosmeticIngredientTextRepository cosmeticIngredientTextRepository) {
         this.redisService = redisService;
         this.cosmeticRepository = cosmeticRepository;
         this.userKeywordsRepository = userKeywordsRepository;
         this.userRepository = userRepository;
+        this.cosmeticIngredientTextRepository = cosmeticIngredientTextRepository;
     }
 
     @Override
@@ -121,7 +125,15 @@ public class CompareServiceImpl implements CompareService {
                         });
             }
 
-            // 성분 정보 연결 필요
+            // 성분 정보
+            String text = null;
+            CosmeticIngredientText cosInText = cosmeticIngredientTextRepository.findById(item.getCosmeticId()).orElse(null);
+            if (cosInText != null) {
+                Map<String, String> ingredientMap = cosInText.getIngredientText();
+                if (ingredientMap != null && !ingredientMap.isEmpty()) {
+                    text = ingredientMap.values().iterator().next(); // 첫 번째 value만 추출
+                }
+            }
 
             return new CompareResponseDTO(
                     item.getCosmeticId(),
@@ -129,7 +141,8 @@ public class CompareServiceImpl implements CompareService {
                     item.getName(),
                     item.getImageUrl1(),
                     top5Keywords,
-                    matchedKeywords
+                    matchedKeywords,
+                    text
             );
         }).toList();
     }
