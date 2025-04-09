@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import ProductCard from "@/app/_components/product/ProductCard";
 import SearchHeader from "../_components/SearchHeader";
 import type { SearchResponse } from "@/types/search";
@@ -101,5 +101,12 @@ export default function SearchResultsPage() {
         <ScrollToTopButton />
       </div>
     </div>
+  );
+}
+export function SearchResultsSuspense() {
+  return (
+    <Suspense>
+      <SearchResultsPage />
+    </Suspense>
   );
 }
