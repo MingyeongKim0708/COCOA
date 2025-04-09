@@ -11,6 +11,7 @@ import com.cocoa.backend.domain.cosmetic.service.CosmeticService;
 import com.cocoa.backend.domain.user.dto.CustomOAuth2UserDTO;
 import com.cocoa.backend.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
+@Tag(name = "Cosmetic API", description = "화장품 관련 API")
 public class CosmeticController {
 
     private final CategoryService categoryService;
