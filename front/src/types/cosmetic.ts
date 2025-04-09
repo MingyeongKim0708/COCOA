@@ -12,5 +12,5 @@ export interface Cosmetic {
   isLiked: boolean;
   likeCount: number;
   reviewCount: number;
-  ingredient: string[];
+  ingredient: string;
 }
