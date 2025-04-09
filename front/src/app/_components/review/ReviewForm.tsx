@@ -54,7 +54,7 @@ export default function ReviewForm({
       return;
     }
 
-    const cosmeticId = cosmetic.id;
+    const cosmeticId = cosmetic.cosmeticId;
 
     if (initialReview) {
       const reviewId = initialReview.reviewId;
