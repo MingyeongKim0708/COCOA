@@ -83,4 +83,8 @@ public class Cosmetic {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "cosmetic_id")
+    private CosmeticIngredientText cosmeticIngredientText;
 }
