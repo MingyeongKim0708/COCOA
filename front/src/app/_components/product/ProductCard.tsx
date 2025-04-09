@@ -10,7 +10,7 @@ interface ProductCardProps {
 const ProductCard = ({ cosmetic }: ProductCardProps) => {
   const router = useRouter();
   const goToDetail = () => {
-    router.push(`/product/${cosmetic.id}`);
+    router.push(`/cosmetic/${cosmetic.cosmeticId}`);
   };
   console.log("화장품 정보 : ", cosmetic);
   return (

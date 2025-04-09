@@ -29,14 +29,28 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     @Override
     public List<CosmeticResponseDTO> getRecommendedCosmetics(Integer categoryId, Long userId) {
+        long start = System.currentTimeMillis();
 
         // 1. 사용자 top 키워드 조회
-        UserKeywords userKeywords = userKeywordsRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("사용자 키워드 없음"));
+//        UserKeywords userKeywords = userKeywordsRepository.findById(userId)
+//                .orElseThrow(() -> new RuntimeException("사용자 키워드 없음"));
+//
+//        Map<String, Integer> userTopKeywords = userKeywords.getTopKeywords();
+//        if (userTopKeywords == null || userTopKeywords.isEmpty()) {
+//            return List.of(); // 추천할 키워드가 없으면 빈 리스트 반환
+//        }
 
-        Map<String, Integer> userTopKeywords = userKeywords.getTopKeywords();
+        Optional<UserKeywords> userKeywordsOpt = userKeywordsRepository.findById(userId);
+
+        if (userKeywordsOpt.isEmpty()) {
+            log.info("유저 {}의 키워드가 없음 → 추천 없음 반환", userId);
+            return List.of(); // 유저 키워드가 아예 존재하지 않음
+        }
+
+        Map<String, Integer> userTopKeywords = userKeywordsOpt.get().getTopKeywords();
         if (userTopKeywords == null || userTopKeywords.isEmpty()) {
-            return List.of(); // 추천할 키워드가 없으면 빈 리스트 반환
+            log.info("유저 {}의 키워드가 비어 있음 → 추천 없음 반환", userId);
+            return List.of(); // 키워드가 비어 있어도 추천 불가
         }
 
         // 2. 해당 카테고리의 모든 제품 top 키워드 조회
@@ -56,16 +70,19 @@ public class RecommendationServiceImpl implements RecommendationService {
 
                     double similarity = calculateCosineSimilarity(userTopKeywords, productTopKeywords);
 
-                    log.info("cosmeticId: {}, name: {}, similarity: {}",
-                            cosmetic.getCosmeticId(),
-                            cosmetic.getName(),
-                            similarity);
+//                    log.info("cosmeticId: {}, name: {}, similarity: {}",
+//                            cosmetic.getCosmeticId(),
+//                            cosmetic.getName(),
+//                            similarity);
 
                     return Pair.of(cosmetic, similarity); // 또는 Map.Entry로 해도 됨
                 })
                 .sorted((a, b) -> Double.compare(b.getRight(), a.getRight()))  // 유사도 높은 순
                 .limit(10)
                 .toList();
+
+        long end = System.currentTimeMillis();
+        log.info("추천 API 응답 시간: {} ms", (end - start));
 
 
         return scored.stream()

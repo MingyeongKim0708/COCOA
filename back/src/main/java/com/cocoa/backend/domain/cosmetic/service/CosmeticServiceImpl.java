@@ -26,14 +26,17 @@ public class CosmeticServiceImpl implements CosmeticService {
     @Override
     public List<CosmeticResponseDTO> getCosmeticsByCategoryId(Integer categoryId, Long userId) {
         List<Cosmetic> cosmetics = cosmeticRepository.findByCategory_CategoryId(categoryId);
-
+        long start = System.currentTimeMillis();
+        long end = System.currentTimeMillis();
+        log.info("전체 조회 API 응답 시간: {} ms", (end - start));
+        
         return cosmetics.stream()
                 .map(c -> {
                     // 1. 키워드 처리
                     CosmeticKeywords cosmeticKeywords = c.getCosmeticKeywords();
 
                     Map<String, Integer> keywordsMap = Optional.ofNullable(cosmeticKeywords)
-                            .map(CosmeticKeywords::getKeywords)
+                            .map(CosmeticKeywords::getTopKeywords)
                             .orElse(Collections.emptyMap());
 
                     List<String> top3Keywords = Optional.ofNullable(cosmeticKeywords)
@@ -102,7 +105,7 @@ public class CosmeticServiceImpl implements CosmeticService {
                 .map(c -> {
                     // 이전 getCosmeticsByCategoryId 내부의 DTO 가공 로직 재사용
                     Map<String, Integer> keywordsMap = Optional.ofNullable(c.getCosmeticKeywords())
-                            .map(CosmeticKeywords::getKeywords)
+                            .map(CosmeticKeywords::getTopKeywords)
                             .orElse(Collections.emptyMap());
 
                     List<String> top3Keywords = Optional.ofNullable(c.getCosmeticKeywords())

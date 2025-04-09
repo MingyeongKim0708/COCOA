@@ -10,7 +10,7 @@ const dummyCategory: Category = {
 
 export const dummyProducts: Cosmetic[] = [
   {
-    id: 1,
+    cosmeticId: 1,
     name: "[1등토너] 라운드랩 1025 독도 토너 200ml 기획 (+50ml)",
     brand: "라운드랩",
     images: ["/images/A00000013216229ko.jpg"],
@@ -21,9 +21,10 @@ export const dummyProducts: Cosmetic[] = [
     optionName: "",
     category: dummyCategory,
     reviewCount: 0,
+    ingredient: "",
   },
   {
-    id: 2,
+    cosmeticId: 2,
     name: "[모공개선/탄력광채] 넘버즈인 3번 결광가득 에센스 토너 300ml 대용량 기획",
     brand: "넘버즈인",
     images: ["/images/A00000017358912ko.jpg"],
@@ -38,9 +39,10 @@ export const dummyProducts: Cosmetic[] = [
     optionName: "",
     category: dummyCategory,
     reviewCount: 0,
+    ingredient: "",
   },
   {
-    id: 3,
+    cosmeticId: 3,
     name: "[속보습]닥터지 더모이스처 배리어 D 리퀴드 토너 200ml 기획 (+100ml)",
     brand: "닥터지",
     images: ["/images/A00000019887404ko.jpg"],
@@ -51,9 +53,10 @@ export const dummyProducts: Cosmetic[] = [
     optionName: "",
     category: dummyCategory,
     reviewCount: 0,
+    ingredient: "",
   },
   {
-    id: 4,
+    cosmeticId: 4,
     name: "헤라 옴므 파워부스팅 토너 150ML",
     brand: "헤라",
     images: ["/images/A00000017807504ko.jpg"],
@@ -64,9 +67,10 @@ export const dummyProducts: Cosmetic[] = [
     optionName: "",
     category: dummyCategory,
     reviewCount: 0,
+    ingredient: "",
   },
   {
-    id: 5,
+    cosmeticId: 5,
     name: "[피지쓱싹] 브링그린 티트리시카수딩토너 500mL 기획/단품",
     brand: "브링그린",
     images: ["/images/A00000018918108ko.jpg"],
@@ -77,9 +81,10 @@ export const dummyProducts: Cosmetic[] = [
     optionName: "",
     category: dummyCategory,
     reviewCount: 0,
+    ingredient: "",
   },
   {
-    id: 6,
+    cosmeticId: 6,
     name: "디오디너리 글리코릭 애시드 7% 엑스폴리에이팅 토너 240ml",
     brand: "디오디너리",
     images: ["/images/A00000015861604ko.jpg"],
@@ -90,5 +95,6 @@ export const dummyProducts: Cosmetic[] = [
     optionName: "",
     category: dummyCategory,
     reviewCount: 0,
+    ingredient: "",
   },
 ];

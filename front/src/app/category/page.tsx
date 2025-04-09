@@ -28,8 +28,16 @@ export default function CategoryPage() {
   const leftItemRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const leftMenuRef = useRef<HTMLDivElement | null>(null); // 왼쪽 전체 영역 ref
 
-  const handleMiddleCategoryClick = (id: number) => {
-    router.push(`/category/${id}`);
+  const handleMiddleCategoryClick = (
+    id: number,
+    major: string,
+    middle: string,
+  ) => {
+    const encodedMajor = encodeURIComponent(major);
+    const encodedMiddle = encodeURIComponent(middle);
+    router.push(
+      `/category/${id}?major=${encodedMajor}&middle=${encodedMiddle}`,
+    );
   };
 
   const scrollToCategory = (major: string) => {
@@ -179,7 +187,13 @@ export default function CategoryPage() {
                   {grouped[major].map((cat) => (
                     <div
                       key={cat.categoryId}
-                      onClick={() => handleMiddleCategoryClick(cat.categoryId)}
+                      onClick={() =>
+                        handleMiddleCategoryClick(
+                          cat.categoryId,
+                          cat.majorCategory,
+                          cat.middleCategory,
+                        )
+                      }
                       className="cursor-pointer hover:underline"
                     >
                       <B4>{cat.middleCategory}</B4>
