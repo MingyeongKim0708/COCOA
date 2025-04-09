@@ -4,6 +4,7 @@ from queue import Queue
 from threading import Thread
 from pathlib import Path
 from submit_spark import submit_job
+from collections import Counter
 import time
 import subprocess
 
@@ -39,9 +40,9 @@ def analyze_review():
     review_content = data["review"]
     start = time.time()
     okt = Okt()
-    words = okt.pos(review_content, stem=True)
-
-    result = [w for w, t in words if t in ['Noun', 'Adjective'] and len(w) > 1]
+    stems = okt.pos(review_content, stem=True)
+    words = [w for w, t in stems if t in ['Noun', 'Adjective'] and len(w) > 1]
+    result = dict(Counter(words))
     logger.info("work taked %d", time.time()-start)
 
     return jsonify({"review_id": review_id, "result": result})
