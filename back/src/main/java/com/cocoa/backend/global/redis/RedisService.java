@@ -12,27 +12,29 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class RedisService {
 
-    private final RedisTemplate<String, String> redisTemplate;
 
-    private String getInterestKey(long userId) {
-        return "user:" + userId + ":interest";
-    }
-
-    private String getLatestCosmeticKey(long userId) {
+	private final RedisTemplate<String, String> redisTemplate;
+	private String getInterestKey(long userId) {
+		return "user:" + userId + ":interest";
+	}
+	private String getLatestCosmeticKey(long userId) {
         return "user:" + userId + ":latestCosmetic";
     }
-
-    private String getSearchLogsKey(long userId) {
-        return "user:" + userId + ":searchLogs";
-    }
-
-    private String getHelpfulKey(long userId) {
-        return "user:" + userId + ":helpful";
-    }
-
-    private String getRefreshTokenKey(Long userId) {
-        return "user:" + userId + ":refreshToken";
-    }
+	private String getSearchLogsKey(long userId) {
+		return "user:" + userId + ":searchLogs";
+	}
+	private String getHelpfulKey(long userId) {
+		return "user:" + userId + ":helpful";
+	}
+	private String getRefreshTokenKey(Long userId) {
+		return "user:" + userId + ":refreshToken";
+	}
+	private String getCosmeticLikedByKey(Long cosmeticId) {
+		return "cosmetic:" + cosmeticId + ":likedBy";
+	}
+	private String getCompareKey(long userId) {
+		return "user:" + userId + ":compare";
+	}
 
     // 관심 리뷰 추가
     public void addHelpfulReview(long userId, long reviewId) {
@@ -69,7 +71,6 @@ public class RedisService {
         redisTemplate.delete(getRefreshTokenKey(userId));
     }
 
-
     // user:{userId}:interest          ← 유저가 관심 등록한 제품
     // cosmetic:{cosmeticId}:likedBy  ← 제품을 관심 등록한 유저
 
@@ -100,10 +101,39 @@ public class RedisService {
         return redisTemplate.opsForSet().members(getInterestKey(userId));
     }
 
-    // 내부용 키 생성기
-    private String getCosmeticLikedByKey(Long cosmeticId) {
-        return "cosmetic:" + cosmeticId + ":likedBy";
-    }
+	// 비교 제품 추가 (최대 2개만 가능, 중복 방지 set 사용)
+	public String addCompareItem(long userId, long cosmeticId) {
+		String key = getCompareKey(userId);
+
+		// 중복이면 false 반환
+		if (Boolean.TRUE.equals(redisTemplate.opsForSet().isMember(key, String.valueOf(cosmeticId)))) {
+			return "ALREADY_EXISTS";
+		}
+
+		// 2개 이상 담기 방지
+		Long size = redisTemplate.opsForSet().size(key);
+		if (size != null && size >= 2) {
+			return "MAX_LIMIT_REACHED";
+		}
+
+		redisTemplate.opsForSet().add(key, String.valueOf(cosmeticId));
+		return "SUCCESS";
+	}
+
+	// 비교 제품 삭제
+	public void removeCompareItem(long userId, long cosmeticId) {
+		redisTemplate.opsForSet().remove(getCompareKey(userId), String.valueOf(cosmeticId));
+	}
+
+	// 비교 제품 전체 조회
+	public Set<String> getCompareItems(long userId) {
+		return redisTemplate.opsForSet().members(getCompareKey(userId));
+	}
+
+	// 비교 제품 등록 여부 확인
+	public boolean isItemInCompare(long userId, long cosmeticId) {
+		return redisTemplate.opsForSet().isMember(getCompareKey(userId), String.valueOf(cosmeticId));
+	}
 
     // 최근 검색어 저장(앞에서부터 20개만 유지)
     public void saveSearchLog(Long userId, String keyword) {
