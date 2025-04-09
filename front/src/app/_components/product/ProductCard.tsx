@@ -2,6 +2,9 @@ import { useRouter } from "next/navigation";
 import ProductActionBar from "./ProductActionBar";
 import ProductTags from "./ProductTags";
 import type { Cosmetic } from "@/types/cosmetic";
+import T3 from "../common/T3";
+import T4 from "../common/T4";
+import B4 from "../common/B4";
 
 interface ProductCardProps {
   cosmetic: Cosmetic;
@@ -23,27 +26,24 @@ const ProductCard = ({ cosmetic }: ProductCardProps) => {
         />
 
         <div className="mt-2">
-          <h3 className="line-clamp-1 text-size4 font-title text-gray1">
-            {cosmetic.brand}
-          </h3>
+          <T4 children={cosmetic.brand} className="line-clamp-1" />
           {cosmetic.optionName === "page" ? (
-            <p className="mt-1 line-clamp-3 min-h-[3.9rem] whitespace-pre-line text-size4 font-body text-gray1">
-              {cosmetic.name}
-            </p>
+            <B4
+              children={cosmetic.name}
+              className="mt-1 line-clamp-3 min-h-[3.9rem] whitespace-pre-line"
+            />
           ) : (
             <>
-              <p className="line-clamp-1 text-size4 text-pink1">
-                {cosmetic.optionName}
-              </p>
-              <p className="mt-1 line-clamp-2 whitespace-pre-line text-size4 font-body text-gray1">
-                {cosmetic.name}
-              </p>
+              <B4
+                children={cosmetic.optionName}
+                className="line-clamp-1 text-pink1"
+              />
+              <B4
+                children={cosmetic.name}
+                className="mt-1 line-clamp-2 whitespace-pre-line"
+              />
             </>
           )}
-
-          {/* <p className="mt-1 line-clamp-3 min-h-[3.9rem] whitespace-pre-line text-size4 font-body text-gray1">
-            {cosmetic.name}
-          </p> */}
         </div>
 
         <div className="mt-2">
