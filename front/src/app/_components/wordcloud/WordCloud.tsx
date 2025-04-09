@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useWordCloud } from "../../../hooks/useWordCloud";
 import { useUserStore } from "@/stores/UserStore";
 import { getPxToRem } from "@/utils/wordCloudUtils";
@@ -17,26 +17,17 @@ interface WordCloudProps {
 
 const WordCloud = ({
   words,
-  width = 20.625,
-  height = 10.625,
+  width = 330,
+  height = 170,
   onWordClick,
   selectWord,
   isFiltered,
 }: WordCloudProps) => {
-  const [pxWidth, setPxWidth] = useState<number>(330);
-  const [pxHeight, setPxHeight] = useState<number>(170);
   const [scale, setScale] = useState<number>(1);
   const [computedWords, setComputedWords] = useState<WordWithComponent[]>([]);
-  const boxWidthRef = useRef<number>(660);
-  const boxHeightRef = useRef<number>(340);
-  const cloud = useWordCloud(words, pxWidth, pxHeight);
+  const [boxSize, setBoxSize] = useState({ width: 660, height: 340 });
 
-  useEffect(() => {
-    const pxWidth = getPxToRem(width);
-    const pxHeight = getPxToRem(height);
-    setPxWidth(pxWidth);
-    setPxHeight(pxHeight);
-  }, [width, height]);
+  const cloud = useWordCloud(words, width, height);
 
   useEffect(() => {
     const computedWords = cloud.computedWords;
@@ -44,18 +35,16 @@ const WordCloud = ({
     const box = cloud.box;
 
     if (box.width === 0 || box.height === 0) return;
-
-    const scaleX = pxWidth / box.width;
-    const scaleY = pxHeight / box.height;
+    if (!width || !height || box.width === 0 || box.height === 0) return;
+    const scaleX = width / box.width;
+    const scaleY = height / box.height;
     const placedScale = Math.min(scaleX, scaleY, 1);
 
     console.log(box);
-
-    boxWidthRef.current = box.width;
-    boxHeightRef.current = box.height;
+    setBoxSize({ width: box.width, height: box.height });
     setScale(placedScale);
     console.log("out scale", scale);
-  }, [cloud]);
+  }, [cloud.computedWords, cloud.box.width, cloud.box.height]);
 
   const raw = useUserStore().keywords;
   const keywords: string[] = Object.keys(raw ? raw : []);
@@ -68,16 +57,18 @@ const WordCloud = ({
       id="wordcloud-container"
       className="relative origin-center"
       style={{
-        width: `${width}rem`,
-        height: `${height}rem`,
+        width: boxSize.width,
+        height: boxSize.height,
+        transform: `scale(${scale})`,
+        transformOrigin: "center",
       }}
     >
       <div
         id="inner-box"
         className="absolute left-1/2 top-1/2"
         style={{
-          width: boxWidthRef.current,
-          height: boxHeightRef.current,
+          width: boxSize.width,
+          height: boxSize.height,
           transform: `translate(-50%, -50%) `,
           transformOrigin: "center",
         }}
@@ -99,8 +90,8 @@ const WordCloud = ({
               key={text}
               className="word absolute -translate-x-1/2 -translate-y-1/2 transform"
               style={{
-                left: boxWidthRef.current / 2 + x,
-                top: boxHeightRef.current / 2 + y,
+                left: boxSize.width / 2 + x,
+                top: boxSize.height / 2 + y,
                 transform: `translate(-50%, -50%) scale(${scale * 0.96})`,
                 transformOrigin: "center",
               }}

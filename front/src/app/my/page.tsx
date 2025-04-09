@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReviewUserInfo from "../_components/user/UserInfo";
 import { useUserStore } from "@/stores/UserStore";
 import UserWordCloud from "../_components/wordcloud/UserWordCloud";
@@ -7,6 +7,8 @@ import PreviewLikeItems from "./_components/PreviewLikeItems";
 import PreviewMyReview from "./_components/PreviewMyReview";
 import B5 from "../_components/common/B5";
 import { useRouter } from "next/navigation";
+import CosmeticWordCloud from "../_components/wordcloud/CosmeticWordCloud";
+import { dummyWords } from "@/mocks/dummyWords";
 
 export default function MyPage() {
   const { user, keywords } = useUserStore();

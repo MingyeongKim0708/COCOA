@@ -28,9 +28,7 @@ const PreviewLikeItems = () => {
       }
     };
 
-    // fetchLikes();
-    const dummy = dummyProducts.slice(0, 3);
-    setPreviewLikeItems(dummy);
+    fetchLikes();
   }, []);
 
   const handleGoToLikes = () => {
@@ -49,19 +47,19 @@ const PreviewLikeItems = () => {
         <T3 children="관심제품" />
         <ChevronRight size={24} />
       </div>
-      <div className="flex flex-row justify-center gap-3">
+      <div className="flex flex-row justify-start gap-3 overflow-hidden">
         {previewLikeItems &&
           previewLikeItems.map((cosmetic, idx) => {
             return (
               <div
                 key={idx}
-                className=""
+                className="aspect-square w-[30vw] min-w-[6.375rem] cursor-pointer"
                 onClick={() => handleGoToLikeProduct(cosmetic.cosmeticId)}
               >
                 <img
                   src={cosmetic.images[0]}
                   alt="profile image"
-                  className="h-[6.375rem] w-[6.375rem] flex-shrink-0 rounded-lg object-cover"
+                  className="h-full w-full flex-shrink-0 rounded-lg object-cover"
                 />
               </div>
             );
