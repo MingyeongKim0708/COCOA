@@ -4,8 +4,11 @@ import com.cocoa.backend.domain.user.dto.reqeust.SignupRequestDTO;
 import com.cocoa.backend.domain.user.dto.response.UserDTO;
 import com.cocoa.backend.domain.user.dto.response.UserResponseDTO;
 import com.cocoa.backend.domain.user.entity.User;
+import com.cocoa.backend.domain.user.entity.UserKeywords;
 import com.cocoa.backend.domain.user.errorcode.TokenErrorCode;
+import com.cocoa.backend.domain.user.repository.UserKeywordsRepository;
 import com.cocoa.backend.domain.user.repository.UserRepository;
+import com.cocoa.backend.global.converter.KeywordJsonConverter;
 import com.cocoa.backend.global.exception.CustomException;
 import com.cocoa.backend.global.redis.RedisService;
 import com.cocoa.backend.global.util.CookieUtil;
@@ -14,20 +17,24 @@ import com.cocoa.backend.global.util.UserUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.Period;
+import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final JWTUtil jwtUtil;
     private final RedisService redisService;
+    private final UserKeywordsRepository userKeywordsRepository;
+    private final KeywordJsonConverter keywordJsonConverter;
 
     @Value("${spring.jwt.accesstoken-expires-in}")
     private Long ACCESSTOKEN_EXPIRES_IN;
@@ -38,12 +45,7 @@ public class UserServiceImpl implements UserService {
     @Value("${aws.s3.url}")
     private String S3_URL;
 
-    public UserServiceImpl(UserRepository userRepository, JWTUtil jwtUtil, RedisService redisService) {
-        this.userRepository = userRepository;
-        this.jwtUtil = jwtUtil;
-        this.redisService = redisService;
-    }
-
+    @Transactional
     @Override
     public void signup(SignupRequestDTO requestDTO, Long userId, String providerId, HttpServletResponse response) {
         User user = userRepository.findByProviderIdAndNicknameIsNull(providerId)
@@ -58,6 +60,17 @@ public class UserServiceImpl implements UserService {
         user.setSkinTone(requestDTO.getSkinTone());
 
         userRepository.save(user);
+
+        userKeywordsRepository.saveInitial(userId);
+        Map<String, Integer> map = new HashMap<>();
+        map.put(String.valueOf(user.getGender()), 1);
+        map.put(String.valueOf(user.getSkinType()), 1);
+        map.put(String.valueOf(user.getSkinTone()), 1);
+        String json = keywordJsonConverter.convertToDatabaseColumn(map);
+        userKeywordsRepository.updateKeywords(userId, json);
+        log.info("userId : {}", userId);
+        log.info("map : {}", map);
+        log.info("json : {}", json);
 
         // JWT 발급
         String accessToken = jwtUtil.createJwt(userId, providerId, ACCESSTOKEN_EXPIRES_IN);
