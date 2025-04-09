@@ -141,8 +141,4 @@ public class RedisService {
         redisTemplate.delete(getLatestCosmeticKey(userId));
     }
 
-<<<<<<< Updated upstream
 }
-=======
-}
->>>>>>> Stashed changes

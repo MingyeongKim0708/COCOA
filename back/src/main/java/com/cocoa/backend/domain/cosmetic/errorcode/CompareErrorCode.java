@@ -1,18 +1,18 @@
-package com.cocoa.backend.domain.user.errorcode;
+package com.cocoa.backend.domain.cosmetic.errorcode;
 
 import com.cocoa.backend.global.exception.ErrorCode;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public enum UserErrorCode implements ErrorCode {
-    LOGIN_NEEDED(HttpStatus.UNAUTHORIZED, "로그인 필요"),
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없음");
+public enum CompareErrorCode implements ErrorCode {
+    ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "이미 비교함에 담긴 항목"),
+    MAX_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "비교함 제품 2개 초과");
 
     private final HttpStatus status;
     private final String message;
 
-    UserErrorCode(HttpStatus status, String message) {
+    CompareErrorCode(HttpStatus status, String message) {
         this.status = status;
         this.message = message;
     }
