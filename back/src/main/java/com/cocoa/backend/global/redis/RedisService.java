@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -17,8 +18,8 @@ public class RedisService {
         return "user:" + userId + ":interest";
     }
 
-    private String getLatestProductKey(long userId) {
-        return "user:" + userId + ":latestProduct";
+    private String getLatestCosmeticKey(long userId) {
+        return "user:" + userId + ":latestCosmetic";
     }
 
     private String getSearchLogsKey(long userId) {
@@ -102,6 +103,42 @@ public class RedisService {
     // 내부용 키 생성기
     private String getCosmeticLikedByKey(Long cosmeticId) {
         return "cosmetic:" + cosmeticId + ":likedBy";
+    }
+
+    // 최근 검색어 저장(앞에서부터 20개만 유지)
+    public void saveSearchLog(Long userId, String keyword) {
+        String key = getSearchLogsKey(userId);
+        redisTemplate.opsForList().leftPush(key, keyword); // 앞에 추가
+        redisTemplate.opsForList().trim(key, 0, 19);
+    }
+
+    // 유저의 최근 검색어 가져오기
+    public List<String> getSearchLogs(long userId) {
+        return redisTemplate.opsForList().range(getSearchLogsKey(userId), 0, -1);
+    }
+
+    // 유저의 검색어 로그 삭제 (예: 로그아웃 시)
+    public void deleteSearchLogs(long userId) {
+        redisTemplate.delete(getSearchLogsKey(userId));
+    }
+
+    // 최근 본 상품 이미지 URL 저장(앞에서부터 5개만 유지)
+    public void saveLatestCosmeticImage(Long userId, Integer cosmeticId, String imageUrl1) {
+        String key = getLatestCosmeticKey(userId);
+        String value = cosmeticId + "|" + imageUrl1;
+        redisTemplate.opsForList().remove(key, 0, value); // 중복 제거
+        redisTemplate.opsForList().leftPush(key, value); // 앞에 추가
+        redisTemplate.opsForList().trim(key, 0, 4);
+    }
+
+    // 최근 조회한 상품 이미지들 가져오기
+    public List<String> getLatestCosmeticImages(long userId) {
+        return redisTemplate.opsForList().range(getLatestCosmeticKey(userId), 0, -1);
+    }
+
+    // 최근 조회 이미지 초기화 (필요 시)
+    public void deleteLatestCosmeticImages(long userId) {
+        redisTemplate.delete(getLatestCosmeticKey(userId));
     }
 
 }

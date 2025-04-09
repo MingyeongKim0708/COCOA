@@ -1,10 +1,12 @@
 package com.cocoa.backend.domain.search.service;
 // 검색만 담당
 
+import com.cocoa.backend.domain.cosmetic.entity.Cosmetic;
 import com.cocoa.backend.domain.search.dto.request.SearchRequestDto;
 import com.cocoa.backend.domain.search.dto.response.SearchResponseDto;
 import com.cocoa.backend.domain.search.entity.SearchDocument;
 
+import com.cocoa.backend.domain.search.repository.SearchCosmeticRepository;
 import com.cocoa.backend.domain.search.repository.SearchRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +32,8 @@ public class SearchService {
     //searchRepository
     //→ Elasticsearch와 연결된 Repository야.
     //→ 내부적으로는 ElasticsearchRepository<SearchDocument, String>를 상속해서, 검색 관련 쿼리를 실행할 수 있어.
-    private final SearchRepository searchRepository; // 왜 final
+    private final SearchRepository searchRepository;
+    private final SearchCosmeticRepository searchCosmeticRepository;
 
     //searchCosmetics() 메서드는 이름과 브랜드로 화장품을 검색하는 메서드
 
@@ -97,12 +100,26 @@ new SearchResponseDto(...)
         return results.stream()
                 .filter(Objects::nonNull)
                 .filter(doc -> doc.getCosmeticId() != null && doc.getName() != null && doc.getBrand() != null)
-                .map(search -> new SearchResponseDto(
-                        search.getCosmeticId(),
-                        search.getName(),
-                        search.getBrand(),
-                        search.getTopKeyword()))
+                .map(search -> {
+                    Integer cosmeticId = Integer.valueOf(search.getCosmeticId());
+                    Cosmetic cosmetic = searchCosmeticRepository.findById(cosmeticId).orElse(null);
+
+                    // ✅ imageUrl1 없을 경우 기본 이미지 경로 사용
+                    String imageUrl1 = (cosmetic != null && cosmetic.getImageUrl1() != null)
+                            ? cosmetic.getImageUrl1()
+                            : "profile-image/default_profile.png";
+
+                    String fullImageUrl = String.format("%s", imageUrl1);
+
+                    // ✅ S3_URL과 경로를 결합
+                    return new SearchResponseDto(
+                            search.getCosmeticId(),
+                            search.getName(),
+                            search.getBrand(),
+                            search.getTopKeyword(),
+                            fullImageUrl
+                    );
+                })
                 .collect(Collectors.toList());
     }
-
 }
