@@ -33,7 +33,7 @@ public class SearchController {
                userId = userDetails.getUserId(); 
             }
 
-            List<SearchResponseDto> result = searchService.searchCosmetics(requestDto, userId);
+            List<SearchResponseDto> result = searchService.searchCosmetics(requestDto);
             return ResponseEntity.ok(ApiResponse.success(result));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error("SERVER_ERROR","검색 에러 발생 : " + e.getMessage()));

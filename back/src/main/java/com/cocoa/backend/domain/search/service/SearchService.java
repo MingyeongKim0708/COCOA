@@ -8,7 +8,6 @@ import com.cocoa.backend.domain.search.entity.SearchDocument;
 
 import com.cocoa.backend.domain.search.repository.SearchCosmeticRepository;
 import com.cocoa.backend.domain.search.repository.SearchRepository;
-import com.cocoa.backend.global.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -35,7 +34,6 @@ public class SearchService {
     //→ 내부적으로는 ElasticsearchRepository<SearchDocument, String>를 상속해서, 검색 관련 쿼리를 실행할 수 있어.
     private final SearchRepository searchRepository;
     private final SearchCosmeticRepository searchCosmeticRepository;
-    private final RedisService redisService;
 
     //searchCosmetics() 메서드는 이름과 브랜드로 화장품을 검색하는 메서드
 
@@ -57,11 +55,6 @@ public class SearchService {
         if (isNameEmpty && isBrandEmpty && isKeywordEmpty) {
             log.warn("⚠️ name, brand, topKeyword 모두 비어 있어 검색 불가");
             return List.of();
-        }
-
-        // 최근 검색어 저장(이름 기반으로 저장)
-        if (userId != null && !isNameEmpty) {
-            redisService.saveSearchLog(userId, name);
         }
 
         List<SearchDocument> results;
@@ -117,11 +110,6 @@ new SearchResponseDto(...)
                             : "profile-image/default_profile.png";
 
                     String fullImageUrl = String.format("%s", imageUrl1);
-
-                    // 최근 본 상품 이미지 저장
-                    if(userId != null){
-                        redisService.saveLatestCosmeticImage(userId, cosmeticId, imageUrl1);
-                    }
 
                     // ✅ S3_URL과 경로를 결합
                     return new SearchResponseDto(
