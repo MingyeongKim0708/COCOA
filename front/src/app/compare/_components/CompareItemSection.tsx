@@ -1,7 +1,7 @@
 import { ComparedCosmetic } from "@/types/compare";
 import Info from "./Info";
 import { KeywordBar } from "./KeywordBar";
-import Ingredient from "./Ingredient";
+import IngredientText from "./IngredientText";
 
 interface Props {
   data: ComparedCosmetic | null;
@@ -43,7 +43,7 @@ export default function CompareItemSection({
           />
         ))}
       </div>
-      <Ingredient text={data.ingredients} side={side} />
+      <IngredientText text={data.ingredients} side={side} />
     </div>
   );
 }

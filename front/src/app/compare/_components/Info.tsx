@@ -5,11 +5,11 @@ import { ComparedCosmetic } from "@/types/compare";
 export default function Info({ data }: { data: ComparedCosmetic }) {
   return (
     <div>
-      <div className="w-full max-w-[160px] bg-white pb-3">
+      <div className="w-full max-w-[200px] bg-white pb-2">
         <img
           src={data.imageUrl}
           alt={data.name}
-          className="mx-auto h-[160px] w-[160px] rounded-xl object-cover"
+          className="mx-auto w-full rounded-xl object-cover"
         />
 
         <div className="mt-2">
