@@ -6,6 +6,7 @@ import com.cocoa.backend.domain.user.dto.CustomOAuth2UserDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +24,9 @@ public class RecommendationController {
     @GetMapping("/category/{categoryId}/custom")
     public List<CosmeticResponseDTO> getCustomRecommendations(
             @PathVariable Integer categoryId,
-            @AuthenticationPrincipal CustomOAuth2UserDTO userDetails
+            Authentication authentication
     ) {
+        CustomOAuth2UserDTO userDetails = (CustomOAuth2UserDTO) authentication.getPrincipal();
         return recommendationService.getRecommendedCosmetics(categoryId, userDetails.getUserId());
     }
 }

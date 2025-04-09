@@ -1,7 +1,7 @@
 import { Category } from "./category";
 
 export interface Cosmetic {
-  id: number;
+  cosmeticId: number;
   optionName: string;
   name: string;
   brand: string;
@@ -12,5 +12,5 @@ export interface Cosmetic {
   isLiked: boolean;
   likeCount: number;
   reviewCount: number;
-  ingredient?: string[];
+  ingredient: string[];
 }

@@ -56,7 +56,7 @@ const PreviewLikeItems = () => {
               <div
                 key={idx}
                 className=""
-                onClick={() => handleGoToLikeProduct(cosmetic.id)}
+                onClick={() => handleGoToLikeProduct(cosmetic.cosmeticId)}
               >
                 <img
                   src={cosmetic.images[0]}
