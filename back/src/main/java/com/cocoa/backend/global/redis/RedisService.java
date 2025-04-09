@@ -106,9 +106,9 @@ public class RedisService {
     }
 
     // 최근 검색어 저장(앞에서부터 20개만 유지)
-    public void saveSearchLog(Long userId, String keyword) {
+    public void saveSearchLog(Long userId, String name) {
         String key = getSearchLogsKey(userId);
-        redisTemplate.opsForList().leftPush(key, keyword); // 앞에 추가
+        redisTemplate.opsForList().leftPush(key, name); // 앞에 추가
         redisTemplate.opsForList().trim(key, 0, 19);
     }
 
