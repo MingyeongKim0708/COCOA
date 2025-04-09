@@ -29,7 +29,7 @@ export const reviewCosmetic: Review = {
   helpfulCount: 0,
   user: null,
   cosmetic: {
-    id: 0,
+    cosmeticId: 0,
     name: "디오디너리 글리코릭 애시드 7% 엑스폴리에이팅 토너 240ml",
     brand: "ㄴㅁㄹㄴㅁㅇㄴㅁㅇㄴㅁㅇㄴㅁㄴㄴ",
     images: ["https://placehold.co/600x400"],
@@ -50,6 +50,7 @@ export const reviewCosmetic: Review = {
     isLiked: false,
     likeCount: 0,
     reviewCount: 0,
+    ingredient: "",
   },
   helpfulForMe: false,
   createdAt: "2023.10.21",
