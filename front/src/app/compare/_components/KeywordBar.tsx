@@ -48,11 +48,11 @@ export function KeywordBar({
         >
           {progress && (
             <B6
-              className={`item-center absolute top-1/2 -translate-y-1/2 text-center text-white ${
+              className={`absolute top-1/2 -translate-y-1/2 items-center text-center text-white ${
                 side === "left" ? "right-1" : "left-1"
               }`}
             >
-              {value}
+              {String(value)}
             </B6>
           )}
           {index === 0 && (

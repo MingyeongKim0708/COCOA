@@ -5,7 +5,7 @@ const B6 = ({
   className,
   onClick,
 }: {
-  children: string;
+  children: React.ReactNode;
   className?: string;
   onClick?: () => void;
 }) => {
