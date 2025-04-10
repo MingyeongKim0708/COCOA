@@ -1,12 +1,13 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState, Suspense, useRef } from "react";
 import ProductCard from "@/app/_components/product/ProductCard";
 import SearchHeader from "../_components/SearchHeader";
 import type { SearchResponse } from "@/types/search";
 import { convertSearchToCosmetic } from "@/utils/convertSearchToCosmetic";
 import ScrollToTopButton from "@/app/_components/common/ScrollToTopButton";
+import LoadingLottie from "@/app/_components/common/LoadingLottie";
 
 function SearchResultsPage() {
   // Next.js에서 페이지 이동을 도와줌
@@ -85,7 +86,7 @@ function SearchResultsPage() {
 
       <div className="p-4">
         {loading ? (
-          <p>검색 중...</p>
+          <LoadingLottie />
         ) : results.length > 0 ? (
           <div className="grid grid-cols-2 gap-2">
             {results.map((item) => (
