@@ -8,6 +8,7 @@ import com.cocoa.backend.domain.search.entity.SearchDocument;
 
 import com.cocoa.backend.domain.search.repository.SearchCosmeticRepository;
 import com.cocoa.backend.domain.search.repository.SearchRepository;
+import com.cocoa.backend.global.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ public class SearchService {
     //→ 내부적으로는 ElasticsearchRepository<SearchDocument, String>를 상속해서, 검색 관련 쿼리를 실행할 수 있어.
     private final SearchRepository searchRepository;
     private final SearchCosmeticRepository searchCosmeticRepository;
+    private final RedisService redisService;
 
     //searchCosmetics() 메서드는 이름과 브랜드로 화장품을 검색하는 메서드
 
@@ -41,7 +43,9 @@ public class SearchService {
     //→ Elasticsearch에서 이름에 특정 단어가 포함되었거나 브랜드에 특정 단어가 포함된 화장품을 찾아줘. → 예: name = "토너", brand = "이니스프리"라면 "토너"를 이름에 포함하거나 브랜드가 "이니스프리"인 모든 상품을 가져옴.
     //결과로 SearchDocument 객체 리스트가 반환돼.
     //→ 이건 Elasticsearch에 저장된 문서(document) 형식이야.
-    public List<SearchResponseDto> searchCosmetics(SearchRequestDto requestDto) {
+    public List<SearchResponseDto> searchCosmetics(SearchRequestDto requestDto, Long userId) {
+        log.info("🔍 searchCosmetics() 호출됨 - requestDto={}, userId={}", requestDto, userId);
+
         String name = requestDto.getName();
         String brand = requestDto.getBrand();
         String topKeyword = requestDto.getTopKeyword();
@@ -55,6 +59,12 @@ public class SearchService {
         if (isNameEmpty && isBrandEmpty && isKeywordEmpty) {
             log.warn("⚠️ name, brand, topKeyword 모두 비어 있어 검색 불가");
             return List.of();
+        }
+
+        // 최근 검색어 저장(이름 기반으로 저장)
+        if (userId != null && !isNameEmpty) {
+            redisService.saveSearchLog(userId, name);
+            log.info("📝 Redis에 검색어 저장: userId={}, name={}", userId, name);
         }
 
         List<SearchDocument> results;
@@ -81,7 +91,7 @@ public class SearchService {
         }
 
         log.info("📦 검색 결과 수: {}", results.size());
-        results.forEach(doc -> log.debug("📄 문서: {}", doc));
+//        results.forEach(doc -> log.debug("📄 문서: {}", doc));
 
         /*이 부분은 Java의 Stream API를 활용해서, 가져온 SearchDocument 리스트를 클라이언트에 줄 수 있도록 SearchResponseDto로 바꿔주는 과정이야.
 
@@ -111,6 +121,12 @@ new SearchResponseDto(...)
 
                     String fullImageUrl = String.format("%s", imageUrl1);
 
+//                    // 최근 본 상품 이미지 저장
+//                    if(userId != null){
+//                        redisService.saveLatestCosmeticImage(userId, cosmeticId, imageUrl1);
+//                        log.info("🖼️ Redis에 최근 본 상품 이미지 저장: userId={}, cosmeticId={}, imageUrl={}", userId, cosmeticId, imageUrl1);  // ✅ 로그 추가
+//                    }
+
                     // ✅ S3_URL과 경로를 결합
                     return new SearchResponseDto(
                             search.getCosmeticId(),
@@ -121,5 +137,21 @@ new SearchResponseDto(...)
                     );
                 })
                 .collect(Collectors.toList());
+    }
+
+    // Redis에서 최근 검색어 목록 조회
+    public List<String> getRecentSearchLogs(Long userId) {
+        return redisService.getSearchLogs(userId);
+    }
+
+    // Redis에서 최근 본 화장품 이미지 목록 조회
+    public List<String> getRecentCosmetics(Long userId) {
+        return redisService.getLatestCosmeticImages(userId);
+    }
+
+    // Redis에 최근 본 화장품 이미지 저장
+    public void saveRecentCosmetics(Long userId, Integer cosmeticId, String imageUrl1) {
+        log.info("🖼️ Redis에 최근 본 상품 이미지 저장: userId={}, cosmeticId={}, imageUrl={}", userId, cosmeticId, imageUrl1);
+        redisService.saveLatestCosmeticImage(userId, cosmeticId, imageUrl1);
     }
 }
