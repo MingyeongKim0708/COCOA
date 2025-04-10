@@ -8,7 +8,6 @@ import jakarta.persistence.Converter;
 import org.postgresql.util.PGobject;
 import org.springframework.context.annotation.Configuration;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 

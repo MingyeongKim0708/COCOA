@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import com.cocoa.backend.domain.cosmetic.entity.Cosmetic;
 import com.cocoa.backend.domain.user.entity.User;
 import com.cocoa.backend.global.converter.KeywordJsonConverter;
@@ -50,8 +53,8 @@ public class Review {
 	@Column(name = "satisfied")
 	private Boolean satisfied;
 
-	@Column(name = "keywords",columnDefinition = "jsonb")
-	@Convert(converter = KeywordJsonConverter.class)
+	@JdbcTypeCode(SqlTypes.JSON)
+	@Column(columnDefinition = "jsonb")
 	private Map<String, Integer> keywords;
 
 	@Column(name = "image_url1")

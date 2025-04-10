@@ -1,5 +1,7 @@
 package com.cocoa.backend.domain.user.repository;
 
+import java.util.Map;
+
 import com.cocoa.backend.domain.user.entity.UserKeywords;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -17,7 +19,7 @@ public interface UserKeywordsRepository extends JpaRepository<UserKeywords, Long
         )
         WHERE user_id = :userId
     """, nativeQuery = true)
-    void updateKeywords(@Param("userId") Long userId, @Param("keywordJson") Object keywordJson);
+    void updateKeywords(@Param("userId") Long userId, @Param("keywordJson") Map<String, Integer> keywordJson);
 
     @Modifying
     @Query(value = """
@@ -37,7 +39,7 @@ public interface UserKeywordsRepository extends JpaRepository<UserKeywords, Long
         )
         WHERE user_id = :userId
     """, nativeQuery = true)
-    void subtractKeywords(@Param("userId") Long userId, @Param("keywordJson")  Object keywordJson);
+    void subtractKeywords(@Param("userId") Long userId, @Param("keywordJson") Map<String, Integer> keywordJson);
 
     @Modifying
     @Query(value = """

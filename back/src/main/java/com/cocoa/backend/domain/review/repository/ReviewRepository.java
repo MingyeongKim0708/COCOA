@@ -1,5 +1,7 @@
 package com.cocoa.backend.domain.review.repository;
 
+import java.util.Map;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,7 +29,7 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
 
 	@Modifying
 	@Query(value = "UPDATE reviews SET keywords = CAST(:keywords AS jsonb) WHERE review_id = :reviewId", nativeQuery = true)
-	void updateKeywords(@Param("reviewId") int reviewId, @Param("keywords") Object keywords);
+	void updateKeywords(@Param("reviewId") int reviewId, @Param("keywords") Map<String,Integer> keywords);
 
 	int countByCosmetic_CosmeticId(int cosmeticId);
 }

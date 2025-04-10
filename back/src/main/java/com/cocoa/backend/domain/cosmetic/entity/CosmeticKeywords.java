@@ -2,9 +2,11 @@ package com.cocoa.backend.domain.cosmetic.entity;
 
 import java.util.Map;
 
-import com.cocoa.backend.global.converter.KeywordJsonConverter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -17,11 +19,11 @@ public class CosmeticKeywords {
     @Id
     private Integer cosmeticId;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
-    @Convert(converter = KeywordJsonConverter.class)
     private Map<String, Integer> keywords;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
-    @Convert(converter = KeywordJsonConverter.class)
     private Map<String, Integer> topKeywords;
 }

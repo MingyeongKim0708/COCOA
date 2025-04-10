@@ -21,7 +21,7 @@ public interface CosmeticKeywordRepository extends JpaRepository<CosmeticKeyword
 		)
 		WHERE cosmetic_id = :cosmeticId
 	""", nativeQuery = true)
-	void updateKeywords(@Param("cosmeticId") int cosmeticId, @Param("keywordJson") Object keywordJson);
+	void updateKeywords(@Param("cosmeticId") int cosmeticId, @Param("keywordJson") Map<String, Integer> keywordJson);
 
 	@Modifying
 	@Query(value = """
@@ -41,5 +41,5 @@ public interface CosmeticKeywordRepository extends JpaRepository<CosmeticKeyword
 		)
 		WHERE cosmetic_id = :cosmeticId
 	""", nativeQuery = true)
-	void subtractKeywords(@Param("cosmeticId") int cosmeticId, @Param("keywordJson") Object keywordJson);
+	void subtractKeywords(@Param("cosmeticId") int cosmeticId, @Param("keywordJson") Map<String, Integer> keywordJson);
 }

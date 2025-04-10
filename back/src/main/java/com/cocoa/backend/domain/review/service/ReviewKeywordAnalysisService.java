@@ -51,10 +51,9 @@ public class ReviewKeywordAnalysisService {
 
 			if(response==null) throw new Exception();
 
-			Object json = jsonConverter.convertToDatabaseColumn(response.getKeywords());
-			reviewRepository.updateKeywords(response.getReviewId(), json);
-			cosmeticKeywordRepository.updateKeywords(review.getCosmetic().getCosmeticId(),json);
-			userKeywordsRepository.updateKeywords(review.getUser().getUserId(), json);
+			reviewRepository.updateKeywords(response.getReviewId(), response.getKeywords());
+			cosmeticKeywordRepository.updateKeywords(review.getCosmetic().getCosmeticId(), response.getKeywords());
+			userKeywordsRepository.updateKeywords(review.getUser().getUserId(), response.getKeywords());
 		} catch (Exception e) {
 			log.error("분석 실패: {}", e.getMessage());
 		}
