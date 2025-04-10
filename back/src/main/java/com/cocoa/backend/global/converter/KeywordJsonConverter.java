@@ -18,7 +18,7 @@ public class KeywordJsonConverter implements AttributeConverter<Map<String, Inte
     @Override
     public String convertToDatabaseColumn(Map<String, Integer> attribute) {
         try {
-            if (attribute == null || attribute.isEmpty()) return null;
+            if (attribute == null || attribute.isEmpty()) return "{}";
             return objectMapper.writeValueAsString(attribute);
         } catch (Exception e) {
             throw new IllegalArgumentException("키워드 변환 실패", e);
