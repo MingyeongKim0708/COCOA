@@ -14,7 +14,7 @@ export default function RecentLog() {
   return (
     <div className="mt-6">
       <h2 className="mb-2 text-lg font-semibold">최근 검색어</h2>
-      <div className="flex flex-wrap">
+      <div className="flex space-x-2 overflow-x-auto whitespace-nowrap">
         {recentTags.map((tag) => (
           <Button key={tag} label={tag} onRemove={() => removeTag(tag)} />
         ))}
