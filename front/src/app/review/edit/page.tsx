@@ -16,10 +16,11 @@ function ReviewEditPage() {
 
   useEffect(() => {
     if (!reviewId) router.back();
-    fetchWrapper(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/${reviewId}`,
+    fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/edit?reviewId=${reviewId}`,
       {
         method: "GET",
+        credentials: "include",
       },
     )
       .then((res) => res.json())
@@ -31,34 +32,41 @@ function ReviewEditPage() {
     cosmeticId,
     satisfied,
     content,
+    imageUrls,
     images,
   }: {
     reviewId?: number;
     cosmeticId: number;
     satisfied: boolean;
     content: string;
+    imageUrls?: string[];
     images: File[];
   }) => {
     const formData = new FormData();
-    formData.append("cosmeticId", String(reviewId));
-    formData.append("cosmeticId", String(cosmeticId));
+    formData.append("reviewId", String(reviewId));
     formData.append("satisfied", String(satisfied));
     formData.append("content", content);
-    images.forEach((file) => formData.append("imageFiles", file));
+    imageUrls?.forEach((imageUrl, index) =>
+      formData.append("imageUrls", imageUrl),
+    );
+    images.forEach((image, index) => {
+      formData.append("imageFiles", image);
+    });
 
-    const res = await fetchWrapper(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/write`,
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/edit`,
       {
         method: "POST",
+        credentials: "include",
         body: formData,
       },
     );
 
     if (res.ok) {
-      alert("리뷰가 등록되었습니다!");
+      alert("리뷰가 갱신되었습니다!");
       router.back(); // 또는 리뷰 목록 페이지
     } else {
-      alert("리뷰 등록 실패");
+      alert("리뷰 갱신 실패");
     }
   };
 

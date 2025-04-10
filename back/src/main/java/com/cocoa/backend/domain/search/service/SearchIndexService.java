@@ -4,7 +4,7 @@ package com.cocoa.backend.domain.search.service;
 import com.cocoa.backend.domain.cosmetic.entity.Cosmetic;
 import com.cocoa.backend.domain.cosmetic.entity.CosmeticKeywords;
 import com.cocoa.backend.domain.cosmetic.repository.CosmeticRepository;
-import com.cocoa.backend.domain.search.repository.CosmeticKeywordRepository;
+import com.cocoa.backend.domain.cosmetic.repository.CosmeticKeywordRepository;
 import com.cocoa.backend.domain.search.repository.SearchCosmeticRepository;
 import com.cocoa.backend.domain.search.repository.SearchRepository;
 import com.cocoa.backend.domain.search.entity.SearchDocument;

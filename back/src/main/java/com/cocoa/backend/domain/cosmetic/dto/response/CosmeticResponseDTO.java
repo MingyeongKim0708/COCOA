@@ -3,9 +3,16 @@ package com.cocoa.backend.domain.cosmetic.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Stream;
+
+import com.cocoa.backend.domain.cosmetic.entity.Cosmetic;
+import com.cocoa.backend.domain.cosmetic.entity.CosmeticKeywords;
 
 @Getter
 @NoArgsConstructor
@@ -30,6 +37,7 @@ public class CosmeticResponseDTO {
     // 관심 등록 타이밍
     private Long likedAt;
     
+    @Setter
     private int reviewCount;
 
     // 카테고리 정보도 DTO 형태로 포함 (예: major/middleCategory 등)
