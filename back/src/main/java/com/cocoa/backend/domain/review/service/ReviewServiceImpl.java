@@ -63,7 +63,7 @@ public class ReviewServiceImpl implements ReviewService{
 				imageUrls.add(url);
 			}
 		}
-		log.info("들어온 정보 유저{} 화장품: {} 내용: {} 만족 :{}",userId, request.getCosmeticId(),request.getContent(),request.getSatisfied());
+		// log.info("들어온 정보 유저{} 화장품: {} 내용: {} 만족 :{}",userId, request.getCosmeticId(),request.getContent(),request.getSatisfied());
 
 		User user = userService.getUser(userId);
 		Cosmetic cosmetic = cosmeticService.getOneByCosmeticId(request.getCosmeticId());

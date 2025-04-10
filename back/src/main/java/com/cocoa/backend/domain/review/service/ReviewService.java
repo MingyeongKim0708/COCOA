@@ -1,7 +1,5 @@
 package com.cocoa.backend.domain.review.service;
 
-import java.util.List;
-
 import com.cocoa.backend.domain.review.dto.ReviewDTO;
 import com.cocoa.backend.domain.review.dto.request.ReviewInsertRequestDTO;
 import com.cocoa.backend.domain.review.dto.request.ReviewUpdateRequestDTO;
