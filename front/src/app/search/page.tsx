@@ -25,7 +25,7 @@ export default function SearchPage() {
         onChange={setSearchText}
         onSubmit={handleSubmit}
       />
-      <div className="p-4">
+      <div className="py-4">
         {/* 최근 검색어 */}
         <div className="mt-6">
           <h2 className="mb-2 text-lg font-semibold">최근 검색어</h2>
