@@ -17,6 +17,7 @@ spring:
     database: postgresql
     hibernate:
       ddl-auto: validate
+      dialect: org.hibernate.dialect.PostgreSQLDialect
   security:
     oauth2:
       client:
