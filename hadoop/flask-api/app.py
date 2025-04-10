@@ -40,12 +40,12 @@ def analyze_review():
     review_content = data["review"]
     start = time.time()
     okt = Okt()
-    stems = okt.pos(review_content, stem=True)
-    words = [w for w, t in stems if t in ['Noun', 'Adjective'] and len(w) > 1]
-    result = dict(Counter(words))
+    words = okt.pos(review_content, stem=True)
+    wordlist = [w for w, t in words if t in ['Noun', 'Adjective'] and len(w) > 1]    
+    result = dict(Counter(wordlist))
     logger.info("work taked %d", time.time()-start)
 
-    return jsonify({"review_id": review_id, "result": result})
+    return jsonify({"reviewId": review_id, "keywords": result})
 
 
 @app.route("/analyze/crawl", methods=["POST"])
@@ -63,6 +63,7 @@ def analyze_crawl():
         else:
             f.write(reviews)
 
+
     hdfs_path = f"/input/reviews_{cosmetic_id}.txt"
     result = subprocess.run(
         ["hdfs", "dfs", "-put", "-f", local_path, hdfs_path], capture_output=True, text=True)
@@ -73,7 +74,6 @@ def analyze_crawl():
     # Spark submit 실행
     spark_queue.put(cosmetic_id)
     return jsonify({"status": "queued"})
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
