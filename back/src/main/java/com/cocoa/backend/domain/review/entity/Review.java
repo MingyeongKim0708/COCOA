@@ -50,7 +50,7 @@ public class Review {
 	@Column(name = "satisfied")
 	private Boolean satisfied;
 
-	@Column(name = "keywords")
+	@Column(name = "keywords",columnDefinition = "jsonb")
 	@Convert(converter = KeywordJsonConverter.class)
 	private Map<String, Integer> keywords;
 
