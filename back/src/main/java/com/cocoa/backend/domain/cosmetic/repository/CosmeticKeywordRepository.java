@@ -17,11 +17,11 @@ public interface CosmeticKeywordRepository extends JpaRepository<CosmeticKeyword
 		UPDATE cosmetic_keywords
 		SET keywords = (
 			SELECT jsonb_object_agg(key, (COALESCE(keywords->>key, '0')::int + value::int))
-			FROM jsonb_each_text((:keywordJson)::jsonb) AS t(key, value)
+			FROM jsonb_each_text(CAST(:keywordJson AS jsonb)) AS t(key, value)
 		)
 		WHERE cosmetic_id = :cosmeticId
 	""", nativeQuery = true)
-	void updateKeywords(@Param("cosmeticId") int cosmeticId, @Param("keywordJson") Map<String, Integer> keywordJson);
+	void updateKeywords(@Param("cosmeticId") int cosmeticId, @Param("keywordJson") String keywordJson);
 
 	@Modifying
 	@Query(value = """
@@ -37,9 +37,9 @@ public interface CosmeticKeywordRepository extends JpaRepository<CosmeticKeyword
 					END
 				)
 			)
-			FROM jsonb_each_text((:keywordJson)::jsonb) AS t(key, value)
+			FROM jsonb_each_text(CAST(:keywordJson AS jsonb)) AS t(key, value)
 		)
 		WHERE cosmetic_id = :cosmeticId
 	""", nativeQuery = true)
-	void subtractKeywords(@Param("cosmeticId") int cosmeticId, @Param("keywordJson") Map<String, Integer> keywordJson);
+	void subtractKeywords(@Param("cosmeticId") int cosmeticId, @Param("keywordJson") String keywordJson);
 }

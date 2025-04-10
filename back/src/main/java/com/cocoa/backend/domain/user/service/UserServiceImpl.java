@@ -35,6 +35,8 @@ public class UserServiceImpl implements UserService {
     private final JWTUtil jwtUtil;
     private final RedisService redisService;
     private final UserKeywordsRepository userKeywordsRepository;
+    private final KeywordJsonConverter keywordJsonConverter;
+
 
     @Value("${spring.jwt.accesstoken-expires-in}")
     private Long ACCESSTOKEN_EXPIRES_IN;
@@ -66,10 +68,11 @@ public class UserServiceImpl implements UserService {
         map.put(String.valueOf(user.getGender()), 1);
         map.put(String.valueOf(user.getSkinType()), 1);
         map.put(String.valueOf(user.getSkinTone()), 1);
-        userKeywordsRepository.updateKeywords(userId, map);
+        String json = keywordJsonConverter.convertToDatabaseColumn(map);
+        userKeywordsRepository.updateKeywords(userId, json);
         log.info("userId : {}", userId);
         log.info("map : {}", map);
-        log.info("json : {}", Arrays.toString(map.entrySet().stream().toList().toArray()));
+        log.info("json : {}", json);
 
         // JWT 발급
         String accessToken = jwtUtil.createJwt(userId, providerId, ACCESSTOKEN_EXPIRES_IN);

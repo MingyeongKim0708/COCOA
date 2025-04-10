@@ -53,11 +53,10 @@ function ReviewEditPage() {
       formData.append("imageFiles", image);
     });
 
-    const res = await fetch(
+    const res = await fetchWrapper(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/edit`,
       {
         method: "POST",
-        credentials: "include",
         body: formData,
       },
     );

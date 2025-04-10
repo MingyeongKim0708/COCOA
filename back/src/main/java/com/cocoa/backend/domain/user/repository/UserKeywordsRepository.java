@@ -15,11 +15,11 @@ public interface UserKeywordsRepository extends JpaRepository<UserKeywords, Long
         UPDATE user_keywords
         SET keywords = (
             SELECT jsonb_object_agg(key, (COALESCE(keywords->>key, '0')::int + value::int))
-            FROM jsonb_each_text((:keywordJson)::jsonb) AS t(key, value)
+            FROM jsonb_each_text(CAST(CAST(:keywordJson AS jsonb) AS jsonb)) AS t(key, value)
         )
         WHERE user_id = :userId
     """, nativeQuery = true)
-    void updateKeywords(@Param("userId") Long userId, @Param("keywordJson") Map<String, Integer> keywordJson);
+    void updateKeywords(@Param("userId") Long userId, @Param("keywordJson") String keywordJson);
 
     @Modifying
     @Query(value = """
@@ -35,11 +35,11 @@ public interface UserKeywordsRepository extends JpaRepository<UserKeywords, Long
               END
             )
           )
-          FROM jsonb_each_text((:keywordJson)::jsonb) AS t(key, value)
+          FROM jsonb_each_text(CAST(:keywordJson AS jsonb)) AS t(key, value)
         )
         WHERE user_id = :userId
     """, nativeQuery = true)
-    void subtractKeywords(@Param("userId") Long userId, @Param("keywordJson") Map<String, Integer> keywordJson);
+    void subtractKeywords(@Param("userId") Long userId, @Param("keywordJson") String keywordJson);
 
     @Modifying
     @Query(value = """

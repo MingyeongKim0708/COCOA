@@ -86,11 +86,11 @@ public class Review {
 			content,
 			satisfied,
 			keywords,
-			!imageUrls.isEmpty() ? imageUrls.get(0) : null,
-			imageUrls.size() > 1 ? imageUrls.get(1) : null,
-			imageUrls.size() > 2 ? imageUrls.get(2) : null,
-			imageUrls.size() > 3 ? imageUrls.get(3) : null,
-			imageUrls.size() > 4 ? imageUrls.get(4) : null,
+			(imageUrls != null && !imageUrls.isEmpty()) ? imageUrls.get(0) : null,
+			(imageUrls != null && imageUrls.size() > 1) ? imageUrls.get(1) : null,
+			(imageUrls != null && imageUrls.size() > 2) ? imageUrls.get(2) : null,
+			(imageUrls != null && imageUrls.size() > 3) ? imageUrls.get(3) : null,
+			(imageUrls != null && imageUrls.size() > 4) ? imageUrls.get(4) : null,
 			helpfulCount,
 			LocalDate.now()
 		);

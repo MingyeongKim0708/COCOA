@@ -105,8 +105,9 @@ public class ReviewServiceImpl implements ReviewService{
 
 		User user = userService.getUser(userId);
 
-		userKeywordsRepository.subtractKeywords(user.getUserId(),review.getKeywords());
-		cosmeticKeywordRepository.subtractKeywords(review.getCosmetic().getCosmeticId(),review.getKeywords());
+		String json = jsonConverter.convertToDatabaseColumn(review.getKeywords());
+		userKeywordsRepository.subtractKeywords(user.getUserId(), json);
+		cosmeticKeywordRepository.subtractKeywords(review.getCosmetic().getCosmeticId(), json);
 
 		review = Review.of(review.getReviewId(),user,review.getCosmetic(),request.getContent(),
 			request.isSatisfied(),review.getKeywords(),review.getHelpfulCount(), imageUrls);
