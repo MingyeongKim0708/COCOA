@@ -4,10 +4,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
 import java.util.Map;
 
+
+@Configuration
 @Converter
 public class KeywordJsonConverter implements AttributeConverter<Map<String, Integer>, String> {
     private static final ObjectMapper objectMapper = new ObjectMapper();

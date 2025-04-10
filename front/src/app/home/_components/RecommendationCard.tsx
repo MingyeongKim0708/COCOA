@@ -58,8 +58,8 @@ export function RecommendationCard() {
   }, [currentIndex]); // 슬라이드가 바뀔 때 다시 측정
 
   return (
-    <section className="pb-5">
-      <div className="inline-flex gap-2 pb-3">
+    <section className="pb-7">
+      <div className="inline-flex gap-2 pb-4">
         <T3>이 </T3>
         <T3>"최근 본 카테고리"</T3>
         <T3> 제품은 어떠신가요?</T3>

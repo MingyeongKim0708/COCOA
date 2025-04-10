@@ -18,7 +18,7 @@ export default function IngredientText({
     >
       <hr />
       <T4 className="pt-6">성분</T4>
-      <B5 className="line-clamp-6">{text}</B5>
+      <B5 className="line-clamp-3">{text}</B5>
       <button
         onClick={() => setIsOpen(true)}
         className="text-size6 font-semibold text-gray2 underline"

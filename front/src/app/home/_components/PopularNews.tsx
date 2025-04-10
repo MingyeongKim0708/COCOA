@@ -9,51 +9,27 @@ interface NewsItem {
   publishedAt: string;
 }
 
-const NEWS_CACHE_KEY = "cachedNews";
-const NEWS_CACHE_DATE_KEY = "cachedNewsDate";
-
-// 더미 데이터
-const dummyNews = [
+const newsData = [
   {
     title: "화장품 바르는 것 외 피부 고민별 피부 관리 방법",
     thumbnail:
-      "https://mblogthumb-phinf.pstatic.net/MjAyNTA0MDRfMjEx/MDAxNzQzNzY5MjgwMDUz.En5lVhHYZXiyTAtkhAj_WK2pOws4Tj_2qjmz0O_r8kUg.QGPj34Md442tXuH9bZkxXrslae4IhgeietttKvbtwbAg.JPEG/IMG_2025.JPG?type=w800",
+      "https://postfiles.pstatic.net/MjAyNTAxMTNfMjI0/MDAxNzM2NzU1ODUyNDQz.YxCRwFoDLGJQAGdlyeoy-1as2Al3KrAc4JykB3H4O7Ag.Cv9mG2ViEl9G-vgZaFdE0J9Bu74bgONECLqVxRZELs8g.JPEG/SE-e361729e-bf80-457e-ac7e-6f3a6e6a1d21.jpg?type=w966",
     link: "https://blog.naver.com/rincyan/223821785937?isInf=true",
     publishedAt: "2025-04-06",
   },
   {
-    title: "율영세일 니들리 토너 패드, 모공관리와 각질케어까지 후기!",
+    title: "미백광채앰플 브이앤에이 로즈펩타이드앰플로 맑은 피부 찾았어요",
     thumbnail:
-      "https://mblogthumb-phinf.pstatic.net/MjAyNTAzMzBfMjA3/MDAxNzQzMzM5NTc1NjU5.i2sEYt3Nsc6Nq2PGR8rE34JR0Chvwbi5XCZhL4a2gYog.1EDiTXA3b7FOp1Sb_fSC78-JyhU04w9-DIkc7JkWDAEg.JPEG/%25BA%25B8%25BD%25C0_%25C0%25E5%25BA%25AE_%25C5%25A9%25B8%25B2.JPG?type=w800",
+      "https://postfiles.pstatic.net/MjAyNTA0MDZfMTg2/MDAxNzQzOTE4NDE2OTI5.Wog9Z4bQEo73h_KYyCTe1DzK9INYOrr2tvfb9XX5akMg.S8sZm25f6hKhXUrP80BOqeetCfXogj81_7SB1mOBjXUg.JPEG/DSC04965.JPG?type=w966",
     link: "https://blog.naver.com/qmffn06/223823890508?isInf=true&trackingCode=naver_etc",
-    publishedAt: "2025-04-06",
+    publishedAt: "2025-04-10",
   },
 ];
 
 export default function PopularNews() {
   const [news, setNews] = useState<NewsItem[]>([]);
   useEffect(() => {
-    const today = new Date().toISOString().slice(0, 10); // "2025-04-06"
-
-    const cachedDate = localStorage.getItem(NEWS_CACHE_DATE_KEY);
-    const cachedNews = localStorage.getItem(NEWS_CACHE_KEY);
-
-    if (cachedDate === today && cachedNews) {
-      // - 오늘 저장된 뉴스가 있다면 사용
-      setNews(JSON.parse(cachedNews));
-    } else {
-      // -오늘 처음이거나 캐시 없음 → API 호출
-      //   fetchWrapper("/api/news")
-      //     .then((res) => res.json())
-      //     .then((data: NewsItem[]) => {
-      //       setNews(data);
-      //       localStorage.setItem(NEWS_CACHE_KEY, JSON.stringify(data));
-      //       localStorage.setItem(NEWS_CACHE_DATE_KEY, today);
-      //     });
-      setNews(dummyNews);
-      localStorage.setItem(NEWS_CACHE_KEY, JSON.stringify(dummyNews));
-      localStorage.setItem(NEWS_CACHE_DATE_KEY, today);
-    }
+    setNews(newsData);
   }, []);
 
   return (
