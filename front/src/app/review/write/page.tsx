@@ -19,7 +19,7 @@ function ReviewWritePage() {
       setCosmetic(dummyProducts[0]);
     } else {
       // ${process.env.NEXT_PUBLIC_API_BASE_URL}
-      fetch(`localhost:8080/cosmetics/${cosmeticId}`)
+      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/cosmetics/${cosmeticId}`)
         .then((res) => res.json())
         .then((data) => setCosmetic(data));
     }
@@ -37,15 +37,19 @@ function ReviewWritePage() {
     images: File[];
   }) => {
     const formData = new FormData();
-    formData.append("cosmeticId", String(cosmeticId));
-    formData.append("satisfied", String(satisfied));
+    formData.append("cosmeticId", cosmeticId.toString());
+    formData.append("satisfied", satisfied.toString());
     formData.append("content", content);
-    images.forEach((file) => formData.append("imageFiles", file));
 
-    const res = await fetchWrapper(
+    images.forEach((image, index) => {
+      formData.append("imageFiles", image);
+    });
+    //
+    const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/write`,
       {
         method: "POST",
+        credentials: "include",
         body: formData,
       },
     );

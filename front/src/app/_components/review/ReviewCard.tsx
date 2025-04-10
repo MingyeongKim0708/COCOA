@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import ReviewProductInfo from "./ReviewProductInfo";
 import ReviewUserInfo from "../user/UserInfo";
 import type { Review } from "@/types/review";
@@ -10,13 +9,14 @@ import B4 from "../common/B4";
 import B5 from "../common/B5";
 import ReviewImageGrid from "./ReviewImageGrid";
 import { fetchWrapper } from "@/lib/fetchWrapper";
+import { useRouter } from "next/navigation";
 
 interface ReviewProps {
   review: Review;
 }
 
 const ReviewCard = ({ review }: ReviewProps) => {
-  // const router = useRouter();
+  const router = useRouter();
   // const isUserPage = router.pathname.startsWith("/user");
   // const isCosmeticPage = router.pathname.startsWith("/cosmetic");
   const isUserPage = review.user != null ? true : false;
@@ -30,7 +30,10 @@ const ReviewCard = ({ review }: ReviewProps) => {
   const items = ["수정하기", "삭제하기"];
 
   const handleSelect = (item: string) => {
-    console.log("선택했다:", item);
+    console.log("선택했다:", item, review.reviewId);
+    if (item === "수정하기")
+      router.push(`/review/edit?reviewId=${review.reviewId}`);
+
     setMenuOpen(false);
   };
 
@@ -76,25 +79,25 @@ const ReviewCard = ({ review }: ReviewProps) => {
         )}
         <B4 children={review.content} />
       </div>
-      <ReviewImageGrid urls={review.images} />
+      <ReviewImageGrid urls={review.imageUrls} />
       <div className="flex justify-between p-2">
         <HelpfulButton
           helpfulCount={helpfulCount}
           helpfulForMe={helpfulForMe}
           onClick={() => handleHelpful()}
         />
-        <div className="flex items-center justify-between gap-1">
+        <div className="relative flex items-center justify-between gap-1">
           <B5 children={review.createdAt} className="text-gray4" />
           <button onClick={() => setMenuOpen((prev) => !prev)}>
             <EllipsisVertical size={20} />
-            {menuOpen && (
-              <ContextMenu
-                items={items}
-                onSelect={handleSelect}
-                onClose={() => setMenuOpen(false)}
-              />
-            )}
           </button>
+          {menuOpen && (
+            <ContextMenu
+              items={items}
+              onSelect={handleSelect}
+              onClose={() => setMenuOpen(false)}
+            />
+          )}
         </div>
       </div>
     </div>

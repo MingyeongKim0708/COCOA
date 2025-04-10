@@ -1,5 +1,7 @@
 package com.cocoa.backend.domain.cosmetic.dto.response;
 
+import com.cocoa.backend.domain.cosmetic.entity.Category;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,4 +16,8 @@ public class CategoryResponseDTO {
     private String middleCategory;
     private String categoryNo;
 
+    public static CategoryResponseDTO fromEntity(Category category){
+        return new CategoryResponseDTO(category.getCategoryId(), category.getMajorCategory(),
+            category.getMiddleCategory(), category.getCategoryNo());
+    }
 }

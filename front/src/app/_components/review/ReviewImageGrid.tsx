@@ -19,9 +19,10 @@ export default function ReviewImageGrid({
   editable = false,
   maxCount = 5,
 }: ReviewImageGridProps) {
-  const previews = files
-    ? files.map((file) => URL.createObjectURL(file))
-    : (urls ?? []);
+  const previews = [
+    ...(urls ?? []),
+    ...(files ? files.map((file) => URL.createObjectURL(file)) : []),
+  ];
 
   return (
     <div className="flex flex-row gap-3 overflow-x-auto py-2">
