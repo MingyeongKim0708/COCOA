@@ -10,7 +10,7 @@ export interface Cosmetic {
   keywords: Record<string, number> | null;
   topKeywords: string[];
   liked: boolean;
-  likedAt?: string;
+  likedAt?: number;
   likeCount: number;
   reviewCount: number;
   ingredient: string;
