@@ -1,13 +1,13 @@
 package com.cocoa.backend.domain.cosmetic.controller;
 
 import com.cocoa.backend.domain.cosmetic.dto.request.CompareRequestDTO;
-import com.cocoa.backend.domain.cosmetic.dto.response.CategoryResponseDTO;
-import com.cocoa.backend.domain.cosmetic.dto.response.CompareModalResponseDTO;
-import com.cocoa.backend.domain.cosmetic.dto.response.CompareResponseDTO;
-import com.cocoa.backend.domain.cosmetic.dto.response.CosmeticResponseDTO;
+import com.cocoa.backend.domain.cosmetic.dto.response.*;
 import com.cocoa.backend.domain.cosmetic.service.CategoryService;
 import com.cocoa.backend.domain.cosmetic.service.CompareService;
 import com.cocoa.backend.domain.cosmetic.service.CosmeticService;
+import com.cocoa.backend.domain.review.dto.ReviewDTO;
+import com.cocoa.backend.domain.review.dto.response.CosmeticReviewResponseDTO;
+import com.cocoa.backend.domain.review.service.ReviewService;
 import com.cocoa.backend.domain.user.dto.CustomOAuth2UserDTO;
 import com.cocoa.backend.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,18 +34,26 @@ public class CosmeticController {
     private final CompareService compareService;
     private final CosmeticService cosmeticService;
 
-    public CosmeticController(CategoryService categoryService, CompareService compareService, CosmeticService cosmeticService) {
+    private final ReviewService reviewService;
+
+    public CosmeticController(CategoryService categoryService, CompareService compareService, CosmeticService cosmeticService, ReviewService reviewService) {
         this.categoryService = categoryService;
         this.compareService = compareService;
         this.cosmeticService = cosmeticService;
+        this.reviewService = reviewService;
     }
 
+    @Operation(summary = "화장품 상세 조회", description = "화장품 상세 정보와 해당 화장품의 리뷰를 함께 반환합니다.")
     @GetMapping("/cosmetic/{cosmeticId}")
-    public ResponseEntity<ApiResponse<CosmeticResponseDTO>> getCosmeticByCosmeticId(Authentication authentication, @PathVariable int cosmeticId){
+    public ResponseEntity<ApiResponse<CosmeticDetailResponseDTO>> getCosmeticByCosmeticId(Authentication authentication, @PathVariable int cosmeticId){
         CustomOAuth2UserDTO userDetails = (CustomOAuth2UserDTO)authentication.getPrincipal();
 
         CosmeticResponseDTO cosmetic= cosmeticService.getCosmeticsByCosmeticId(userDetails.getUserId(), cosmeticId);
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(cosmetic));
+        List<ReviewDTO> reviews = reviewService.getReviewsByCosmeticId(userDetails.getUserId(), cosmetic.getCosmeticId(), null, 0).getReviews();
+
+        CosmeticDetailResponseDTO response = new CosmeticDetailResponseDTO(cosmetic, reviews);
+
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(response));
     }
 
     @Operation(summary = "카테고리 전체 조회", description = "모든 카테고리를 조회합니다.")

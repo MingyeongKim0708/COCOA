@@ -38,7 +38,10 @@ const UserWordCloud = ({ words }: UserWordCloudProps) => {
         className="w-full"
       />
       <div className="absolute inset-0 flex items-center justify-center">
-        {size.width > 0 && size.height > 0 && words ? (
+        {size.width > 0 &&
+        size.height > 0 &&
+        words &&
+        Object.keys(words).length > 0 ? (
           <div className="flex h-[80%] w-[80%] items-center justify-center">
             <WordCloud
               words={words}

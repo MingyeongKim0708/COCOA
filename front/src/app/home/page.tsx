@@ -23,7 +23,7 @@ export default function HomePage() {
       <PageHeader
         title={
           <>
-            안녕하세요 <span className="text-pink1">{user.nickname}</span>님
+            안녕하세요 <span className="text-pink1">{user?.nickname}</span>님
           </>
         }
       />

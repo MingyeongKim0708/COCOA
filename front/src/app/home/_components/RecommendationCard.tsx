@@ -5,6 +5,7 @@ import T3 from "@/app/_components/common/T3";
 import Tag from "@/app/_components/common/Tag";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Link from "next/link";
 
 interface RecommendedCosmetics {
   cosmeticId: number;
@@ -61,7 +62,6 @@ export function RecommendationCard() {
     <section className="pb-7">
       <div className="inline-flex gap-2 pb-4">
         <T3>이 </T3>
-        <T3>"최근 본 카테고리"</T3>
         <T3> 제품은 어떠신가요?</T3>
       </div>
 
@@ -72,11 +72,13 @@ export function RecommendationCard() {
             <Slider ref={sliderRef} {...settings}>
               {cosmetics.map((item) => (
                 <div key={item.cosmeticId}>
+                  {/* <Link href={`/cosmetic/${item.cosmeticId}`}> */}
                   <img
                     src={item.imageUrl}
                     alt="추천 제품"
                     className="w-full object-cover"
-                  />
+                  />{" "}
+                  {/* </Link> */}
                 </div>
               ))}
             </Slider>

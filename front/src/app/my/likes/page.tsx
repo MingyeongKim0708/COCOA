@@ -25,9 +25,7 @@ export default function LikesPage() {
         const sortedCosmetics = cosmetics
           .slice()
           .sort(
-            (a: Cosmetic, b: Cosmetic) =>
-              new Date(b.likedAt || "1970-01-01").getTime() -
-              new Date(a.likedAt || "1970-01-01").getTime(),
+            (a: Cosmetic, b: Cosmetic) => (b.likedAt || 0) - (a.likedAt || 0),
           );
 
         setLikedCosmetic(sortedCosmetics);
@@ -37,7 +35,7 @@ export default function LikesPage() {
     };
 
     fetchLiked();
-  }, [user.id]);
+  }, [user?.id]);
 
   return (
     <div>

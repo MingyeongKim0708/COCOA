@@ -164,7 +164,7 @@ export default function CategoryDetailPage() {
         <div className="flex h-[2rem] flex-row items-center gap-1">
           {isCustomMode ? (
             <>
-              <T3 children={`${user.nickname}`} className="text-red2" />
+              <T3 children={`${user?.nickname}`} className="text-red2" />
               <T3 children="님에게 맞는 제품" />
             </>
           ) : (

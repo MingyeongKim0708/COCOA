@@ -31,10 +31,12 @@ export default function CosmeticDetailPage() {
   const fetchAllReviews = async () => {
     try {
       const res = await fetchWrapper(
-        `${baseUrl}/reviews/cosmetic/{cosmeticId}?page=0`,
+        `${baseUrl}/reviews/cosmetic/${cosmeticId}?page=0`,
       );
-      const data: Review[] = await res.json();
-      setReviews(data);
+      const resJson = await res.json();
+      const data = resJson;
+      const reviews: Review[] = data.reviews;
+      setReviews(reviews);
     } catch (err) {
       console.error("리뷰 불러오기 실패", err);
     }
@@ -43,10 +45,12 @@ export default function CosmeticDetailPage() {
   const fetchFilteredReviews = async (keyword: string) => {
     try {
       const res = await fetchWrapper(
-        `${baseUrl}/reviews/cosmetic/{cosmeticId}?page=0&keyword=${keyword}`,
+        `${baseUrl}/reviews/cosmetic/${cosmeticId}?page=0&keyword=${keyword}`,
       );
-      const data: Review[] = await res.json();
-      setReviews(data);
+      const resJson = await res.json();
+      const data = resJson;
+      const reviews: Review[] = data.reviews;
+      setReviews(reviews);
     } catch (err) {
       console.error("리뷰 불러오기 실패", err);
     }
@@ -66,11 +70,11 @@ export default function CosmeticDetailPage() {
     setIsFiltered((prev) => !prev);
   };
 
-  useEffect(() => {}, [isFiltered]);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetchWrapper(`${baseUrl}/cosmetics/${cosmeticId}`);
+        const res = await fetchWrapper(`${baseUrl}/cosmetic/${cosmeticId}`);
+
         const resJson = await res.json();
         const data: CosmeticDetail = resJson.data;
         setCosmetic(data.cosmetic);

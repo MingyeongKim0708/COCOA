@@ -13,16 +13,19 @@ const PreviewLikeItems = () => {
     const fetchLikes = async () => {
       const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-      const res = await fetchWrapper(`${baseUrl}/like`, {
-        credentials: "include",
-      });
+      const res = await fetchWrapper(`${baseUrl}/cosmetic/likes`);
 
       if (res.ok) {
-        const {
-          data: { LikeItems: likes },
-        } = await res.json();
+        const resJson = await res.json();
+        const likes = resJson.data;
 
-        const prevLikes = likes.slice(0, 3);
+        const prevLikes = likes
+          .slice()
+          .sort(
+            (a: Cosmetic, b: Cosmetic) => (b.likedAt || 0) - (a.likedAt || 0),
+          )
+          .slice(0, 3);
+
         setPreviewLikeItems(prevLikes);
       }
     };

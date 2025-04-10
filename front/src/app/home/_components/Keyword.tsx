@@ -6,6 +6,8 @@ import { KeywordMarquee } from "./KeywordMarquee";
 export function Keyword() {
   const { user, keywords } = useUserStore();
 
+  if (!user) return;
+
   const userKeywordList = [
     user.gender,
     user.ageGroup,
