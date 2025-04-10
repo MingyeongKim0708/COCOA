@@ -22,7 +22,8 @@ export const dummyProducts: Cosmetic[] = [
     optionName: "",
     category: dummyCategory,
     reviewCount: 0,
-    ingredient: "",
+    ingredient:
+      "정제수, 글리세린, 부틸렌글라이콜, 나이아신아마이드, 피이지-60하이드로제네이티드캐스터오일, 판테놀, 알란토인, 병풀추출물, 트레할로오스, 마데카소사이드, 세라마이드엔피, 하이드롤라이즈드콜라겐, 녹차추출물, 에틸헥실글리세린, 라벤더오일",
   },
   {
     cosmeticId: 2,
