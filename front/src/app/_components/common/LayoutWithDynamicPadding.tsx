@@ -23,6 +23,7 @@ const noNavRoutes = [
   "/my/withdraw", // 회원 탈퇴
   "/review/write", // 리뷰 작성
   "/review/edit", // 리뷰 수정
+  "/cosmetic",
 ];
 
 export default function LayoutWithDynamicPadding({
@@ -32,9 +33,19 @@ export default function LayoutWithDynamicPadding({
 }) {
   const pathname = usePathname();
 
+  const isInNoNavRoutes = noNavRoutes.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`),
+  );
+
+  const isInNoHeaderRoutes = noHeaderRoutes.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`),
+  );
+
   const hasHeader = !noHeaderRoutes.includes(pathname);
   const hasNav = !noNavRoutes.includes(pathname);
 
+  // const hasHeader = !isInNoHeaderRoutes;
+  // const hasNav = !isInNoNavRoutes;
   // 디버깅용
   // console.log("hasHeader? : " + hasHeader);
   // console.log("hasNav? : " + hasNav);
