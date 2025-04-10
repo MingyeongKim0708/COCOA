@@ -40,6 +40,14 @@ public class CosmeticController {
         this.cosmeticService = cosmeticService;
     }
 
+    @GetMapping("/cosmetic/{cosmeticId}")
+    public ResponseEntity<ApiResponse<CosmeticResponseDTO>> getCosmeticByCosmeticId(Authentication authentication, @PathVariable int cosmeticId){
+        CustomOAuth2UserDTO userDetails = (CustomOAuth2UserDTO)authentication.getPrincipal();
+
+        CosmeticResponseDTO cosmetic= cosmeticService.getCosmeticsByCosmeticId(userDetails.getUserId(), cosmeticId);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(cosmetic));
+    }
+
     @Operation(summary = "카테고리 전체 조회", description = "모든 카테고리를 조회합니다.")
     @GetMapping("/category")
     public ResponseEntity<ApiResponse<List<CategoryResponseDTO>>> getAllCategires() {

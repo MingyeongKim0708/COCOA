@@ -35,6 +35,11 @@ public class CosmeticServiceImpl implements CosmeticService {
     }
 
     @Override
+    public CosmeticResponseDTO getCosmeticsByCosmeticId(Long userId, int cosmeticId) {
+        return cosmeticMapper.CosmeticDTOFromEntity(getOneByCosmeticId(cosmeticId),userId);
+    }
+
+    @Override
     public List<CosmeticResponseDTO> getCosmeticsByCategoryId(Integer categoryId, Long userId) {
         long start = System.currentTimeMillis();
         List<Cosmetic> cosmetics = cosmeticRepository.findByCategory_CategoryId(categoryId);

@@ -19,9 +19,12 @@ function ReviewWritePage() {
       setCosmetic(dummyProducts[0]);
     } else {
       // ${process.env.NEXT_PUBLIC_API_BASE_URL}
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/cosmetics/${cosmeticId}`)
+      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/cosmetic/${cosmeticId}`, {
+        method: "GET",
+        credentials: "include",
+      })
         .then((res) => res.json())
-        .then((data) => setCosmetic(data));
+        .then((data) => setCosmetic(data.data));
     }
   }, [cosmeticId]);
 

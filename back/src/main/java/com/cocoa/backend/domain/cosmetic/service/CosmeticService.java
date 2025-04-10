@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface CosmeticService {
     Cosmetic getOneByCosmeticId(Integer cosmeticId);
+    CosmeticResponseDTO getCosmeticsByCosmeticId(Long userId, int cosmeticId);
+
     List<CosmeticResponseDTO> getCosmeticsByCategoryId(Integer categoryId, Long userId);
     List<CosmeticResponseDTO> getInterestedCosmetics(Long userId);
 
@@ -15,5 +17,4 @@ public interface CosmeticService {
     void removeInterest(Long userId, Long cosmeticId);
 
     List<CosmeticResponseDTO> getCosmeticsByCursor(Integer categoryId, Integer lastId, int size, Long userId);
-
 }
