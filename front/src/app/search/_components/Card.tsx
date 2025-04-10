@@ -19,6 +19,7 @@ const Card: React.FC<CardProps> = ({ imageUrl, onRemove, id }) => {
   // 이미지 클릭 시 Redis 저장
   const handleClick = () => {
     saveRecentCosmetic(Number(id), imageUrl);
+    router.push(`/cosmetic/${id}`);
   };
   return (
     <div className="relative mr-3 h-32 w-24 flex-shrink-0">
