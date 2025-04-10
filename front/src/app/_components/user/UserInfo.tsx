@@ -21,7 +21,7 @@ const UserInfo = ({ user }: UserInfoProps) => {
       <div className="flex flex-col justify-around">
         <div className="flex flex-row items-center gap-1 pl-1">
           <T3 children={user.nickname} />
-          {user.id === loginUser.id && <EditUserButton />}
+          {user.id === loginUser?.id && <EditUserButton />}
         </div>
         <div className="flex flex-row gap-x-3">
           <Tag children={user.ageGroup} />

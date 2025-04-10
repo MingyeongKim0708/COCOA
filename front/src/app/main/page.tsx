@@ -73,17 +73,17 @@ export default function MainPage() {
       {/* 마이페이지 */}
       <div className="p-6">
         <h1 className="text-xl font-bold">마이페이지</h1>
-        <p>유저id: {user.id}</p>
-        <p>닉네임: {user.nickname}</p>
+        <p>유저id: {user?.id}</p>
+        <p>닉네임: {user?.nickname}</p>
         <img
-          src={user.imageUrl}
+          src={user?.imageUrl}
           alt="프로필 이미지"
           className="h-20 w-20 rounded-full border border-gray-300 object-cover"
         />
-        <p>성별: {user.gender}</p>
-        <p>연령대: {user.ageGroup}</p>
-        <p>피부타입: {user.skinType}</p>
-        <p>피부톤: {user.skinTone}</p>
+        <p>성별: {user?.gender}</p>
+        <p>연령대: {user?.ageGroup}</p>
+        <p>피부타입: {user?.skinType}</p>
+        <p>피부톤: {user?.skinTone}</p>
       </div>
 
       {/* Top Keywords */}
