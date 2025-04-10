@@ -61,8 +61,8 @@ export default function ComparePage() {
       {left && right && (
         <div className="flex flex-col items-center pt-7">
           <div className="flex flex-row">
-            <T4 className="text-red2">{user.nickname}</T4>
-            <B4>님과 겹치는 키워드는</B4>
+            <T4 className="inline break-all text-red2">{user.nickname}</T4>
+            <B4 className="inline break-all">님과 겹치는 키워드는</B4>
           </div>
           {matched.length > 0 ? (
             <p>
