@@ -121,11 +121,11 @@ new SearchResponseDto(...)
 
                     String fullImageUrl = String.format("%s", imageUrl1);
 
-                    // 최근 본 상품 이미지 저장
-                    if(userId != null){
-                        redisService.saveLatestCosmeticImage(userId, cosmeticId, imageUrl1);
-                        log.info("🖼️ Redis에 최근 본 상품 이미지 저장: userId={}, cosmeticId={}, imageUrl={}", userId, cosmeticId, imageUrl1);  // ✅ 로그 추가
-                    }
+//                    // 최근 본 상품 이미지 저장
+//                    if(userId != null){
+//                        redisService.saveLatestCosmeticImage(userId, cosmeticId, imageUrl1);
+//                        log.info("🖼️ Redis에 최근 본 상품 이미지 저장: userId={}, cosmeticId={}, imageUrl={}", userId, cosmeticId, imageUrl1);  // ✅ 로그 추가
+//                    }
 
                     // ✅ S3_URL과 경로를 결합
                     return new SearchResponseDto(
@@ -139,7 +139,6 @@ new SearchResponseDto(...)
                 .collect(Collectors.toList());
     }
 
-
     // Redis에서 최근 검색어 목록 조회
     public List<String> getRecentSearchLogs(Long userId) {
         return redisService.getSearchLogs(userId);
@@ -148,5 +147,11 @@ new SearchResponseDto(...)
     // Redis에서 최근 본 화장품 이미지 목록 조회
     public List<String> getRecentCosmetics(Long userId) {
         return redisService.getLatestCosmeticImages(userId);
+    }
+
+    // Redis에 최근 본 화장품 이미지 저장
+    public void saveRecentCosmetics(Long userId, Integer cosmeticId, String imageUrl1) {
+        log.info("🖼️ Redis에 최근 본 상품 이미지 저장: userId={}, cosmeticId={}, imageUrl={}", userId, cosmeticId, imageUrl1);
+        redisService.saveLatestCosmeticImage(userId, cosmeticId, imageUrl1);
     }
 }

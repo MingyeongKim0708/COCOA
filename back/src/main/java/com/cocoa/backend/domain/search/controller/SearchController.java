@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/search")
@@ -24,7 +25,7 @@ public class SearchController {
     private final SearchService searchService;
 
     // 기본 검색 기능
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<ApiResponse<List<SearchResponseDto>>> searchCosmetics(@ModelAttribute SearchRequestDto requestDto, Authentication authentication) {
         try {
             Long userId = null;
@@ -87,4 +88,26 @@ public class SearchController {
                     .body(ApiResponse.error("SERVER_ERROR", "최근 본 상품 조회 중 오류 발생: " + e.getMessage()));
         }
     }
+
+    // 최근 조회 상품 저장 (이미지 클릭 시)
+    @PostMapping("/recentCosmetic/{cosmeticId}")
+    public ResponseEntity<ApiResponse<String>> saveRecentCosmetic(
+            @PathVariable Integer cosmeticId,
+            @RequestBody Map<String, String> body,
+            Authentication authentication) {
+        try {
+            Long userId = null;
+            if (authentication != null && authentication.isAuthenticated()) {
+                CustomOAuth2UserDTO userDetails = (CustomOAuth2UserDTO) authentication.getPrincipal();
+                userId = userDetails.getUserId();
+            }
+            String imageUrl1 = body.get("imageUrl1"); // JSON에서 key 꺼내기
+            searchService.saveRecentCosmetics(userId, cosmeticId, imageUrl1);
+            return ResponseEntity.ok(ApiResponse.success("최근 본 상품에 저장 완료"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.error("SERVER_ERROR", "최근 본 상품 저장 중 오류 발생: " + e.getMessage()));
+        }
+    }
+
 }
