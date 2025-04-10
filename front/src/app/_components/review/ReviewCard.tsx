@@ -45,14 +45,14 @@ const ReviewCard = ({ review }: ReviewProps) => {
       const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
       setIsLoading(true); // 요청 시작
       if (helpfulForMe) {
-        // await fetchWrapper(`${baseUrl}/review/${review.reviewId}/helpful`, {
-        //   method: "DELETE",
-        // });
+        await fetchWrapper(`${baseUrl}/reviews/helpful/${review.reviewId}`, {
+          method: "DELETE",
+        });
         setHelpfulCount((c) => c - 1);
       } else {
-        // await fetchWrapper(`${baseUrl}/review/${review.reviewId}/helpful`, {
-        //   method: "POST",
-        // });
+        await fetchWrapper(`${baseUrl}/reviews/helpful/${review.reviewId}`, {
+          method: "POST",
+        });
         setHelpfulCount((c) => c + 1);
       }
       setHelpfulForMe((f) => !f);

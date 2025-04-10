@@ -56,7 +56,7 @@ function ReviewEditPage() {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/edit`,
       {
-        method: "PATCH",
+        method: "POST",
         credentials: "include",
         body: formData,
       },

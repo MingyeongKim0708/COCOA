@@ -66,16 +66,14 @@ public class ReviewController {
 		return ResponseEntity.ok(dto);
 	}
 
-	@PatchMapping("/edit")
+	@PostMapping("/edit")
 	public ResponseEntity<Map<String, String>> updateReview(Authentication authentication,
 		@RequestParam int reviewId,
-		@RequestParam int cosmeticId,
 		@RequestParam Boolean satisfied,
 		@RequestParam String content,
-		@RequestPart(required = false) List<String> imageUrls,
+		@RequestParam(required = false) List<String> imageUrls,
 		@RequestPart(required = false) List<MultipartFile> imageFiles) {
 		CustomOAuth2UserDTO userDetails = (CustomOAuth2UserDTO)authentication.getPrincipal();
-		log.info("Patch updateReview!!!! {}{}{}{}{}",reviewId,satisfied,content, Arrays.toString(imageUrls.toArray()),imageFiles.size());
 		ReviewUpdateRequestDTO request = new ReviewUpdateRequestDTO (reviewId,satisfied,content,imageUrls,imageFiles);
 		reviewService.updateReview(userDetails.getUserId(), request);
 		Map<String, String> response = new HashMap<>();
@@ -84,7 +82,7 @@ public class ReviewController {
 		return ResponseEntity.ok(response);
 	}
 
-	@PostMapping("/{reviewId}/helpful")
+	@PostMapping("/helpful/{reviewId}")
 	public ResponseEntity<Map<String, String>> insertHelpfulReview (Authentication authentication, @PathVariable long reviewId){
 		CustomOAuth2UserDTO userDetails = (CustomOAuth2UserDTO) authentication.getPrincipal();
 		reviewService.increaseHelpfulCount(userDetails.getUserId(),reviewId);
@@ -94,7 +92,7 @@ public class ReviewController {
 		return ResponseEntity.ok(response);
 	}
 
-	@DeleteMapping("/{reviewId}/helpful")
+	@DeleteMapping("/helpful/{reviewId}")
 	public ResponseEntity<Map<String, String>> deleteHelpfulReview (Authentication authentication, @PathVariable long reviewId){
 		CustomOAuth2UserDTO userDetails = (CustomOAuth2UserDTO) authentication.getPrincipal();
 		reviewService.decreaseHelpfulCount(userDetails.getUserId(),reviewId);
