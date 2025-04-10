@@ -27,7 +27,7 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
 
 	@Modifying
 	@Query(value = "UPDATE reviews SET keywords = CAST(:keywords AS jsonb) WHERE review_id = :reviewId", nativeQuery = true)
-	void updateKeywords(@Param("reviewId") int reviewId, @Param("keywords") String keywords);
+	void updateKeywords(@Param("reviewId") int reviewId, @Param("keywords") Object keywords);
 
 	int countByCosmetic_CosmeticId(int cosmeticId);
 }

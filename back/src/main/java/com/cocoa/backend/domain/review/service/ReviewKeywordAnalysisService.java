@@ -51,7 +51,7 @@ public class ReviewKeywordAnalysisService {
 
 			if(response==null) throw new Exception();
 
-			String json = jsonConverter.convertToDatabaseColumn(response.getKeywords());
+			Object json = jsonConverter.convertToDatabaseColumn(response.getKeywords());
 			reviewRepository.updateKeywords(response.getReviewId(), json);
 			cosmeticKeywordRepository.updateKeywords(review.getCosmetic().getCosmeticId(),json);
 			userKeywordsRepository.updateKeywords(review.getUser().getUserId(), json);

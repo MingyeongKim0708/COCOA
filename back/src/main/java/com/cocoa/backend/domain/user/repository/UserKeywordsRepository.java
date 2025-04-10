@@ -17,7 +17,7 @@ public interface UserKeywordsRepository extends JpaRepository<UserKeywords, Long
         )
         WHERE user_id = :userId
     """, nativeQuery = true)
-    void updateKeywords(@Param("userId") Long userId, @Param("keywordJson") String keywordJson);
+    void updateKeywords(@Param("userId") Long userId, @Param("keywordJson") Object keywordJson);
 
     @Modifying
     @Query(value = """
@@ -37,7 +37,7 @@ public interface UserKeywordsRepository extends JpaRepository<UserKeywords, Long
         )
         WHERE user_id = :userId
     """, nativeQuery = true)
-    void subtractKeywords(@Param("userId") Long userId, @Param("keywordJson")  String keywordJson);
+    void subtractKeywords(@Param("userId") Long userId, @Param("keywordJson")  Object keywordJson);
 
     @Modifying
     @Query(value = """

@@ -104,7 +104,7 @@ public class ReviewServiceImpl implements ReviewService{
 		Review review = reviewRepository.getReferenceById((int)request.getReviewId());
 
 		User user = userService.getUser(userId);
-		String keywordJson = jsonConverter.convertToDatabaseColumn(review.getKeywords());
+		Object keywordJson = jsonConverter.convertToDatabaseColumn(review.getKeywords());
 
 		userKeywordsRepository.subtractKeywords(user.getUserId(),keywordJson);
 		cosmeticKeywordRepository.subtractKeywords(review.getCosmetic().getCosmeticId(),keywordJson);
@@ -184,7 +184,6 @@ public class ReviewServiceImpl implements ReviewService{
 	}
 
 	@Override
-	@Transactional
 	public int getReviewAmount(int cosmeticId) {
 		return reviewRepository.countByCosmetic_CosmeticId(cosmeticId);
 	}

@@ -66,11 +66,11 @@ public class UserServiceImpl implements UserService {
         map.put(String.valueOf(user.getGender()), 1);
         map.put(String.valueOf(user.getSkinType()), 1);
         map.put(String.valueOf(user.getSkinTone()), 1);
-        String json = keywordJsonConverter.convertToDatabaseColumn(map);
+        Object json = keywordJsonConverter.convertToDatabaseColumn(map);
         userKeywordsRepository.updateKeywords(userId, json);
         log.info("userId : {}", userId);
         log.info("map : {}", map);
-        log.info("json : {}", json);
+        log.info("json : {}", json.toString());
 
         // JWT 발급
         String accessToken = jwtUtil.createJwt(userId, providerId, ACCESSTOKEN_EXPIRES_IN);

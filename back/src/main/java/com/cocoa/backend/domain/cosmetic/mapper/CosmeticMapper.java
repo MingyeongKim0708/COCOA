@@ -34,7 +34,7 @@ public class CosmeticMapper {
 			CosmeticKeywords cosmeticKeywords = cosmetic.getCosmeticKeywords();
 
 			Map<String, Integer> keywordsMap = Optional.ofNullable(cosmeticKeywords)
-				.map(CosmeticKeywords::getKeywords)
+				.map(CosmeticKeywords::getTopKeywords)
 				.orElse(Collections.emptyMap());
 
 			List<String> top3Keywords = Optional.ofNullable(cosmeticKeywords)
