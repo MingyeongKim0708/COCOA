@@ -146,4 +146,9 @@ public class CompareServiceImpl implements CompareService {
             );
         }).toList();
     }
+
+    @Override
+    public void removeAllCompareItems(Long userId) {
+        redisService.removeAllCompareItems(userId);
+    }
 }
