@@ -8,8 +8,16 @@ import type { SearchResponse } from "@/types/search";
 import { convertSearchToCosmetic } from "@/utils/convertSearchToCosmetic";
 import ScrollToTopButton from "@/app/_components/common/ScrollToTopButton";
 import LoadingLottie from "@/app/_components/common/LoadingLottie";
+import dynamic from "next/dynamic";
 
 function SearchResultsPage() {
+  // ✅ ssr: false를 설정하면 이 컴포넌트는 클라이언트에서만 렌더링됨
+  const LoadingLottie = dynamic(
+    () => import("@/app/_components/common/LoadingLottie"),
+    {
+      ssr: false,
+    },
+  );
   // Next.js에서 페이지 이동을 도와줌
   const router = useRouter();
   // 현재 주소(url)에 붙은 쿼리 파라미터를 가져옴
@@ -111,3 +119,4 @@ export default function SearchResultsSuspense() {
     </Suspense>
   );
 }
+// export default SearchResultsPage;
