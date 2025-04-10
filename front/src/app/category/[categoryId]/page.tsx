@@ -17,7 +17,7 @@ export default function CategoryDetailPage() {
   const params = useParams();
   const categoryId = Number(params?.categoryId);
   const { user } = useUserStore();
-  const [cosmetics, setCosmetics] = useState<Cosmetic[]>([]);
+  const [cosmetics, setCosmetics] = useState<Cosmetic[] | null>(null);
   const [allCosmetics, setAllCosmetics] = useState<Cosmetic[]>([]); // 전체 제품용
   const [isCustomMode, setIsCustomMode] = useState(true); // 기본: 맞춤 추천
 
@@ -30,6 +30,8 @@ export default function CategoryDetailPage() {
   const [hasNext, setHasNext] = useState(true); // 다음 페이지 존재 여부
   const [isLoading, setIsLoading] = useState(false); // 로딩 중인지
 
+  const [isRecommendationLoading, setIsRecommendationLoading] = useState(false);
+
   // console.log("categoryId:", categoryId); // 확인용
   // console.log("API 요청 URL:", `/category/${categoryId}/custom`);
   // console.log("API URL:", process.env.NEXT_PUBLIC_API_BASE_URL);
@@ -40,8 +42,17 @@ export default function CategoryDetailPage() {
       const res = await fetchWrapper(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/category/${categoryId}/custom`,
       );
-      const data = await res.json();
-      setCosmetics(data);
+      const json = await res.json();
+      const status = json.data.status;
+
+      if (status === "processing") {
+        // 추천 중 로딩 메세지 표시
+        setIsRecommendationLoading(true);
+        setCosmetics(null);
+      } else if (status === "ready") {
+        setIsRecommendationLoading(false);
+        setCosmetics(json.data.data); // 실제 추천 결과 리스트
+      }
     };
 
     const fetchAllCosmetics = async () => {
@@ -140,19 +151,28 @@ export default function CategoryDetailPage() {
         <Toggle isOn={isCustomMode} onToggle={handleToggle} />
       </div>
       {isCustomMode ? (
-        cosmetics.length === 0 ? (
+        cosmetics === null ? (
+          isRecommendationLoading ? (
+            <p className="pt-4 text-center text-gray2">
+              당신에게 잘 맞는 제품을 찾는 중이에요🔍
+              <br />
+              조금만 기다려주세요!
+            </p>
+          ) : (
+            <p className="pt-4 text-center text-gray2">
+              당신에게 잘 맞는 제품을 찾는 중이에요🔍
+            </p>
+          )
+        ) : cosmetics.length === 0 ? (
           <p className="pt-4 text-center text-gray2">
             아직 사용자 맞춤 키워드가 없어 <br />
             추천할 수 있는 제품이 없어요 😢
           </p>
         ) : (
           <div className="grid grid-cols-2 place-items-center gap-2">
-            {cosmetics.map((cosmetic) => {
-              // console.log("화장품 정보:", cosmetic);
-              return (
-                <ProductCard cosmetic={cosmetic} key={cosmetic.cosmeticId} />
-              );
-            })}
+            {cosmetics.map((cosmetic) => (
+              <ProductCard cosmetic={cosmetic} key={cosmetic.cosmeticId} />
+            ))}
           </div>
         )
       ) : (
@@ -160,16 +180,14 @@ export default function CategoryDetailPage() {
           {allCosmetics.map((cosmetic, index) => {
             const isLast = index === allCosmetics.length - 1;
             return (
-              <div key={cosmetic.cosmeticId} ref={isLast ? loadMoreRef : null}>
+              <div
+                key={`${cosmetic.cosmeticId}-${index}`}
+                ref={isLast ? loadMoreRef : null}
+              >
                 <ProductCard cosmetic={cosmetic} />
               </div>
             );
           })}
-          {isLoading && (
-            <div className="col-span-2 py-4 text-center text-gray2">
-              불러오는 중...
-            </div>
-          )}
         </div>
       )}
 
