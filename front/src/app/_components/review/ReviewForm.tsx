@@ -20,6 +20,7 @@ interface ReviewFormProps {
     cosmeticId: number;
     satisfied: boolean;
     content: string;
+    imageUrls?: string[];
     images: File[];
   }) => void;
 }
@@ -33,6 +34,9 @@ export default function ReviewForm({
     initialReview?.satisfied ?? null,
   );
   const [content, setContent] = useState<string>(initialReview?.content ?? "");
+  const [imageUrls, setImageUrls] = useState<string[]>(
+    initialReview?.imageUrls ?? [],
+  );
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -45,7 +49,14 @@ export default function ReviewForm({
   };
 
   const handleRemoveImage = (idx: number) => {
-    setImageFiles((prev) => prev.filter((_, i) => i !== idx));
+    if (idx < imageUrls.length) {
+      // 기존 S3 이미지 제거
+      setImageUrls((prev) => prev.filter((_, i) => i !== idx));
+    } else {
+      // 새로 올린 파일 제거
+      const fileIdx = idx - imageUrls.length;
+      setImageFiles((prev) => prev.filter((_, i) => i !== fileIdx));
+    }
   };
 
   const handleSubmit = () => {
@@ -63,6 +74,7 @@ export default function ReviewForm({
         cosmeticId,
         satisfied,
         content,
+        imageUrls: imageUrls,
         images: imageFiles,
       });
     } else {
@@ -166,6 +178,7 @@ export default function ReviewForm({
           <T3>사진 업로드</T3>
           <ReviewImageGrid
             files={imageFiles}
+            urls={imageUrls}
             onAdd={handleAddImage}
             onRemove={handleRemoveImage}
             editable

@@ -10,34 +10,39 @@ import PageHeader from "@/app/_components/common/PageHeader";
 import { reviewCosmetic, reviewUser } from "@/mocks/dummyReviews";
 import UserInfo from "@/app/_components/user/UserInfo";
 import { fetchWrapper } from "@/lib/fetchWrapper";
+import T3 from "../common/T3";
 
-interface UserReviewListProps {
-  userId: string;
+interface CosmeticReviewListProps {
+  cosmeticId: string;
 }
 
-export default function UserReviewListPage({ userId }: UserReviewListProps) {
+export default function CosmeticReviewListPage({
+  cosmeticId,
+}: CosmeticReviewListProps) {
   const router = useRouter();
 
   const [userInfo, setUserInfo] = useState<User | null>(null);
   const [reviews, setReviews] = useState<Array<Review> | null>(null);
-  const [page, setPage] = useState<number | 0>(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    if (!userId || Array.isArray(userId)) return;
+    setReviews([reviewCosmetic, reviewUser]);
+  }, []);
+
+  useEffect(() => {
+    if (!cosmeticId || Array.isArray(cosmeticId)) return;
 
     const fetchReviews = async () => {
       try {
         setLoading(true);
         const res = await fetchWrapper(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/users/${userId}?page=${page}`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/cosmetic/${cosmeticId}`,
         );
         if (!res.ok) throw new Error("failed");
         const data = await res.json();
         setUserInfo(data.user);
         setReviews(data.reviews);
-        setPage(1);
       } catch (e) {
         setError(true);
       } finally {
@@ -50,24 +55,19 @@ export default function UserReviewListPage({ userId }: UserReviewListProps) {
 
   const reviewRequest = async () => {
     const res = await fetchWrapper(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/users/${userId}?page=${page}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/users/${cosmeticId}`,
     );
     if (!res.ok) throw new Error("failed");
     const data = await res.json();
     setReviews(reviews?.concat(data.reviews) || null);
-    setPage(page + 1);
   };
 
   return (
     <>
-      {
-        <PageHeader
-          title={`리뷰 ${reviews ? reviews.length : 0}`}
-          showBackButton
-        />
-      }
+      <div className="flex justify-between">
+        <T3 children={`리뷰 ${reviews ? reviews.length : 0}`} />
+      </div>
       <div>
-        {userInfo ? <UserInfo user={userInfo} /> : null}
         {reviews?.map((review) => (
           <ReviewCard key={review.reviewId} review={review} />
         ))}

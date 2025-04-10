@@ -83,7 +83,6 @@ public class UserServiceImpl implements UserService {
         response.addCookie(CookieUtil.createCookie("Authorization", accessToken, (int)(ACCESSTOKEN_EXPIRES_IN / 1000)));
         response.addCookie(CookieUtil.createCookie("RefreshToken", refreshToken, (int)(REFRESHTOKEN_EXPIRES_IN / 1000)));
     }
-
     @Override
     public void tokenRefresh(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = null;
@@ -125,6 +124,13 @@ public class UserServiceImpl implements UserService {
         response.addCookie(newAccessCookie);
     }
 
+
+    @Override
+    public User getUser(Long userId) {
+        return userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("사용자 없음"));
+    }
+
     @Override
     public UserResponseDTO getUserInfo(Long userId) {
         User user = userRepository.findById(userId)
@@ -139,15 +145,8 @@ public class UserServiceImpl implements UserService {
             log.info("topKeyWord: {}", topKeywords);
         }
 
-        UserDTO userDTO = new UserDTO(
-                user.getUserId(),
-                user.getNickname(),
-                user.getImageUrl(),
-                ageGroup,
-                user.getGender(),
-                user.getSkinType(),
-                user.getSkinTone()
-        );
+        UserDTO userDTO = UserDTO.fromEntity(user);
+
         return new UserResponseDTO(
                 userDTO,
                 topKeywords
