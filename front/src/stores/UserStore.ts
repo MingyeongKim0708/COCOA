@@ -22,7 +22,7 @@ export const useUserStore = create(
         skinType: SkinType.dry,
         skinTone: SkinTone.spring_warm,
       },
-      keywords: null,
+      keywords: { 촉촉함: 1 },
 
       setUser: (user: User) => set({ user }),
       setKeywords: (keywords: Record<string, number> | null) =>

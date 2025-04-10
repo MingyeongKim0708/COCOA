@@ -1,6 +1,6 @@
 import { User } from "./user";
 
-export interface UserInfo {
+export interface UserWithKeywords {
   user: User;
-  topKeywords: string[] | null;
+  keywords: Record<string, number> | null;
 }

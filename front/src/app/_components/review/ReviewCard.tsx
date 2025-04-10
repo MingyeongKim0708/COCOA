@@ -9,7 +9,7 @@ import B4 from "../common/B4";
 import B5 from "../common/B5";
 import ReviewImageGrid from "./ReviewImageGrid";
 import { fetchWrapper } from "@/lib/fetchWrapper";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 interface ReviewProps {
   review: Review;
@@ -17,10 +17,10 @@ interface ReviewProps {
 
 const ReviewCard = ({ review }: ReviewProps) => {
   const router = useRouter();
-  // const isUserPage = router.pathname.startsWith("/user");
-  // const isCosmeticPage = router.pathname.startsWith("/cosmetic");
-  const isUserPage = review.user != null ? true : false;
-  const isCosmeticPage = review.cosmetic != null ? true : false;
+  const pathname = usePathname();
+
+  const isUserPage = pathname.startsWith("/review");
+  const isCosmeticPage = pathname.startsWith("/cosmetic");
 
   const [isLoading, setIsLoading] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -66,8 +66,8 @@ const ReviewCard = ({ review }: ReviewProps) => {
 
   return (
     <div className="relative flex w-full flex-col gap-y-2 py-2 text-start">
-      <ReviewProductInfo cosmetic={review.cosmetic} />
-      <ReviewUserInfo user={review.user} />
+      {isUserPage && <ReviewProductInfo cosmetic={review.cosmetic} />}
+      {isCosmeticPage && <ReviewUserInfo user={review.user} />}
       <div className="gap-1 py-1">
         {review.satisfied ? (
           <B5 children="이 회원님은 제품에 만족했어요" className="text-pink1" />

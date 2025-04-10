@@ -10,6 +10,8 @@ import PageHeader from "@/app/_components/common/PageHeader";
 import { reviewCosmetic, reviewUser } from "@/mocks/dummyReviews";
 import UserInfo from "@/app/_components/user/UserInfo";
 import { fetchWrapper } from "@/lib/fetchWrapper";
+import OtherUserInfo from "../user/OtherUserInfo";
+import { UserWithKeywords } from "@/types/userInfo";
 
 interface UserReviewListProps {
   userId: string;
@@ -18,7 +20,7 @@ interface UserReviewListProps {
 export default function UserReviewListPage({ userId }: UserReviewListProps) {
   const router = useRouter();
 
-  const [userInfo, setUserInfo] = useState<User | null>(null);
+  const [userInfo, setUserInfo] = useState<UserWithKeywords | null>(null);
   const [reviews, setReviews] = useState<Array<Review> | null>(null);
   const [page, setPage] = useState<number | 0>(0);
   const [loading, setLoading] = useState(true);
@@ -31,7 +33,7 @@ export default function UserReviewListPage({ userId }: UserReviewListProps) {
       try {
         setLoading(true);
         const res = await fetchWrapper(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/users/${userId}?page=${page}`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/user/${userId}?page=${page}`,
         );
         if (!res.ok) throw new Error("failed");
         const data = await res.json();
@@ -67,7 +69,7 @@ export default function UserReviewListPage({ userId }: UserReviewListProps) {
         />
       }
       <div>
-        {userInfo ? <UserInfo user={userInfo} /> : null}
+        {userInfo ? <OtherUserInfo userInfos={userInfo} /> : null}
         {reviews?.map((review) => (
           <ReviewCard key={review.reviewId} review={review} />
         ))}

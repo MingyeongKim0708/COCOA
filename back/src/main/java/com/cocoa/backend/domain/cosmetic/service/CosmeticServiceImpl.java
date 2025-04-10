@@ -96,7 +96,6 @@ public class CosmeticServiceImpl implements CosmeticService {
         return cosmetics.stream()
                 .map(c -> {
                     return cosmeticMapper.CosmeticDTOFromEntity(c, userId);
-                
                 })
                 .toList();
     }
