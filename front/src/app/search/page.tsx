@@ -3,7 +3,7 @@
 import SearchHeader from "./_components/SearchHeader";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { searchByName } from "@/stores/SearchStore"; // ✅ 추가
+import { searchByName } from "@/stores/SearchStore";
 import RecentLog from "./_components/RecentLog";
 import RecentCosmetic from "./_components/RecentCosmetic";
 

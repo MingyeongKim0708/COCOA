@@ -1,7 +1,10 @@
+"use client";
+
 import { useRouter } from "next/navigation";
 import ProductActionBar from "./ProductActionBar";
 import ProductTags from "./ProductTags";
 import type { Cosmetic } from "@/types/cosmetic";
+import { saveRecentCosmetic } from "@/stores/SearchStore";
 
 interface ProductCardProps {
   cosmetic: Cosmetic;
@@ -9,10 +12,16 @@ interface ProductCardProps {
 
 const ProductCard = ({ cosmetic }: ProductCardProps) => {
   const router = useRouter();
-  const goToDetail = () => {
+  const goToDetail = async () => {
+    const imageUrl = cosmetic.images?.[0];
+
+    if (imageUrl) {
+      await saveRecentCosmetic(cosmetic.id, imageUrl);
+    }
+
     router.push(`/product/${cosmetic.id}`);
   };
-  console.log("화장품 정보 : ", cosmetic);
+
   return (
     <div
       className="w-full max-w-[160px] bg-white pb-4"

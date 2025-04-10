@@ -69,7 +69,7 @@ export const SearchStore = create<SearchState>((set, get) => ({
   },
 }));
 
-// ✅ 새 함수: 검색 요청 + 리디스 저장 트리거
+// 검색 요청 + 레디스 저장 트리거
 export const searchByName = async (name: string) => {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -94,5 +94,30 @@ export const searchByName = async (name: string) => {
     return result;
   } catch (err) {
     console.error("🔴 검색 중 오류:", err);
+  }
+};
+
+export const saveRecentCosmetic = async (id: number, url: string) => {
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+  try {
+    const res = await fetch(`${baseUrl}/search/recentCosmetic/${id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({ imageUrl1: url }),
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      console.error("🔴 최근 이미지 저장 실패:", res.status, text);
+      return;
+    }
+
+    console.log("✅ 최근 이미지 저장 성공:", `${id}|${url}`);
+  } catch (err) {
+    console.error("🔴 최근 이미지 저장 중 오류:", err);
   }
 };
