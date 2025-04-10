@@ -170,6 +170,7 @@ public class RecommendationServiceImpl implements RecommendationService {
                                 top3Keywords,
                                 liked,
                                 likeCount,
+                                null,
                                 0, // 리뷰 수 (아직 구현 안 됨)
                                 categoryDTO,
                                 Collections.emptyList() // 성분 (아직 구현 안 됨)
