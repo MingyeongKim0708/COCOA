@@ -15,7 +15,7 @@ public interface UserKeywordsRepository extends JpaRepository<UserKeywords, Long
         UPDATE user_keywords
         SET keywords = (
             SELECT jsonb_object_agg(key, (COALESCE(keywords->>key, '0')::int + value::int))
-            FROM jsonb_each_text(CAST(CAST(:keywordJson AS jsonb) AS jsonb)) AS t(key, value)
+            FROM jsonb_each_text((:keywordJson)::jsonb) AS t(key, value)
         )
         WHERE user_id = :userId
     """, nativeQuery = true)
@@ -35,7 +35,7 @@ public interface UserKeywordsRepository extends JpaRepository<UserKeywords, Long
               END
             )
           )
-          FROM jsonb_each_text(CAST(:keywordJson AS jsonb)) AS t(key, value)
+          FROM jsonb_each_text((:keywordJson)::jsonb) AS t(key, value)
         )
         WHERE user_id = :userId
     """, nativeQuery = true)

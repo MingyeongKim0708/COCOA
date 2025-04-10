@@ -17,7 +17,7 @@ public interface CosmeticKeywordRepository extends JpaRepository<CosmeticKeyword
 		UPDATE cosmetic_keywords
 		SET keywords = (
 			SELECT jsonb_object_agg(key, (COALESCE(keywords->>key, '0')::int + value::int))
-			FROM jsonb_each_text(CAST(:keywordJson AS jsonb)) AS t(key, value)
+			FROM jsonb_each_text((:keywordJson)::jsonb) AS t(key, value)
 		)
 		WHERE cosmetic_id = :cosmeticId
 	""", nativeQuery = true)
@@ -37,7 +37,7 @@ public interface CosmeticKeywordRepository extends JpaRepository<CosmeticKeyword
 					END
 				)
 			)
-			FROM jsonb_each_text(CAST(:keywordJson AS jsonb)) AS t(key, value)
+			FROM jsonb_each_text((:keywordJson)::jsonb) AS t(key, value)
 		)
 		WHERE cosmetic_id = :cosmeticId
 	""", nativeQuery = true)
