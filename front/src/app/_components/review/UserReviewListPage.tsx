@@ -7,8 +7,6 @@ import { Review } from "@/types/review";
 import { User } from "@/types/user";
 import ReviewCard from "@/app/_components/review/ReviewCard";
 import PageHeader from "@/app/_components/common/PageHeader";
-import { reviewCosmetic, reviewUser } from "@/mocks/dummyReviews";
-import UserInfo from "@/app/_components/user/UserInfo";
 import { fetchWrapper } from "@/lib/fetchWrapper";
 import OtherUserInfo from "../user/OtherUserInfo";
 import { UserWithKeywords } from "@/types/userInfo";
