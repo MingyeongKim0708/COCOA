@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { WordWithComponent } from "../types/wordCloueTypes";
 import {
   assignFontComponents,
@@ -29,7 +29,26 @@ export const useWordCloud = (
     centerY: 0,
   });
 
+  const prevWordsRef = useRef<string>("");
+  const prevSizeRef = useRef<{ width: number; height: number }>({
+    width,
+    height,
+  });
+
   useEffect(() => {
+    const key = JSON.stringify(words);
+    const sameWords = prevWordsRef.current === key;
+    const sameSize =
+      prevSizeRef.current.width === width &&
+      prevSizeRef.current.height === height;
+
+    if (sameWords && sameSize) {
+      return;
+    }
+
+    prevWordsRef.current = key;
+    prevSizeRef.current = { width, height };
+
     const topWords = toWordArray(words)
       .sort((a, b) => b.value - a.value)
       .slice(0, 15);
@@ -48,9 +67,6 @@ export const useWordCloud = (
       .rotate(() => 0)
       .fontSize((d) => getAdjustedFontSize(d))
       .on("end", (results) => {
-        const container = document.getElementById("wordcloud-container");
-        if (!container) return;
-
         const filtered: WordWithComponent[] = [];
 
         for (let i = 0; i < results.length; i++) {
