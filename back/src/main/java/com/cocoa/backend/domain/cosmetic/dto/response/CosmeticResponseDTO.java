@@ -26,6 +26,10 @@ public class CosmeticResponseDTO {
     // 사용자별 관심 여부
     private boolean liked;
     private long likeCount;
+
+    // 관심 등록 타이밍
+    private Long likedAt;
+    
     private int reviewCount;
 
     // 카테고리 정보도 DTO 형태로 포함 (예: major/middleCategory 등)
@@ -33,4 +37,17 @@ public class CosmeticResponseDTO {
 
     // 선택적 성분 정보 (없으면 생략 가능)
     private List<String> ingredient;
+
+    public void setLiked(boolean liked) {
+        this.liked = liked;
+    }
+
+    public void setLikeCount(long likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public void setLikedAt(Long likedAt) {
+        this.likedAt = likedAt;
+    }
+
 }

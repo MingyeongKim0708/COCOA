@@ -45,7 +45,15 @@ public class RecommendationServiceImpl implements RecommendationService {
         if (Objects.equals(cachedHash, newKeywordHash)) {
             List<CosmeticResponseDTO> cached = redisService.getCachedRecommendation(userId, categoryId);
             if (cached != null) {
-                log.info("Redis 캐시에서 추천 결과 반환");
+                // 관심 상태 최신값으로 업데이트
+                for (CosmeticResponseDTO dto : cached) {
+                    Long cosmeticId = dto.getCosmeticId().longValue();
+
+                    dto.setLiked(redisService.isLikedCosmetic(userId, cosmeticId));
+                    dto.setLikeCount(redisService.getLikeCountOfCosmetic(cosmeticId));
+                }
+
+                log.info("Redis 캐시에서 추천 결과 반환 (관심 상태 보정 완료)");
                 return cached;
             }
         } else {
@@ -162,6 +170,7 @@ public class RecommendationServiceImpl implements RecommendationService {
                                 top3Keywords,
                                 liked,
                                 likeCount,
+                                null,
                                 0, // 리뷰 수 (아직 구현 안 됨)
                                 categoryDTO,
                                 Collections.emptyList() // 성분 (아직 구현 안 됨)
@@ -169,7 +178,15 @@ public class RecommendationServiceImpl implements RecommendationService {
                     })
                     .toList();
 
-            // 8. 캐시에 결과 저장 및 상태 변경
+
+            // 8. 캐시에 저장할 DTO에서 liked, likeCount 초기화
+            List<CosmeticResponseDTO> rawResult = result.stream()
+                    .map(dto -> {
+                        dto.setLiked(false);
+                        dto.setLikeCount(0);
+                        return dto;
+                    }).toList();
+
             redisService.cacheRecommendation(userId, categoryId, result);
             redisService.setRecommendationStatus(userId, categoryId, "ready");
             redisService.setRecommendationKeywordHash(userId, categoryId, newKeywordHash); // ✅ 성공한 경우에만 저장

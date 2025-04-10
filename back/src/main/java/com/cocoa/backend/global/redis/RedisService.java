@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class RedisService {
 	private final RedisTemplate<String, String> redisTemplate;
     private final ObjectMapper objectMapper;
 	private String getInterestKey(long userId) {
-		return "user:" + userId + ":interest";
+		return "user:" + userId + ":interest:zset";
 	}
 	private String getLatestCosmeticKey(long userId) {
         return "user:" + userId + ":latestCosmetic";
@@ -93,19 +94,20 @@ public class RedisService {
 
     // 관심 제품 등록 (양방향 저장)
     public void addInterestProduct(Long userId, Long cosmeticId) {
-        redisTemplate.opsForSet().add(getInterestKey(userId), String.valueOf(cosmeticId));
+        redisTemplate.opsForZSet().add(getInterestKey(userId), String.valueOf(cosmeticId),  System.currentTimeMillis());
         redisTemplate.opsForSet().add(getCosmeticLikedByKey(cosmeticId), String.valueOf(userId));
     }
 
     // 관심 제품 해제 (양방향 제거)
     public void removeInterestProduct(Long userId, Long cosmeticId) {
-        redisTemplate.opsForSet().remove(getInterestKey(userId), String.valueOf(cosmeticId));
+        redisTemplate.opsForZSet().remove(getInterestKey(userId), String.valueOf(cosmeticId));
         redisTemplate.opsForSet().remove(getCosmeticLikedByKey(cosmeticId), String.valueOf(userId));
     }
 
     // 관심 여부 확인
     public boolean isLikedCosmetic(Long userId, Long cosmeticId) {
-        return redisTemplate.opsForSet().isMember(getInterestKey(userId), String.valueOf(cosmeticId));
+        return redisTemplate.opsForZSet().score(getInterestKey(userId), String.valueOf(cosmeticId)) != null;
+
     }
 
     // 해당 제품의 관심 등록 수 조회
@@ -113,9 +115,15 @@ public class RedisService {
         return redisTemplate.opsForSet().size(getCosmeticLikedByKey(cosmeticId));
     }
 
-    // 관심 제품 목록 조회
+    // 관심 제품 목록 조회 (Set 기준, likedAt 필요 없을 때)
     public Set<String> getInterestedCosmeticIds(Long userId) {
         return redisTemplate.opsForSet().members(getInterestKey(userId));
+    }
+
+
+    // 관심 제품 ID + likedAt 시간 포함 목록 (ZSet 기준)
+    public Set<ZSetOperations.TypedTuple<String>> getInterestedCosmeticWithTimestamps(Long userId) {
+        return redisTemplate.opsForZSet().rangeWithScores(getInterestKey(userId), 0, -1);
     }
 
 	// 비교 제품 추가 (최대 2개만 가능, 중복 방지 set 사용)
@@ -262,6 +270,7 @@ public class RedisService {
     public void deleteCachedRecommendation(Long userId, Integer categoryId) {
         redisTemplate.delete("recommend:" + userId + ":" + categoryId);
     }
+
 
 
 

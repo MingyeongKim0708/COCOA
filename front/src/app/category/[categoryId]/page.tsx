@@ -118,8 +118,34 @@ export default function CategoryDetailPage() {
     [isLoading, hasNext],
   );
 
-  const handleToggle = () => {
-    setIsCustomMode((prev) => !prev);
+  const handleToggle = async () => {
+    const next = !isCustomMode;
+    setIsCustomMode(next);
+
+    if (next) {
+      // ✅ 맞춤 추천 다시 fetch
+      setIsRecommendationLoading(true);
+      const res = await fetchWrapper(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/category/${categoryId}/custom`,
+      );
+      const json = await res.json();
+      const status = json.data.status;
+
+      if (status === "processing") {
+        setCosmetics(null);
+      } else if (status === "ready") {
+        setCosmetics(json.data.data);
+      }
+      setIsRecommendationLoading(false);
+    } else {
+      // ✅ 전체 제품 다시 fetch (관심제품 반영된 상태로)
+      const res = await fetchWrapper(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/category/${categoryId}`,
+      );
+      const json = await res.json();
+      setAllCosmetics(json.data.data);
+    }
+    // setIsCustomMode((prev) => !prev);
   };
 
   return (

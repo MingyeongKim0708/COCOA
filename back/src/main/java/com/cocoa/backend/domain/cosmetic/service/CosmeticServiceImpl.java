@@ -13,9 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -85,6 +87,7 @@ public class CosmeticServiceImpl implements CosmeticService {
                             top3Keywords,
                             liked,
                             likeCount,
+                            null,
                             reviewCount,
                             categoryDTO,
                             ingredient
@@ -95,26 +98,29 @@ public class CosmeticServiceImpl implements CosmeticService {
 
     @Override
     public List<CosmeticResponseDTO> getInterestedCosmetics(Long userId) {
-        Set<String> cosmeticIdStrings = redisService.getInterestedCosmeticIds(userId);
-        if (cosmeticIdStrings == null || cosmeticIdStrings.isEmpty()) return List.of();
+        Set<ZSetOperations.TypedTuple<String>> cosmeticTuples = redisService.getInterestedCosmeticWithTimestamps(userId);
+        if (cosmeticTuples == null || cosmeticTuples.isEmpty()) return List.of();
 
-        List<Integer> cosmeticIds = cosmeticIdStrings.stream()
-                .map(Integer::parseInt)
-                .toList();
+        // cosmeticId -> likedAt 매핑
+        Map<Integer, Long> likedAtMap = cosmeticTuples.stream()
+                .collect(Collectors.toMap(
+                        tuple -> Integer.parseInt(tuple.getValue()),
+                        tuple -> tuple.getScore().longValue()
+                ));
+
+        List<Integer> cosmeticIds = new ArrayList<>(likedAtMap.keySet());
 
         List<Cosmetic> cosmetics = cosmeticRepository.findAllById(cosmeticIds);
 
         return cosmetics.stream()
                 .map(c -> {
-                    // 이전 getCosmeticsByCategoryId 내부의 DTO 가공 로직 재사용
+                    Long likedAt = likedAtMap.get(c.getCosmeticId());
+
                     Map<String, Integer> keywordsMap = Optional.ofNullable(c.getCosmeticKeywords())
                             .map(CosmeticKeywords::getTopKeywords)
                             .orElse(Collections.emptyMap());
 
-                    List<String> top3Keywords = Optional.ofNullable(c.getCosmeticKeywords())
-                            .map(CosmeticKeywords::getTopKeywords)
-                            .orElse(Collections.emptyMap())
-                            .entrySet().stream()
+                    List<String> top3Keywords = keywordsMap.entrySet().stream()
                             .filter(e -> e.getKey() != null && e.getValue() != null)
                             .sorted((a, b) -> b.getValue().compareTo(a.getValue()))
                             .limit(3)
@@ -135,10 +141,7 @@ public class CosmeticServiceImpl implements CosmeticService {
                             c.getCategory().getCategoryNo()
                     );
 
-                    boolean liked = true; // 이미 관심 등록된 제품이니까 true
-                    long likeCount = redisService.getLikeCountOfCosmetic(c.getCosmeticId().longValue());
-
-                    return new CosmeticResponseDTO(
+                    CosmeticResponseDTO dto = new CosmeticResponseDTO(
                             c.getCosmeticId(),
                             c.getName(),
                             c.getBrand(),
@@ -146,14 +149,23 @@ public class CosmeticServiceImpl implements CosmeticService {
                             images,
                             keywordsMap,
                             top3Keywords,
-                            liked,
-                            likeCount,
+                            true,
+                            redisService.getLikeCountOfCosmetic(c.getCosmeticId().longValue()),
+                            likedAtMap.get(c.getCosmeticId()),
                             0,
                             categoryDTO,
                             Collections.emptyList()
                     );
-                }).toList();
+
+                    return dto;
+                })
+                .sorted((a, b) -> Long.compare(
+                        Optional.ofNullable(b.getLikedAt()).orElse(0L),
+                        Optional.ofNullable(a.getLikedAt()).orElse(0L)
+                ))
+                .toList();
     }
+
 
     @Override
     public void addInterest(Long userId, Long cosmeticId) {
@@ -214,6 +226,7 @@ public class CosmeticServiceImpl implements CosmeticService {
                             top3Keywords,
                             liked,
                             likeCount,
+                            null,
                             0,
                             categoryDTO,
                             Collections.emptyList()
