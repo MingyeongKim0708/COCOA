@@ -4,7 +4,6 @@ import React, { useCallback, useRef } from "react";
 import ProductCard from "@/app/_components/product/ProductCard";
 import PageHeader from "@/app/_components/common/PageHeader";
 import ScrollToTopButton from "@/app/_components/common/ScrollToTopButton";
-import { dummyProducts } from "@/mocks/dummyProducts";
 import T3 from "@/app/_components/common/T3";
 import { useUserStore } from "@/stores/UserStore";
 import { useParams, useSearchParams } from "next/navigation";
