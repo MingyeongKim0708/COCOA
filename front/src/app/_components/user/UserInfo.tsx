@@ -3,6 +3,7 @@ import T3 from "../common/T3";
 import Tag from "../common/Tag";
 import { useUserStore } from "@/stores/UserStore";
 import EditUserButton from "./EditUserButton";
+import { useRouter } from "next/navigation";
 
 interface UserInfoProps {
   user: User | null;
@@ -10,9 +11,15 @@ interface UserInfoProps {
 
 const UserInfo = ({ user }: UserInfoProps) => {
   const loginUser = useUserStore().user;
+  const router = useRouter();
+  const handleGoToUserPage = (user: number) => {
+    if (user === loginUser?.id) return;
+    router.push(`/review/${user}`);
+  };
+
   if (user == null) return;
   return (
-    <div className="flex gap-3">
+    <div className="flex gap-3" onClick={() => handleGoToUserPage(user.id)}>
       <img
         src={user.imageUrl}
         alt="profile image"
