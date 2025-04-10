@@ -1,4 +1,3 @@
-// src/mocks/dummyProducts.ts
 import { Category } from "@/types/category";
 import type { Cosmetic } from "@/types/cosmetic";
 

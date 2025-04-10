@@ -74,7 +74,7 @@ export const reviewDummyList: Review[] = [
     cosmetic: null,
     helpfulForMe: false,
     createdAt: "2024.02.10",
-    images: [],
+    imageUrls: [],
   },
   {
     reviewId: 1,
@@ -93,7 +93,7 @@ export const reviewDummyList: Review[] = [
     cosmetic: null,
     helpfulForMe: true,
     createdAt: "2024.03.15",
-    images: [],
+    imageUrls: [],
   },
   {
     reviewId: 2,
@@ -112,6 +112,6 @@ export const reviewDummyList: Review[] = [
     cosmetic: null,
     helpfulForMe: false,
     createdAt: "2024.04.01",
-    images: [],
+    imageUrls: [],
   },
 ];

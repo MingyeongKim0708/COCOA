@@ -1,6 +1,5 @@
 import T3 from "@/app/_components/common/T3";
 import ReviewCard from "@/app/_components/review/ReviewCard";
-import { reviewCosmetic, reviewUser } from "@/mocks/dummyReviews";
 import { Review } from "@/types/review";
 import { User } from "@/types/user";
 import { ChevronRight } from "lucide-react";

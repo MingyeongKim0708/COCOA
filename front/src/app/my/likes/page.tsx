@@ -1,11 +1,9 @@
 "use client";
 
 import PageHeader from "@/app/_components/common/PageHeader";
-import T1 from "@/app/_components/common/T1";
 import T2 from "@/app/_components/common/T2";
 import ProductCard from "@/app/_components/product/ProductCard";
 import { fetchWrapper } from "@/lib/fetchWrapper";
-import { dummyProducts } from "@/mocks/dummyProducts";
 import { useUserStore } from "@/stores/UserStore";
 import { Cosmetic } from "@/types/cosmetic";
 import { User } from "@/types/user";
@@ -38,15 +36,6 @@ export default function LikesPage() {
       }
     };
 
-    // setLikedCosmetic(
-    //   dummyProducts
-    //     .slice()
-    //     .sort(
-    //       (a: Cosmetic, b: Cosmetic) =>
-    //         new Date(b.likedAt || "1970-01-01").getTime() -
-    //         new Date(a.likedAt || "1970-01-01").getTime(),
-    //     ),
-    // );
     fetchLiked();
   }, [user.id]);
 

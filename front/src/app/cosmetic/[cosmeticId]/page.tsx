@@ -12,14 +12,10 @@ import { Cosmetic } from "@/types/cosmetic";
 import { Review } from "@/types/review";
 import { CosmeticDetail } from "@/types/cosmeticDetail";
 import ToggleSwitch from "./_components/ToggleSwitch";
-import { dummyProducts } from "@/mocks/dummyProducts";
 import T5 from "@/app/_components/common/T5";
-import T6 from "@/app/_components/common/T6";
 import T3 from "@/app/_components/common/T3";
-import { CircleAlert } from "lucide-react";
 import InfoHint from "./_components/InfoHint";
 import CosmeticReviewList from "@/app/_components/review/CosmeticReviewList";
-import { reviewDummyList } from "@/mocks/dummyReviews";
 
 export default function CosmeticDetailPage() {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -85,7 +81,6 @@ export default function CosmeticDetailPage() {
     };
 
     fetchData();
-    // setCosmetic(dummyProducts[0]);
   }, [cosmeticId]);
 
   if (!cosmetic) {
