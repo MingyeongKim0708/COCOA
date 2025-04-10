@@ -5,13 +5,13 @@ import { useParams } from "next/navigation";
 import PageHeader from "@/app/_components/common/PageHeader";
 import CosmeticInfo from "./_components/CosmeticInfo";
 import CosmeticWordCloud from "@/app/_components/wordcloud/CosmeticWordCloud";
-import ToggleSwitch from "@/app/cosmetic/[cosmeticId]/_components/ToggleSwitch";
 import ScrollToTopButton from "@/app/_components/common/ScrollToTopButton";
 import WriteReviewButton from "./_components/WriteReviewButton";
 import { fetchWrapper } from "@/lib/fetchWrapper";
 import { Cosmetic } from "@/types/cosmetic";
 import { Review } from "@/types/review";
 import { CosmeticDetail } from "@/types/cosmeticDetail";
+import ToggleSwitch from "./_components/ToggleSwitch";
 
 export default function CosmeticDetailPage() {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -24,14 +24,48 @@ export default function CosmeticDetailPage() {
   const [selectWord, setSelectWord] = useState<string | null>(null);
   const [isFiltered, setIsFiltered] = useState(false);
 
+  const fetchAllReviews = async () => {
+    try {
+      const res = await fetchWrapper(
+        `${baseUrl}/reviews?cosmeticId=${cosmeticId}&page=0`,
+      );
+      const data: Review[] = await res.json();
+      setReviews(data);
+    } catch (err) {
+      console.error("리뷰 불러오기 실패", err);
+    }
+  };
+
+  const fetchFilteredReviews = async (keyword: string) => {
+    try {
+      const res = await fetchWrapper(
+        `${baseUrl}/reviews?cosmeticId=${cosmeticId}&keyword=${encodeURIComponent(keyword)}&page=0`,
+      );
+      const data: Review[] = await res.json();
+      setReviews(data);
+    } catch (err) {
+      console.error("리뷰 불러오기 실패", err);
+    }
+  };
+
   const handleSelectWord = (word: string) => {
-    setSelectWord(selectWord === word ? null : word);
+    if (selectWord === word) {
+      setSelectWord(null);
+      setIsFiltered(false);
+      fetchAllReviews();
+      return;
+    }
+
+    setSelectWord(word);
+    setIsFiltered(false);
+    fetchFilteredReviews(word);
   };
 
   const handleToggle = () => {
     if (selectWord) {
       setSelectWord(null);
       setIsFiltered(true);
+      fetchAllReviews();
       return;
     }
     setIsFiltered((prev) => !prev);
