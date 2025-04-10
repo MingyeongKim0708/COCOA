@@ -9,13 +9,16 @@ interface ReviewProductInfoProps {
 
 const ReviewProductInfo = ({ cosmetic }: ReviewProductInfoProps) => {
   if (cosmetic == null) return;
+  console.log(cosmetic);
   return (
     <div className="flex gap-3">
-      <img
-        src={cosmetic.images[0]}
-        alt="profile image"
-        className="h-20 w-20 flex-shrink-0 rounded-lg object-cover"
-      />
+      {cosmetic.images?.[0] && (
+        <img
+          src={cosmetic.images[0]}
+          alt="profile image"
+          className="h-20 w-20 flex-shrink-0 rounded-lg object-cover"
+        />
+      )}
       <div className="flex flex-col justify-between">
         <T5 children={cosmetic.brand} />
         <B4
@@ -23,7 +26,7 @@ const ReviewProductInfo = ({ cosmetic }: ReviewProductInfoProps) => {
           className="line-clamp-2 text-ellipsis break-words"
         />
         <div className="no-scrollbar flex flex-row gap-x-3 overflow-x-auto">
-          {cosmetic.topKeywords.map((item) => (
+          {cosmetic.topKeywords?.map((item) => (
             <Tag key={item} children={item} />
           ))}
         </div>

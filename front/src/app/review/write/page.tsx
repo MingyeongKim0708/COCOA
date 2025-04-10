@@ -24,7 +24,7 @@ function ReviewWritePage() {
         credentials: "include",
       })
         .then((res) => res.json())
-        .then((data) => setCosmetic(data.data));
+        .then((data) => setCosmetic(data.data.cosmetic));
     }
   }, [cosmeticId]);
 
