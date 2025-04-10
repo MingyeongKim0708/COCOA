@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -46,17 +48,30 @@ public class CosmeticController {
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(categories));
     }
 
-    @Operation(summary = "카테고리별 제품 조회", description = "해당 카테고리에 속한 제품을 조회합니다.")
+    @Operation(summary = "카테고리별 제품 조회 (cursor 기반)", description = "해당 카테고리에 속한 제품을 조회합니다.")
     @GetMapping("/category/{categoryId}")
-    public ResponseEntity<ApiResponse<List<CosmeticResponseDTO>>> getCosmeticsByCategory(
+    public ResponseEntity<ApiResponse<Map<String, Object>>> getCosmeticsByCategory(
             @PathVariable Integer categoryId,
+            @RequestParam(required = false) Integer lastId,
+            @RequestParam(defaultValue = "20") int size,
             Authentication authentication) {
 
         CustomOAuth2UserDTO userDetails = (CustomOAuth2UserDTO) authentication.getPrincipal();
         Long userId = userDetails.getUserId();
 
-        List<CosmeticResponseDTO> cosmetics = cosmeticService.getCosmeticsByCategoryId(categoryId, userId);
-        return ResponseEntity.ok(ApiResponse.success(cosmetics));
+//        List<CosmeticResponseDTO> cosmetics = cosmeticService.getCosmeticsByCategoryId(categoryId, userId);
+        List<CosmeticResponseDTO> cosmetics = cosmeticService.getCosmeticsByCursor(categoryId, lastId, size, userId);
+
+
+        boolean hasNext = cosmetics.size() == size;
+        Integer nextCursor = hasNext ? cosmetics.get(cosmetics.size() - 1).getCosmeticId() : null;
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("data", cosmetics);
+        result.put("hasNext", hasNext);
+        result.put("nextCursor", nextCursor);
+
+        return ResponseEntity.ok(ApiResponse.success(result));
     }
 
     @Operation(summary = "비교함에 등록된 제품id 조회")

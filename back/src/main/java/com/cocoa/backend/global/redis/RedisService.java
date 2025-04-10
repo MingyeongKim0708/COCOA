@@ -1,5 +1,9 @@
 package com.cocoa.backend.global.redis;
 
+import com.cocoa.backend.domain.cosmetic.dto.response.CosmeticResponseDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -14,6 +18,7 @@ public class RedisService {
 
 
 	private final RedisTemplate<String, String> redisTemplate;
+    private final ObjectMapper objectMapper;
 	private String getInterestKey(long userId) {
 		return "user:" + userId + ":interest";
 	}
@@ -35,6 +40,18 @@ public class RedisService {
 	private String getCompareKey(long userId) {
 		return "user:" + userId + ":compare";
 	}
+
+    private String getRecommendKey(Long userId, Integer categoryId) {
+        return "recommend:" + userId + ":" + categoryId;
+    }
+
+    private String getRecommendStatusKey(Long userId, Integer categoryId) {
+        return "recommend_status:" + userId + ":" + categoryId;
+    }
+
+    private String getCustomRecommendKey(long userId, int categoryId) {
+        return "user:" + userId + ":category:" + categoryId + ":recommend";
+    }
 
     // 관심 리뷰 추가
     public void addHelpfulReview(long userId, long reviewId) {
@@ -175,5 +192,76 @@ public class RedisService {
     public void deleteLatestCosmeticImages(long userId) {
         redisTemplate.delete(getLatestCosmeticKey(userId));
     }
+
+
+    // 추천 결과 캐시 저장 (유효시간 30분)
+    public void cacheRecommendation(Long userId, Integer categoryId, List<CosmeticResponseDTO> result) {
+        try {
+            String json = objectMapper.writeValueAsString(result);
+            redisTemplate.opsForValue().set(getRecommendKey(userId, categoryId), json, 30, TimeUnit.MINUTES);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("추천 결과 직렬화 실패", e);
+        }
+    }
+
+    // 캐시된 추천 결과 조회
+    public List<CosmeticResponseDTO> getCachedRecommendation(Long userId, Integer categoryId) {
+        String json = redisTemplate.opsForValue().get(getRecommendKey(userId, categoryId));
+        if (json == null) return null;
+        try {
+            return objectMapper.readValue(json, new TypeReference<>() {});
+        } catch (JsonProcessingException e) {
+            return null;
+        }
+    }
+
+    // 추천 상태 저장 ("processing" / "ready")
+    public void setRecommendationStatus(Long userId, Integer categoryId, String status) {
+        redisTemplate.opsForValue().set(getRecommendStatusKey(userId, categoryId), status, 10, TimeUnit.MINUTES);
+    }
+
+    // 추천 상태 조회
+    public String getRecommendationStatus(Long userId, Integer categoryId) {
+        return redisTemplate.opsForValue().get(getRecommendStatusKey(userId, categoryId));
+    }
+
+    // 추천 상태 삭제
+    public void deleteRecommendationStatus(Long userId, Integer categoryId) {
+        redisTemplate.delete(getRecommendStatusKey(userId, categoryId));
+    }
+
+    // 추천 결과 캐싱 (JSON 문자열로 저장)
+    public void saveCustomRecommendResult(long userId, int categoryId, String jsonData, long expireSeconds) {
+        String key = getCustomRecommendKey(userId, categoryId);
+        redisTemplate.opsForValue().set(key, jsonData, expireSeconds, TimeUnit.SECONDS);
+    }
+
+    // 추천 결과 조회
+    public String getCustomRecommendResult(long userId, int categoryId) {
+        String key = getCustomRecommendKey(userId, categoryId);
+        return redisTemplate.opsForValue().get(key);
+    }
+
+    // 추천 결과 삭제 (옵션, 초기화용)
+    public void deleteCustomRecommendResult(long userId, int categoryId) {
+        String key = getCustomRecommendKey(userId, categoryId);
+        redisTemplate.delete(key);
+    }
+
+    public void setRecommendationKeywordHash(Long userId, Integer categoryId, String hash) {
+        String key = "recommend_hash:" + userId + ":" + categoryId;
+        redisTemplate.opsForValue().set(key, hash, 30, TimeUnit.MINUTES);
+    }
+
+    public String getRecommendationKeywordHash(Long userId, Integer categoryId) {
+        String key = "recommend_hash:" + userId + ":" + categoryId;
+        return redisTemplate.opsForValue().get(key);
+    }
+
+    public void deleteCachedRecommendation(Long userId, Integer categoryId) {
+        redisTemplate.delete("recommend:" + userId + ":" + categoryId);
+    }
+
+
 
 }
