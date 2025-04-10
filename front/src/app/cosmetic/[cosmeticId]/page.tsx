@@ -24,15 +24,8 @@ export default function CosmeticDetailPage() {
   const [selectWord, setSelectWord] = useState<string | null>(null);
   const [isFiltered, setIsFiltered] = useState(false);
 
-  const handleSelectWord = async (word: string) => {
-    if (selectWord === word) {
-      setSelectWord(null);
-      setIsFiltered(false);
-      return;
-    }
-
-    setSelectWord(word);
-    setIsFiltered(false);
+  const handleSelectWord = (word: string) => {
+    setSelectWord(selectWord === word ? null : word);
   };
 
   const handleToggle = () => {
