@@ -3,6 +3,8 @@ package com.cocoa.backend.global.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import lombok.Getter;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
@@ -17,10 +19,15 @@ public class S3Config {
     @Value("${aws.secret-key}")
     private String secretKey;
 
-    @Value("${aws.s3.region}")
+    @Getter
+	@Value("${aws.s3.region}")
     private String region;
 
-    @Bean
+    @Getter
+	@Value("${aws.s3.name}")
+    private String name;
+
+	@Bean
     public S3Client s3Client() {
         return S3Client.builder()
                 .region(Region.of(region))

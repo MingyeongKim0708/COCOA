@@ -7,7 +7,7 @@ export interface Review {
   cosmetic: Cosmetic | null;
   content: string;
   satisfied: boolean;
-  images: string[];
+  imageUrls: string[];
   helpfulCount: number;
   helpfulForMe: boolean;
   createdAt: string;

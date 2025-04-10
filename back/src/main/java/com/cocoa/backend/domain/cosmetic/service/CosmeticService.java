@@ -1,10 +1,12 @@
 package com.cocoa.backend.domain.cosmetic.service;
 
 import com.cocoa.backend.domain.cosmetic.dto.response.CosmeticResponseDTO;
+import com.cocoa.backend.domain.cosmetic.entity.Cosmetic;
 
 import java.util.List;
 
 public interface CosmeticService {
+    Cosmetic getOneByCosmeticId(Integer cosmeticId);
     List<CosmeticResponseDTO> getCosmeticsByCategoryId(Integer categoryId, Long userId);
     List<CosmeticResponseDTO> getInterestedCosmetics(Long userId);
 
