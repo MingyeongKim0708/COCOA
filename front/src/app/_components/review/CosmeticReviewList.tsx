@@ -1,9 +1,7 @@
 import { Review } from "@/types/review";
 import React, { useEffect, useState } from "react";
 import T3 from "../common/T3";
-import T4 from "../common/T4";
 import ReviewCard from "./ReviewCard";
-import { reviewDummyList } from "@/mocks/dummyReviews";
 
 interface CosmeticReviewListProps {
   reviews: Review[];

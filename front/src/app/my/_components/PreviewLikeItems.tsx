@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Cosmetic } from "@/types/cosmetic";
-import { dummyProducts } from "@/mocks/dummyProducts";
 import { fetchWrapper } from "@/lib/fetchWrapper";
 
 const PreviewLikeItems = () => {
