@@ -10,6 +10,9 @@ import com.cocoa.backend.global.exception.InterestErrorCode;
 import com.cocoa.backend.global.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -25,15 +28,18 @@ public class CosmeticServiceImpl implements CosmeticService {
 
     @Override
     public List<CosmeticResponseDTO> getCosmeticsByCategoryId(Integer categoryId, Long userId) {
+        long start = System.currentTimeMillis();
         List<Cosmetic> cosmetics = cosmeticRepository.findByCategory_CategoryId(categoryId);
-
+        long end = System.currentTimeMillis();
+        log.info("전체 조회 API 응답 시간: {} ms", (end - start));
+        
         return cosmetics.stream()
                 .map(c -> {
                     // 1. 키워드 처리
                     CosmeticKeywords cosmeticKeywords = c.getCosmeticKeywords();
 
                     Map<String, Integer> keywordsMap = Optional.ofNullable(cosmeticKeywords)
-                            .map(CosmeticKeywords::getKeywords)
+                            .map(CosmeticKeywords::getTopKeywords)
                             .orElse(Collections.emptyMap());
 
                     List<String> top3Keywords = Optional.ofNullable(cosmeticKeywords)
@@ -102,7 +108,7 @@ public class CosmeticServiceImpl implements CosmeticService {
                 .map(c -> {
                     // 이전 getCosmeticsByCategoryId 내부의 DTO 가공 로직 재사용
                     Map<String, Integer> keywordsMap = Optional.ofNullable(c.getCosmeticKeywords())
-                            .map(CosmeticKeywords::getKeywords)
+                            .map(CosmeticKeywords::getTopKeywords)
                             .orElse(Collections.emptyMap());
 
                     List<String> top3Keywords = Optional.ofNullable(c.getCosmeticKeywords())
@@ -163,6 +169,57 @@ public class CosmeticServiceImpl implements CosmeticService {
             throw new CustomException(InterestErrorCode.INTEREST_NOT_FOUND);
         }
         redisService.removeInterestProduct(userId, cosmeticId);
+    }
+
+    @Override
+    public List<CosmeticResponseDTO> getCosmeticsByCursor(Integer categoryId, Integer lastId, int size, Long userId) {
+        Pageable pageable = PageRequest.of(0, size, Sort.by("cosmeticId").ascending());
+
+        List<Cosmetic> cosmetics = cosmeticRepository.findCosmeticsByCursor(categoryId, lastId, pageable);
+
+        return cosmetics.stream()
+                .map(c -> {
+                    Map<String, Integer> keywordsMap = Optional.ofNullable(c.getCosmeticKeywords())
+                            .map(k -> k.getTopKeywords())
+                            .orElse(Collections.emptyMap());
+
+                    List<String> top3Keywords = keywordsMap.entrySet().stream()
+                            .filter(e -> e.getKey() != null && e.getValue() != null)
+                            .sorted((a, b) -> b.getValue().compareTo(a.getValue()))
+                            .limit(3)
+                            .map(Map.Entry::getKey)
+                            .toList();
+
+                    List<String> images = Stream.of(c.getImageUrl1(), c.getImageUrl2(), c.getImageUrl3())
+                            .filter(img -> img != null && !img.isBlank())
+                            .toList();
+
+                    boolean liked = redisService.isLikedCosmetic(userId, c.getCosmeticId().longValue());
+                    long likeCount = redisService.getLikeCountOfCosmetic(c.getCosmeticId().longValue());
+
+                    CategoryResponseDTO categoryDTO = new CategoryResponseDTO(
+                            c.getCategory().getCategoryId(),
+                            c.getCategory().getMajorCategory(),
+                            c.getCategory().getMiddleCategory(),
+                            c.getCategory().getCategoryNo()
+                    );
+
+                    return new CosmeticResponseDTO(
+                            c.getCosmeticId(),
+                            c.getName(),
+                            c.getBrand(),
+                            c.getOptionName(),
+                            images,
+                            keywordsMap,
+                            top3Keywords,
+                            liked,
+                            likeCount,
+                            0,
+                            categoryDTO,
+                            Collections.emptyList()
+                    );
+                })
+                .toList();
     }
 
 }

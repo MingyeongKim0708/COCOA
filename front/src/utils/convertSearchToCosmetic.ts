@@ -3,7 +3,7 @@ import type { Cosmetic } from "@/types/cosmetic";
 // 검색 결과(SearchResponse)를 실제 화면에서 사용할 화장품 데이터(Cosmetic)로 변환하는 함수
 export function convertSearchToCosmetic(item: SearchResponse): Cosmetic {
   return {
-    id: item.cosmeticId ? Number(item.cosmeticId) : 0,
+    cosmeticId: item.cosmeticId ? Number(item.cosmeticId) : 0,
     name: item.name ?? "",
     brand: item.brand ?? "",
     optionName: "",
@@ -19,9 +19,9 @@ export function convertSearchToCosmetic(item: SearchResponse): Cosmetic {
     ],
     keywords: {}, // 기본값으로 비워진 객체
     topKeywords: item.topKeyword?.split(",") ?? [],
-    isLiked: false,
+    liked: false,
     likeCount: 0,
     reviewCount: 0,
-    ingredient: [],
+    ingredient: "",
   };
 }

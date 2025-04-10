@@ -6,7 +6,8 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum UserErrorCode implements ErrorCode {
-    LOGIN_NEEDED(HttpStatus.UNAUTHORIZED, "로그인 필요");
+    LOGIN_NEEDED(HttpStatus.UNAUTHORIZED, "로그인 필요"),
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없음");
 
     private final HttpStatus status;
     private final String message;

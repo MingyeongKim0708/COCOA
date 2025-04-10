@@ -1,5 +1,9 @@
 package com.cocoa.backend.global.redis;
 
+import com.cocoa.backend.domain.cosmetic.dto.response.CosmeticResponseDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -12,26 +16,41 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class RedisService {
 
-    private final RedisTemplate<String, String> redisTemplate;
 
-    private String getInterestKey(long userId) {
-        return "user:" + userId + ":interest";
-    }
-
-    private String getLatestCosmeticKey(long userId) {
+	private final RedisTemplate<String, String> redisTemplate;
+    private final ObjectMapper objectMapper;
+	private String getInterestKey(long userId) {
+		return "user:" + userId + ":interest";
+	}
+	private String getLatestCosmeticKey(long userId) {
         return "user:" + userId + ":latestCosmetic";
     }
+	private String getSearchLogsKey(long userId) {
+		return "user:" + userId + ":searchLogs";
+	}
+	private String getHelpfulKey(long userId) {
+		return "user:" + userId + ":helpful";
+	}
+	private String getRefreshTokenKey(Long userId) {
+		return "user:" + userId + ":refreshToken";
+	}
+	private String getCosmeticLikedByKey(Long cosmeticId) {
+		return "cosmetic:" + cosmeticId + ":likedBy";
+	}
+	private String getCompareKey(long userId) {
+		return "user:" + userId + ":compare";
+	}
 
-    private String getSearchLogsKey(long userId) {
-        return "user:" + userId + ":searchLogs";
+    private String getRecommendKey(Long userId, Integer categoryId) {
+        return "recommend:" + userId + ":" + categoryId;
     }
 
-    private String getHelpfulKey(long userId) {
-        return "user:" + userId + ":helpful";
+    private String getRecommendStatusKey(Long userId, Integer categoryId) {
+        return "recommend_status:" + userId + ":" + categoryId;
     }
 
-    private String getRefreshTokenKey(Long userId) {
-        return "user:" + userId + ":refreshToken";
+    private String getCustomRecommendKey(long userId, int categoryId) {
+        return "user:" + userId + ":category:" + categoryId + ":recommend";
     }
 
     // 관심 리뷰 추가
@@ -69,7 +88,6 @@ public class RedisService {
         redisTemplate.delete(getRefreshTokenKey(userId));
     }
 
-
     // user:{userId}:interest          ← 유저가 관심 등록한 제품
     // cosmetic:{cosmeticId}:likedBy  ← 제품을 관심 등록한 유저
 
@@ -100,10 +118,44 @@ public class RedisService {
         return redisTemplate.opsForSet().members(getInterestKey(userId));
     }
 
-    // 내부용 키 생성기
-    private String getCosmeticLikedByKey(Long cosmeticId) {
-        return "cosmetic:" + cosmeticId + ":likedBy";
+	// 비교 제품 추가 (최대 2개만 가능, 중복 방지 set 사용)
+	public String addCompareItem(long userId, long cosmeticId) {
+		String key = getCompareKey(userId);
+
+		// 중복이면 false 반환
+		if (Boolean.TRUE.equals(redisTemplate.opsForSet().isMember(key, String.valueOf(cosmeticId)))) {
+			return "ALREADY_EXISTS";
+		}
+
+		// 2개 이상 담기 방지
+		Long size = redisTemplate.opsForSet().size(key);
+		if (size != null && size >= 2) {
+			return "MAX_LIMIT_REACHED";
+		}
+
+		redisTemplate.opsForSet().add(key, String.valueOf(cosmeticId));
+		return "SUCCESS";
+	}
+
+	// 비교 제품 삭제
+	public void removeCompareItem(long userId, long cosmeticId) {
+		redisTemplate.opsForSet().remove(getCompareKey(userId), String.valueOf(cosmeticId));
+	}
+
+    // 비교 제품 전체 삭제
+    public void removeAllCompareItems(long userId) {
+        redisTemplate.delete(getCompareKey(userId));
     }
+
+	// 비교 제품 전체 조회
+	public Set<String> getCompareItems(long userId) {
+		return redisTemplate.opsForSet().members(getCompareKey(userId));
+	}
+
+	// 비교 제품 등록 여부 확인
+	public boolean isItemInCompare(long userId, long cosmeticId) {
+		return redisTemplate.opsForSet().isMember(getCompareKey(userId), String.valueOf(cosmeticId));
+	}
 
     // 최근 검색어 저장(앞에서부터 20개만 유지)
     public void saveSearchLog(Long userId, String name) {
@@ -141,5 +193,76 @@ public class RedisService {
     public void deleteLatestCosmeticImages(long userId) {
         redisTemplate.delete(getLatestCosmeticKey(userId));
     }
+
+
+    // 추천 결과 캐시 저장 (유효시간 30분)
+    public void cacheRecommendation(Long userId, Integer categoryId, List<CosmeticResponseDTO> result) {
+        try {
+            String json = objectMapper.writeValueAsString(result);
+            redisTemplate.opsForValue().set(getRecommendKey(userId, categoryId), json, 30, TimeUnit.MINUTES);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("추천 결과 직렬화 실패", e);
+        }
+    }
+
+    // 캐시된 추천 결과 조회
+    public List<CosmeticResponseDTO> getCachedRecommendation(Long userId, Integer categoryId) {
+        String json = redisTemplate.opsForValue().get(getRecommendKey(userId, categoryId));
+        if (json == null) return null;
+        try {
+            return objectMapper.readValue(json, new TypeReference<>() {});
+        } catch (JsonProcessingException e) {
+            return null;
+        }
+    }
+
+    // 추천 상태 저장 ("processing" / "ready")
+    public void setRecommendationStatus(Long userId, Integer categoryId, String status) {
+        redisTemplate.opsForValue().set(getRecommendStatusKey(userId, categoryId), status, 10, TimeUnit.MINUTES);
+    }
+
+    // 추천 상태 조회
+    public String getRecommendationStatus(Long userId, Integer categoryId) {
+        return redisTemplate.opsForValue().get(getRecommendStatusKey(userId, categoryId));
+    }
+
+    // 추천 상태 삭제
+    public void deleteRecommendationStatus(Long userId, Integer categoryId) {
+        redisTemplate.delete(getRecommendStatusKey(userId, categoryId));
+    }
+
+    // 추천 결과 캐싱 (JSON 문자열로 저장)
+    public void saveCustomRecommendResult(long userId, int categoryId, String jsonData, long expireSeconds) {
+        String key = getCustomRecommendKey(userId, categoryId);
+        redisTemplate.opsForValue().set(key, jsonData, expireSeconds, TimeUnit.SECONDS);
+    }
+
+    // 추천 결과 조회
+    public String getCustomRecommendResult(long userId, int categoryId) {
+        String key = getCustomRecommendKey(userId, categoryId);
+        return redisTemplate.opsForValue().get(key);
+    }
+
+    // 추천 결과 삭제 (옵션, 초기화용)
+    public void deleteCustomRecommendResult(long userId, int categoryId) {
+        String key = getCustomRecommendKey(userId, categoryId);
+        redisTemplate.delete(key);
+    }
+
+    public void setRecommendationKeywordHash(Long userId, Integer categoryId, String hash) {
+        String key = "recommend_hash:" + userId + ":" + categoryId;
+        redisTemplate.opsForValue().set(key, hash, 30, TimeUnit.MINUTES);
+    }
+
+    public String getRecommendationKeywordHash(Long userId, Integer categoryId) {
+        String key = "recommend_hash:" + userId + ":" + categoryId;
+        return redisTemplate.opsForValue().get(key);
+    }
+
+    public void deleteCachedRecommendation(Long userId, Integer categoryId) {
+        redisTemplate.delete("recommend:" + userId + ":" + categoryId);
+    }
+
+
 
 }

@@ -43,13 +43,13 @@ const PreviewMyReview = ({ user }: PreviewMyReviewProps) => {
       }
     };
 
-    setReview(reviewCosmetic);
+    // setReview(reviewCosmetic);
 
-    // fetchReview(); api완성되면 주석 해제
+    fetchReview();
   }, []);
 
   const handleGoToMyReaiews = () => {
-    router.push(`/my/${user.id}`);
+    router.push(`/review/${user.id}`);
   };
 
   return (
