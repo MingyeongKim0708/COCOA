@@ -7,9 +7,10 @@ export interface Cosmetic {
   brand: string;
   category: Category;
   images: string[];
-  keywords: Record<string, number>;
+  keywords: Record<string, number> | null;
   topKeywords: string[];
   liked: boolean;
+  likedAt?: string;
   likeCount: number;
   reviewCount: number;
   ingredient: string;
