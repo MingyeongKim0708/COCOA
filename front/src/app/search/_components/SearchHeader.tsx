@@ -16,7 +16,7 @@ export default function SearchHeader({
   placeholder = "검색어를 입력하세요",
 }: SearchHeaderProps) {
   return (
-    <div className="sticky top-0 z-10 bg-white p-4">
+    <div className="sticky top-0 z-10 bg-white py-4">
       <SearchBar
         value={value}
         onChange={onChange}

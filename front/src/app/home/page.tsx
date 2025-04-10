@@ -1,14 +1,23 @@
 "use client";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useUserStore } from "@/stores/UserStore";
 import PageHeader from "../_components/common/PageHeader";
 import { RecommendationCard } from "./_components/RecommendationCard";
 import { Keyword } from "./_components/Keyword";
 import PopularNews from "./_components/PopularNews";
-import SearchBar from "../_components/common/SearchBar";
+import SearchHeader from "../search/_components/SearchHeader";
 
 export default function HomePage() {
-  const { user, keywords } = useUserStore();
+  const { user } = useUserStore();
+  const router = useRouter();
+  const [searchText, setSearchText] = useState("");
+
+  const handleSubmit = () => {
+    if (searchText.trim() === "") return;
+    router.push(`/search/result?name=${encodeURIComponent(searchText)}`);
+  };
+
   return (
     <div>
       <PageHeader
@@ -18,8 +27,12 @@ export default function HomePage() {
           </>
         }
       />
-      <div className="pb-6 pt-6">
-        <SearchBar />
+      <div className="py-2">
+        <SearchHeader
+          value={searchText}
+          onChange={setSearchText}
+          onSubmit={handleSubmit}
+        />
       </div>
 
       {/* 최근 본 제품 추천 */}
