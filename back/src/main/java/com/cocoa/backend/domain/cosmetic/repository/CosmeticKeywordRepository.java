@@ -41,5 +41,5 @@ public interface CosmeticKeywordRepository extends JpaRepository<CosmeticKeyword
 		)
 		WHERE cosmetic_id = :cosmeticId
 	""", nativeQuery = true)
-	void subtractKeywords(@Param("cosmeticId") int cosmeticId, @Param("keywordJson") String keywordJson);
+	void subtractKeywords(@Param("cosmeticId") int cosmeticId, @Param("keywordJson") Object keywordJson);
 }
