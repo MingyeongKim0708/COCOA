@@ -10,4 +10,5 @@ public interface CompareService {
     void addOrReplaceCompareItem(Long userId, Long originalItemId, Long newItemId);
     List<CompareModalResponseDTO> getCompareModalItems(Long userId);
     List<CompareResponseDTO> getCompareItems(Long userId);
+    void removeAllCompareItems(Long userId);
 }

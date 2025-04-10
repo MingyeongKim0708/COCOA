@@ -125,6 +125,11 @@ public class RedisService {
 		redisTemplate.opsForSet().remove(getCompareKey(userId), String.valueOf(cosmeticId));
 	}
 
+    // 비교 제품 전체 삭제
+    public void removeAllCompareItems(long userId) {
+        redisTemplate.delete(getCompareKey(userId));
+    }
+
 	// 비교 제품 전체 조회
 	public Set<String> getCompareItems(long userId) {
 		return redisTemplate.opsForSet().members(getCompareKey(userId));

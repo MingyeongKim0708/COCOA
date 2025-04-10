@@ -90,4 +90,12 @@ public class CosmeticController {
         List<CompareResponseDTO> compareItems = compareService.getCompareItems(userDetails.getUserId());
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(compareItems));
     }
+
+    @Operation(summary = "비교함 전체 삭제")
+    @DeleteMapping("/compare")
+    public ResponseEntity<ApiResponse<Void>> removeAllCompareItems(Authentication authentication) {
+        CustomOAuth2UserDTO userDetails = (CustomOAuth2UserDTO) authentication.getPrincipal();
+        compareService.removeAllCompareItems(userDetails.getUserId());
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(null));
+    }
 }

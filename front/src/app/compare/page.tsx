@@ -8,6 +8,7 @@ import B4 from "../_components/common/B4";
 import { useUserStore } from "@/stores/UserStore";
 import { ComparedCosmetic } from "@/types/compare";
 import T4 from "../_components/common/T4";
+import { Trash2 } from "lucide-react";
 
 export default function ComparePage() {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -35,11 +36,30 @@ export default function ComparePage() {
     setTimeout(() => setProgress(true), 100);
   }, []);
 
+  const handleClearCompare = async () => {
+    const res = await fetchWrapper(`${baseUrl}/compare`, {
+      method: "DELETE",
+    });
+    if (res.ok) {
+      setItems([]);
+    }
+  };
+
   return (
-    <div>
+    <div className="relative">
       <PageHeader title="비교하기" />
+      {items.length > 0 && (
+        <div className="absolute right-0 top-[2rem]">
+          <button
+            className="text-size5 text-gray4 active:text-gray2"
+            onClick={handleClearCompare}
+          >
+            <Trash2 />
+          </button>
+        </div>
+      )}
       {left && right && (
-        <div className="flex flex-col items-center pt-5">
+        <div className="flex flex-col items-center pt-7">
           <div className="flex flex-row">
             <T4 className="text-red2">{user.nickname}</T4>
             <B4>님과 겹치는 키워드는</B4>
@@ -54,7 +74,7 @@ export default function ComparePage() {
           )}
         </div>
       )}
-      <div className="grid grid-cols-2 gap-4 pt-6">
+      <div className="grid grid-cols-2 gap-4 pt-7">
         <CompareItemSection data={left} side="left" progress={progress} />
         <CompareItemSection data={right} side="right" progress={progress} />
       </div>
