@@ -29,7 +29,8 @@ export default function CosmeticDetailPage() {
       const res = await fetchWrapper(
         `${baseUrl}/reviews?cosmeticId=${cosmeticId}&page=0`,
       );
-      const data: Review[] = await res.json();
+      const resJson = await res.json();
+      const data: Review[] = resJson.data;
       setReviews(data);
     } catch (err) {
       console.error("리뷰 불러오기 실패", err);
@@ -41,7 +42,8 @@ export default function CosmeticDetailPage() {
       const res = await fetchWrapper(
         `${baseUrl}/reviews?cosmeticId=${cosmeticId}&keyword=${encodeURIComponent(keyword)}&page=0`,
       );
-      const data: Review[] = await res.json();
+      const resJson = await res.json();
+      const data: Review[] = resJson.data;
       setReviews(data);
     } catch (err) {
       console.error("리뷰 불러오기 실패", err);
@@ -75,8 +77,8 @@ export default function CosmeticDetailPage() {
     const fetchData = async () => {
       try {
         const res = await fetchWrapper(`${baseUrl}/cosmetics/${cosmeticId}`);
-        const data: CosmeticDetail = await res.json();
-
+        const resJson = await res.json();
+        const data: CosmeticDetail = resJson.data;
         setCosmetic(data.cosmetic);
         setReviews(data.reviews);
       } catch (e) {
