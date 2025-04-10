@@ -7,12 +7,25 @@ import PreviewLikeItems from "./_components/PreviewLikeItems";
 import PreviewMyReview from "./_components/PreviewMyReview";
 import B5 from "../_components/common/B5";
 import { useRouter } from "next/navigation";
-import CosmeticWordCloud from "../_components/wordcloud/CosmeticWordCloud";
-import { dummyWords } from "@/mocks/dummyWords";
 
 export default function MyPage() {
   const { user, keywords } = useUserStore();
   const router = useRouter();
+  const filtered = () => {
+    if (!keywords) return {};
+
+    const excludeKeys = [user.gender, user.skinType, user.skinTone].map(String);
+
+    const filteredKeywords = Object.fromEntries(
+      Object.entries(keywords).filter(([key]) => {
+        return !(excludeKeys.includes(key) && keywords[key] >= 2);
+      }),
+    );
+
+    return filteredKeywords;
+  };
+
+  const words = filtered();
 
   const handleClickWithdraw = () => {
     router.push("/my/withdraw");
@@ -21,7 +34,7 @@ export default function MyPage() {
   return (
     <div className="flex flex-col gap-2 pt-[2rem]">
       <ReviewUserInfo user={user} />
-      <UserWordCloud words={keywords} />
+      <UserWordCloud words={words} />
       <PreviewLikeItems />
       <PreviewMyReview user={user} />
       <div className="flex flex-row items-center justify-center gap-3 text-gray3">

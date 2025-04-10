@@ -18,30 +18,30 @@ const CosmeticInfo = ({ cosmetic }: Props) => {
   return (
     <div>
       {/* 카테고리 + 찜/비교 버튼 */}
-      <div className="relative mt-4">
-        <div className="flex items-center text-size3 font-bold text-gray1">
-          <span>{cosmetic.category.majorCategory}</span>
+      <div className="pt-4">
+        <div className="relative flex items-center text-size3 font-bold text-gray1">
+          <T3>{cosmetic.category.majorCategory}</T3>
           <ChevronRight size={20} className="inline"></ChevronRight>
-          <span>{cosmetic.category.middleCategory}</span>
-        </div>
-        <div className="absolute right-0 top-0">
-          <ProductActionBar
-            productId={cosmetic.cosmeticId}
-            likeCount={cosmetic.likeCount}
-            liked={cosmetic.liked}
-          />
+          <T3>{cosmetic.category.middleCategory}</T3>
+          <div className="absolute right-0">
+            <ProductActionBar
+              productId={cosmetic.cosmeticId}
+              likeCount={cosmetic.likeCount}
+              liked={cosmetic.liked}
+            />
+          </div>
         </div>
       </div>
 
       {/* 제품 이름 */}
-      <div className="my-3">
+      <div className="py-3">
         <p className="text-size2 font-bold text-gray1">{cosmetic.brand}</p>
         <p className="text-size2 text-gray1">{cosmetic.name}</p>
       </div>
 
       {/* 성분 요약 */}
       <div className="flex items-center text-size5 text-gray4">
-        <span className="mr-2 shrink-0 font-bold text-gray4">성분</span>
+        <span className="shrink-0 pr-2 font-bold text-gray4">성분</span>
         <span className="truncate">{cosmetic.ingredient}</span>
         <button
           type="button"

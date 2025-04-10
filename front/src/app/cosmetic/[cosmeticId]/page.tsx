@@ -12,6 +12,10 @@ import { Cosmetic } from "@/types/cosmetic";
 import { Review } from "@/types/review";
 import { CosmeticDetail } from "@/types/cosmeticDetail";
 import ToggleSwitch from "./_components/ToggleSwitch";
+import T5 from "@/app/_components/common/T5";
+import T3 from "@/app/_components/common/T3";
+import InfoHint from "./_components/InfoHint";
+import CosmeticReviewList from "@/app/_components/review/CosmeticReviewList";
 
 export default function CosmeticDetailPage() {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -27,7 +31,7 @@ export default function CosmeticDetailPage() {
   const fetchAllReviews = async () => {
     try {
       const res = await fetchWrapper(
-        `${baseUrl}/reviews?cosmeticId=${cosmeticId}&page=0`,
+        `${baseUrl}/reviews/cosmetic/{cosmeticId}?page=0`,
       );
       const data: Review[] = await res.json();
       setReviews(data);
@@ -39,7 +43,7 @@ export default function CosmeticDetailPage() {
   const fetchFilteredReviews = async (keyword: string) => {
     try {
       const res = await fetchWrapper(
-        `${baseUrl}/reviews?cosmeticId=${cosmeticId}&keyword=${encodeURIComponent(keyword)}&page=0`,
+        `${baseUrl}/reviews/cosmetic/{cosmeticId}?page=0&keyword=${keyword}`,
       );
       const data: Review[] = await res.json();
       setReviews(data);
@@ -51,26 +55,18 @@ export default function CosmeticDetailPage() {
   const handleSelectWord = (word: string) => {
     if (selectWord === word) {
       setSelectWord(null);
-      setIsFiltered(false);
       fetchAllReviews();
-      return;
+    } else {
+      setSelectWord(word);
+      fetchFilteredReviews(word);
     }
-
-    setSelectWord(word);
-    setIsFiltered(false);
-    fetchFilteredReviews(word);
   };
 
   const handleToggle = () => {
-    if (selectWord) {
-      setSelectWord(null);
-      setIsFiltered(true);
-      fetchAllReviews();
-      return;
-    }
     setIsFiltered((prev) => !prev);
   };
 
+  useEffect(() => {}, [isFiltered]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -104,10 +100,13 @@ export default function CosmeticDetailPage() {
     <div className="mx-[-1.25rem]">
       <PageHeader title="제품 상세" showBackButton />
       <img src={cosmetic.images[0]} alt={cosmetic.name} className="w-full" />
-      <div className="mx-5">
+      <div className="px-5">
         <CosmeticInfo cosmetic={cosmetic} />
-        <div className="mb-4 mt-8 text-size3 font-bold">제품 키워드</div>
-        <div className="mx-auto w-fit">
+        <div className="flex flex-row items-center justify-between gap-2 pb-4 pt-8">
+          <T3>제품 키워드</T3>
+          <InfoHint />
+        </div>
+        <div className="px-auto w-full">
           <CosmeticWordCloud
             words={cosmetic.keywords}
             onWordClick={handleSelectWord}
@@ -115,19 +114,17 @@ export default function CosmeticDetailPage() {
             isFiltered={isFiltered}
           />
         </div>
-        <div className="mt-4 flex items-center justify-end text-size4 font-bold text-gray2">
+        <div className="flex items-center justify-end pt-4 text-size4 font-title text-gray2">
           <label className="flex cursor-pointer items-center gap-2">
             <span>나와 겹치는 키워드 확인하기</span>
             <ToggleSwitch checked={isFiltered} onChange={handleToggle} />
           </label>
         </div>
-        <div className="mt-10 text-size4 text-gray4">
-          <p>키워드를 클릭해 나에게 맞는 리뷰를 확인해 보세요.</p>
-          <p>
-            제품 관련 키워드를 수집하여 제공하는 것으로, COCOA에서는 관련 리뷰가
-            존재하지 않을 수 있습니다.
-          </p>
-        </div>
+        <T5 className="text-right text-gray4">
+          키워드를 클릭해 나에게 맞는 리뷰를 확인해 보세요.
+        </T5>
+        <CosmeticReviewList reviews={reviews} selectWord={selectWord} />
+        <div className="pt-10 text-gray4"></div>
         <WriteReviewButton cosmeticId={cosmetic.cosmeticId} />
         <ScrollToTopButton />
       </div>

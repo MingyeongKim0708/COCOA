@@ -11,10 +11,9 @@ const UserWordCloud = ({ words }: UserWordCloudProps) => {
   const [size, setSize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
-    console.log("유저 워드클라우드");
     const observer = new ResizeObserver(([entry]) => {
       const { width, height } = entry.contentRect;
-      setSize({ width, height }); // px 단위
+      setSize({ width, height });
     });
 
     if (containerRef.current) {
