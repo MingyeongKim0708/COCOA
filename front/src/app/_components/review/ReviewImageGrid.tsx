@@ -24,8 +24,10 @@ export default function ReviewImageGrid({
     ...(files ? files.map((file) => URL.createObjectURL(file)) : []),
   ];
 
+  if (previews.length < 1 && !editable) return null;
+
   return (
-    <div className="flex flex-row gap-3 overflow-x-auto py-2">
+    <div className="scrollbar-hide flex flex-row gap-3 overflow-x-auto py-2">
       {previews.map((src, idx) => (
         <div key={idx} className="relative block w-24 flex-shrink-0">
           <img

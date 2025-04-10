@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.cocoa.backend.domain.review.dto.ReviewDTO;
 import com.cocoa.backend.domain.review.dto.request.ReviewInsertRequestDTO;
 import com.cocoa.backend.domain.review.dto.request.ReviewUpdateRequestDTO;
+import com.cocoa.backend.domain.review.dto.response.CosmeticReviewResponseDTO;
 import com.cocoa.backend.domain.review.dto.response.UserReviewResponseDTO;
 import com.cocoa.backend.domain.review.service.ReviewService;
 import com.cocoa.backend.domain.user.dto.CustomOAuth2UserDTO;
@@ -102,13 +103,13 @@ public class ReviewController {
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/users/{userId}")
+	@GetMapping("/user/{userId}")
 	public ResponseEntity<UserReviewResponseDTO> getReviewsByUserId(Authentication authentication,
 		@PathVariable long userId, @RequestParam int page) {
 		CustomOAuth2UserDTO userDetails = (CustomOAuth2UserDTO)authentication.getPrincipal();
 		boolean isOwner = userDetails.getUserId() == userId;
 
-		UserReviewResponseDTO response = reviewService.getReviewsByUserId(userId, isOwner, 0);
+		UserReviewResponseDTO response = reviewService.getReviewsByUserId(userId, isOwner, page);
 
 		if (page == 0) {
 			return ResponseEntity.ok(response);
@@ -117,11 +118,11 @@ public class ReviewController {
 		}
 	}
 
-	@GetMapping("/cosmetics/{cosmeticId}")
-	public ResponseEntity<List<ReviewDTO>> getReviewsByCosmeticId(Authentication authentication,
-		@PathVariable int cosmeticId, @RequestParam int page) {
+	@GetMapping("/cosmetic/{cosmeticId}")
+	public ResponseEntity<CosmeticReviewResponseDTO> getReviewsByCosmeticId(Authentication authentication,
+		@PathVariable int cosmeticId, @RequestParam int page, @RequestParam(required = false) String keyword) {
 		CustomOAuth2UserDTO userDetails = (CustomOAuth2UserDTO)authentication.getPrincipal();
-		List<ReviewDTO> reviewList = reviewService.getReviewsByCosmeticId(userDetails.getUserId(), cosmeticId, 0);
+		CosmeticReviewResponseDTO reviewList = reviewService.getReviewsByCosmeticId(userDetails.getUserId(), cosmeticId, keyword, page);
 
 		return ResponseEntity.ok(reviewList);
 	}

@@ -18,6 +18,7 @@ import com.cocoa.backend.domain.cosmetic.service.CosmeticService;
 import com.cocoa.backend.domain.review.dto.ReviewDTO;
 import com.cocoa.backend.domain.review.dto.request.ReviewInsertRequestDTO;
 import com.cocoa.backend.domain.review.dto.request.ReviewUpdateRequestDTO;
+import com.cocoa.backend.domain.review.dto.response.CosmeticReviewResponseDTO;
 import com.cocoa.backend.domain.review.dto.response.UserReviewResponseDTO;
 import com.cocoa.backend.domain.review.entity.Review;
 import com.cocoa.backend.domain.review.mapper.ReviewMapper;
@@ -141,23 +142,6 @@ public class ReviewServiceImpl implements ReviewService{
 
 	@Override
 	@Transactional
-	public List<ReviewDTO> getReviewsByCosmeticId(long userId, int cosmeticId, int page) {
-		Pageable pageable = PageRequest.of(page, 10, Sort.by("reviewId").descending());
-		Page<Review> reviewList = reviewRepository.findByCosmetic_CosmeticId(cosmeticId, pageable);
-		Set<String> helpfulReviewIds = redisService.getHelpfulReviewIds(userId);
-
-		List<ReviewDTO> result = new ArrayList<>();
-		for (Review review : reviewList){
-			boolean helpfulForMe = helpfulReviewIds.contains(review.getReviewId().toString());
-
-			result.add(reviewMapper.toDTO(review,helpfulForMe));
-		}
-
-		return result;
-	}
-
-	@Override
-	@Transactional
 	public UserReviewResponseDTO getReviewsByUserId(long userId, boolean isOwner, int page) {
 		Pageable pageable = PageRequest.of(page, 10, Sort.by("reviewId").descending());
 		Page<Review> reviewList = reviewRepository.findByUser_UserId(userId, pageable);
@@ -172,12 +156,31 @@ public class ReviewServiceImpl implements ReviewService{
 
 		UserReviewResponseDTO responseDTO;
 
-		if(page == 0) {
+		if(page == 0 && !isOwner) {
 			UserResponseDTO userDto = userService.getUserInfo(userId);
 			responseDTO = new UserReviewResponseDTO(userDto,reviewDTOList);
 		}else
 			responseDTO = new UserReviewResponseDTO(null, reviewDTOList);
 		return responseDTO;
+	}
+
+	@Override
+	@Transactional
+	public CosmeticReviewResponseDTO getReviewsByCosmeticId(long userId, int cosmeticId, String keyword,int page) {
+		Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("helpfulCount"), Sort.Order.desc("reviewId")));
+		Page<Review> reviewList = reviewRepository.findByCosmetic_CosmeticId(cosmeticId, pageable);
+		Set<String> helpfulReviewIds = redisService.getHelpfulReviewIds(userId);
+		List<ReviewDTO> reviewDTOList = reviewList.stream()
+			.filter(review -> keyword == null || review.getKeywords().containsKey(keyword))
+			.map(review -> {
+				boolean helpfulForMe = helpfulReviewIds.contains(review.getReviewId().toString());
+				return reviewMapper.toDTO(review, helpfulForMe);
+			})
+			.toList();
+
+		if(page==0)
+			return new CosmeticReviewResponseDTO(getReviewAmount(cosmeticId),reviewDTOList);
+		else return new CosmeticReviewResponseDTO(0,reviewDTOList);
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import java.util.List;
 import com.cocoa.backend.domain.review.dto.ReviewDTO;
 import com.cocoa.backend.domain.review.dto.request.ReviewInsertRequestDTO;
 import com.cocoa.backend.domain.review.dto.request.ReviewUpdateRequestDTO;
+import com.cocoa.backend.domain.review.dto.response.CosmeticReviewResponseDTO;
 import com.cocoa.backend.domain.review.dto.response.UserReviewResponseDTO;
 
 public interface ReviewService {
@@ -16,7 +17,7 @@ public interface ReviewService {
 
 	boolean decreaseHelpfulCount(Long userId, long reviewId);
 
-	List<ReviewDTO> getReviewsByCosmeticId(long userId, int cosmeticId, int page);
+	CosmeticReviewResponseDTO getReviewsByCosmeticId(long userId, int cosmeticId, String  keyword, int page);
 
 	UserReviewResponseDTO getReviewsByUserId(long userId, boolean isOwner, int page);
 

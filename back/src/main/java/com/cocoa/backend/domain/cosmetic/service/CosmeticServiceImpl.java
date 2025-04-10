@@ -86,45 +86,7 @@ public class CosmeticServiceImpl implements CosmeticService {
 
         return cosmetics.stream()
                 .map(c -> {
-                    Map<String, Integer> keywordsMap = Optional.ofNullable(c.getCosmeticKeywords())
-                            .map(k -> k.getTopKeywords())
-                            .orElse(Collections.emptyMap());
-
-                    List<String> top3Keywords = keywordsMap.entrySet().stream()
-                            .filter(e -> e.getKey() != null && e.getValue() != null)
-                            .sorted((a, b) -> b.getValue().compareTo(a.getValue()))
-                            .limit(3)
-                            .map(Map.Entry::getKey)
-                            .toList();
-
-                    List<String> images = Stream.of(c.getImageUrl1(), c.getImageUrl2(), c.getImageUrl3())
-                            .filter(img -> img != null && !img.isBlank())
-                            .toList();
-
-                    boolean liked = redisService.isLikedCosmetic(userId, c.getCosmeticId().longValue());
-                    long likeCount = redisService.getLikeCountOfCosmetic(c.getCosmeticId().longValue());
-
-                    CategoryResponseDTO categoryDTO = new CategoryResponseDTO(
-                            c.getCategory().getCategoryId(),
-                            c.getCategory().getMajorCategory(),
-                            c.getCategory().getMiddleCategory(),
-                            c.getCategory().getCategoryNo()
-                    );
-
-                    return new CosmeticResponseDTO(
-                            c.getCosmeticId(),
-                            c.getName(),
-                            c.getBrand(),
-                            c.getOptionName(),
-                            images,
-                            keywordsMap,
-                            top3Keywords,
-                            liked,
-                            likeCount,
-                            0,
-                            categoryDTO,
-                            Collections.emptyList()
-                    );
+                    return cosmeticMapper.CosmeticDTOFromEntity(c, userId);
                 })
                 .toList();
     }
