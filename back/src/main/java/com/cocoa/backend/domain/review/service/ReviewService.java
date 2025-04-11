@@ -13,6 +13,8 @@ public interface ReviewService {
 
 	boolean updateReview(long userId, ReviewUpdateRequestDTO request);
 
+	boolean deleteReview(Long reviewId);
+
 	boolean increaseHelpfulCount(Long userId, long reviewId);
 
 	boolean decreaseHelpfulCount(Long userId, long reviewId);
@@ -24,4 +26,5 @@ public interface ReviewService {
 	int getReviewAmount(int cosmeticId);
 
 	ReviewDTO getUpdateReview(long reviewId);
+
 }

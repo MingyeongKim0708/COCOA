@@ -6,6 +6,7 @@ import com.cocoa.backend.domain.cosmetic.dto.response.CompareResponseDTO;
 import com.cocoa.backend.domain.cosmetic.entity.Cosmetic;
 import com.cocoa.backend.domain.cosmetic.entity.CosmeticIngredientText;
 import com.cocoa.backend.domain.cosmetic.errorcode.CompareErrorCode;
+import com.cocoa.backend.domain.cosmetic.mapper.CosmeticMapper;
 import com.cocoa.backend.domain.cosmetic.repository.CosmeticIngredientTextRepository;
 import com.cocoa.backend.domain.cosmetic.repository.CosmeticRepository;
 import com.cocoa.backend.domain.user.entity.User;
@@ -16,6 +17,8 @@ import com.cocoa.backend.domain.user.repository.UserRepository;
 import com.cocoa.backend.global.exception.CustomException;
 import com.cocoa.backend.global.redis.RedisService;
 import com.cocoa.backend.global.util.UserUtil;
+
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -24,20 +27,13 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class CompareServiceImpl implements CompareService {
     private final RedisService redisService;
     private final CosmeticRepository cosmeticRepository;
+    private final CosmeticMapper cosmeticMapper;
     private final UserKeywordsRepository userKeywordsRepository;
     private final UserRepository userRepository;
-    private final CosmeticIngredientTextRepository cosmeticIngredientTextRepository;
-
-    public CompareServiceImpl(RedisService redisService, CosmeticRepository cosmeticRepository, UserKeywordsRepository userKeywordsRepository, UserRepository userRepository, CosmeticIngredientTextRepository cosmeticIngredientTextRepository) {
-        this.redisService = redisService;
-        this.cosmeticRepository = cosmeticRepository;
-        this.userKeywordsRepository = userKeywordsRepository;
-        this.userRepository = userRepository;
-        this.cosmeticIngredientTextRepository = cosmeticIngredientTextRepository;
-    }
 
     @Override
     public List<Integer> getCompareItemIds(Long userId) {
@@ -126,14 +122,8 @@ public class CompareServiceImpl implements CompareService {
             }
 
             // 성분 정보
-            String text = null;
-            CosmeticIngredientText cosInText = cosmeticIngredientTextRepository.findById(item.getCosmeticId()).orElse(null);
-            if (cosInText != null) {
-                Map<String, String> ingredientMap = cosInText.getIngredientText();
-                if (ingredientMap != null && !ingredientMap.isEmpty()) {
-                    text = ingredientMap.values().iterator().next(); // 첫 번째 value만 추출
-                }
-            }
+            String text = cosmeticMapper.getCosmeticIngredientText(item);
+
 
             return new CompareResponseDTO(
                     item.getCosmeticId(),

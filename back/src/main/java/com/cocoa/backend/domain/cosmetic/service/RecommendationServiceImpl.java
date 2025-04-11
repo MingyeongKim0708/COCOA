@@ -4,6 +4,7 @@ import com.cocoa.backend.domain.cosmetic.dto.response.CategoryResponseDTO;
 import com.cocoa.backend.domain.cosmetic.dto.response.CosmeticResponseDTO;
 import com.cocoa.backend.domain.cosmetic.entity.Cosmetic;
 import com.cocoa.backend.domain.cosmetic.entity.CosmeticKeywords;
+import com.cocoa.backend.domain.cosmetic.mapper.CosmeticMapper;
 import com.cocoa.backend.domain.cosmetic.repository.CosmeticRepository;
 import com.cocoa.backend.domain.user.entity.UserKeywords;
 import com.cocoa.backend.domain.user.repository.UserKeywordsRepository;
@@ -26,6 +27,7 @@ import java.util.stream.Stream;
 public class RecommendationServiceImpl implements RecommendationService {
 
     private final CosmeticRepository cosmeticRepository;
+    private final CosmeticMapper cosmeticMapper;
     private final UserKeywordsRepository userKeywordsRepository;
     private final RedisService redisService;
 
@@ -129,52 +131,7 @@ public class RecommendationServiceImpl implements RecommendationService {
             List<CosmeticResponseDTO> result = scored.stream()
                     .map(pair -> {
                         Cosmetic c = pair.getLeft();
-                        CosmeticKeywords cosmeticKeywords = c.getCosmeticKeywords();
-
-                        Map<String, Integer> keywordsMap = Optional.ofNullable(cosmeticKeywords)
-                                .map(CosmeticKeywords::getTopKeywords)
-                                .orElse(Collections.emptyMap());
-
-                        List<String> top3Keywords = Optional.ofNullable(cosmeticKeywords)
-                                .map(CosmeticKeywords::getTopKeywords)
-                                .orElse(Collections.emptyMap())
-                                .entrySet().stream()
-                                .filter(entry -> entry.getKey() != null && entry.getValue() != null)
-                                .sorted((a, b) -> b.getValue().compareTo(a.getValue()))
-                                .limit(3)
-                                .map(Map.Entry::getKey)
-                                .toList();
-
-                        List<String> images = Stream.of(c.getImageUrl1(), c.getImageUrl2(), c.getImageUrl3())
-                                .filter(img -> img != null && !img.isBlank())
-                                .toList();
-
-                        boolean liked = redisService.isLikedCosmetic(userId, c.getCosmeticId().longValue());
-                        long likeCount = redisService.getLikeCountOfCosmetic(c.getCosmeticId().longValue());
-
-                        CategoryResponseDTO categoryDTO = new CategoryResponseDTO(
-                                c.getCategory().getCategoryId(),
-                                c.getCategory().getMajorCategory(),
-                                c.getCategory().getMiddleCategory(),
-                                c.getCategory().getCategoryNo()
-                        );
-
-
-                        return new CosmeticResponseDTO(
-                                c.getCosmeticId(),
-                                c.getName(),
-                                c.getBrand(),
-                                c.getOptionName(),
-                                images,
-                                keywordsMap,
-                                top3Keywords,
-                                liked,
-                                likeCount,
-                                null,
-                                0, // 리뷰 수 (아직 구현 안 됨)
-                                categoryDTO,
-                                Collections.emptyList() // 성분 (아직 구현 안 됨)
-                        );
+                        return cosmeticMapper.CosmeticDTOFromEntity(c,userId);
                     })
                     .toList();
 

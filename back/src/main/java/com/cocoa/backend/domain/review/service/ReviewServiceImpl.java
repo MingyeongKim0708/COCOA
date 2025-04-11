@@ -126,6 +126,17 @@ public class ReviewServiceImpl implements ReviewService{
 
 	@Override
 	@Transactional
+	public boolean deleteReview(Long reviewId) {
+		Review review = reviewRepository.getReferenceById(reviewId.intValue());
+		String json = jsonConverter.convertToDatabaseColumn(review.getKeywords());
+		cosmeticKeywordRepository.subtractKeywords(review.getCosmetic().getCosmeticId(),json);
+		userKeywordsRepository.subtractKeywords(review.getUser().getUserId(),json);
+		reviewRepository.delete(review);
+		return true;
+	}
+
+	@Override
+	@Transactional
 	public boolean increaseHelpfulCount(Long userId, long reviewId) {
 		int result = reviewRepository.increaseHelpfulCount(reviewId);
 		redisService.addHelpfulReview(userId,reviewId);

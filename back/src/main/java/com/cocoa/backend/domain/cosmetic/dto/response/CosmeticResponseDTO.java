@@ -44,7 +44,7 @@ public class CosmeticResponseDTO {
     private CategoryResponseDTO category;
 
     // 선택적 성분 정보 (없으면 생략 가능)
-    private List<String> ingredient;
+    private String ingredient;
 
     public void setLiked(boolean liked) {
         this.liked = liked;

@@ -83,6 +83,15 @@ public class ReviewController {
 		return ResponseEntity.ok(response);
 	}
 
+	@DeleteMapping("/{reviewId}")
+	public ResponseEntity<Map<String, String>> deleteReview (Authentication authentication, @PathVariable Long reviewId) {
+		reviewService.deleteReview(reviewId);
+		Map<String, String> response = new HashMap<>();
+		response.put("message", "리뷰 삭제 성공");
+
+		return ResponseEntity.ok(response);
+	}
+
 	@PostMapping("/helpful/{reviewId}")
 	public ResponseEntity<Map<String, String>> insertHelpfulReview (Authentication authentication, @PathVariable long reviewId){
 		CustomOAuth2UserDTO userDetails = (CustomOAuth2UserDTO) authentication.getPrincipal();

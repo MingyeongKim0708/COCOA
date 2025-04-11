@@ -10,7 +10,9 @@ import org.springframework.stereotype.Component;
 import com.cocoa.backend.domain.cosmetic.dto.response.CategoryResponseDTO;
 import com.cocoa.backend.domain.cosmetic.dto.response.CosmeticResponseDTO;
 import com.cocoa.backend.domain.cosmetic.entity.Cosmetic;
+import com.cocoa.backend.domain.cosmetic.entity.CosmeticIngredientText;
 import com.cocoa.backend.domain.cosmetic.entity.CosmeticKeywords;
+import com.cocoa.backend.domain.cosmetic.repository.CosmeticIngredientTextRepository;
 import com.cocoa.backend.global.redis.RedisService;
 
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,19 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CosmeticMapper {
 	private final RedisService redisService;
+	private final CosmeticIngredientTextRepository cosmeticIngredientTextRepository;
+
+	public String getCosmeticIngredientText(Cosmetic cosmetic) {
+		String text = "";
+		CosmeticIngredientText cosInText = cosmeticIngredientTextRepository.findById(cosmetic.getCosmeticId()).orElse(null);
+		if (cosInText != null) {
+			Map<String, String> ingredientMap = cosInText.getIngredientText();
+			if (ingredientMap != null && !ingredientMap.isEmpty()) {
+				text = ingredientMap.values().iterator().next(); // 첫 번째 value만 추출
+			}
+		}
+		return text;
+	}
 
 	public CosmeticResponseDTO CosmeticDTOFromEntity(Cosmetic cosmetic, Long userId) {
 			Set<ZSetOperations.TypedTuple<String>> cosmeticTuples = redisService.getInterestedCosmeticWithTimestamps(userId);
@@ -60,7 +75,7 @@ public class CosmeticMapper {
 			CategoryResponseDTO categoryDTO = CategoryResponseDTO.fromEntity(cosmetic.getCategory());
 
 			// 6. 성분 리스트 (미구현 상태)
-			List<String> ingredient = Collections.emptyList();
+			String cosInText = getCosmeticIngredientText(cosmetic);;
 
 			return new CosmeticResponseDTO(
 				cosmetic.getCosmeticId(),
@@ -75,7 +90,7 @@ public class CosmeticMapper {
 				likedAt,
 				0, //리뷰 개수 생성자에서는 0
 				categoryDTO,
-				ingredient
+				cosInText
 			);
 
 	}

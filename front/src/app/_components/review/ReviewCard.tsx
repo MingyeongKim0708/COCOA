@@ -18,21 +18,29 @@ interface ReviewProps {
 const ReviewCard = ({ review }: ReviewProps) => {
   const router = useRouter();
   const pathname = usePathname();
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   const isUserPage = pathname.startsWith("/review");
   const isCosmeticPage = pathname.startsWith("/cosmetic");
 
   const [isLoading, setIsLoading] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [deleted, setDeleted] = useState(false);
   const [helpfulCount, setHelpfulCount] = useState(review.helpfulCount);
   const [helpfulForMe, setHelpfulForMe] = useState(review.helpfulForMe);
 
   const items = ["수정하기", "삭제하기"];
 
-  const handleSelect = (item: string) => {
+  const handleSelect = async (item: string) => {
     console.log("선택했다:", item, review.reviewId);
     if (item === "수정하기")
       router.push(`/review/edit?reviewId=${review.reviewId}`);
+    else if (item === "삭제하기") {
+      await fetchWrapper(`${baseUrl}/reviews/${review.reviewId}`, {
+        method: "DELETE",
+      });
+      setDeleted(true);
+    }
 
     setMenuOpen(false);
   };
@@ -42,7 +50,6 @@ const ReviewCard = ({ review }: ReviewProps) => {
     if (helpfulCount < 0) return; // 만약을 위한 예외 처리
 
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
       setIsLoading(true); // 요청 시작
       if (helpfulForMe) {
         await fetchWrapper(`${baseUrl}/reviews/helpful/${review.reviewId}`, {
@@ -63,6 +70,7 @@ const ReviewCard = ({ review }: ReviewProps) => {
       setIsLoading(false); // 요청 종료
     }
   };
+  if (deleted) return null;
 
   return (
     <div className="relative flex w-full flex-col gap-y-2 py-2 text-start">
