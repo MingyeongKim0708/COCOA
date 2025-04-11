@@ -12,6 +12,8 @@
 - [기능 소개](#기능-소개)
 - [기술 스택](#기술-스택)
 - [아키텍쳐](#아키텍쳐)
+- [명세서](#명세서)
+- [ERD](#ERD)
 - [팀원](#팀원)
 
 ## ✏️프로젝트 소개
@@ -150,17 +152,17 @@
     </tr>
 </table>
 
-## 아키텍쳐
+## ⚙️아키텍쳐
 
 ![image](/readme/architecture.png)
 
-## 명세서
+## ⚙️명세서
 - [기능명세서](https://foggy-currency-878.notion.site/19e5f518a63e81878dd7dff159fd404c)  
 - [API 명세서](https://foggy-currency-878.notion.site/api-19e5f518a63e81c982c5ec468127bfaf?pvs=74)
 
-## ERD
+## ⚙️ERD
 <p align="center">
-    <img src="./readme/cocoa.png" width="30%"/>
+    <img src="./readme/cocoa.png" width="100%"/>
 </p>
 
 
