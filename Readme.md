@@ -154,11 +154,21 @@
 
 ![image](/readme/architecture.png)
 
-## 👥팀원
+## 명세서
+- [기능명세서](https://foggy-currency-878.notion.site/19e5f518a63e81878dd7dff159fd404c)  
+- [API 명세서](https://foggy-currency-878.notion.site/api-19e5f518a63e81c982c5ec468127bfaf?pvs=74)
 
+## ERD
+<p align="center">
+    <img src="./readme/cocoa.png" width="30%"/>
+</p>
+
+
+## 👥팀원
+**TEAM 브로콜리 너마저**  
 - 김민경 : 팀장(PM), Full Stack, 추천 알고리즘 구현, 전체 제품 조회, 관심 제품 등록/해제 구현, 캐싱 처리 구현
 - 김민지 : Full Stack, 검색, 최근 검색어, 최근 본 제품 구현
 - 최은영 : Full Stack, 로그인, 제품 비교 구현
 - 진상하 : Full Stack, 빅데이터 분석 및 처리, 리뷰 구현
 - 방승윤 : Infra, 빅데이터 분석 및 처리
-- 박가영 : Infra, FE, 워드클라우드 구현
+- 박가영 : Infra, FE, CI/CD, 워드클라우드 구현
